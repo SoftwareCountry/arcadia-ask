@@ -8,6 +8,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Arcadia.Ask
 {
+    using Arcadia.Ask.Hubs;
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -20,6 +22,7 @@ namespace Arcadia.Ask
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSignalR();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // In production, the Angular files will be served from this directory
@@ -46,6 +49,12 @@ namespace Arcadia.Ask
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
+
+            app.UseSignalR(
+                routes =>
+                    {
+                        routes.MapHub<QuestionsHub>("/questions");
+                    });
 
             app.UseMvc(routes =>
             {
