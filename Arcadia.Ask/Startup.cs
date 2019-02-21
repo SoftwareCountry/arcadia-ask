@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Arcadia.Ask
 {
     using Arcadia.Ask.Hubs;
+    using Arcadia.Ask.Questions;
 
     public class Startup
     {
@@ -22,6 +23,8 @@ namespace Arcadia.Ask
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IQuestionStorage, QuestionStorage>();
+
             services.AddSignalR();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
