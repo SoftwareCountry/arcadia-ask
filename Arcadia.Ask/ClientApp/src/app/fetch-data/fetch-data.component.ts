@@ -10,7 +10,7 @@ export class FetchDataComponent {
   public forecasts: WeatherForecast[];
 
   constructor(questionsStore: QuestionsStore) {
-    questionsStore.getData().then(x => console.log(x));
+    questionsStore.getData().subscribe(x => console.log(x.toArray()));
   }
 }
 

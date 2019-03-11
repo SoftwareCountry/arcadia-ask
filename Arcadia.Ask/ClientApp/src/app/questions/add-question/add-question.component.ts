@@ -1,10 +1,9 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-add-question',
   templateUrl: './add-question.component.html',
-  styleUrls: ['./add-question.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./add-question.component.css']
 })
 export class AddQuestionComponent implements OnInit {
 

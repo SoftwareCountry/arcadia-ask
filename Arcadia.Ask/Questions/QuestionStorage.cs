@@ -10,6 +10,12 @@
     {
         private readonly ConcurrentDictionary<Guid, Question> allQuestions = new ConcurrentDictionary<Guid, Question>();
 
+        public QuestionStorage()
+        {
+            var q = new Question(Guid.NewGuid(), "Test", "Me", DateTimeOffset.UtcNow);
+            this.allQuestions[q.QuestionId] = q;
+        }
+
         public async Task<Question[]> GetQuestions()
         {
             return this.allQuestions.ToArray().Select(x => x.Value).ToArray();
