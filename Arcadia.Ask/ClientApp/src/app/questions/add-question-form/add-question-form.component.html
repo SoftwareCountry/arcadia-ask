@@ -1,0 +1,10 @@
+<div>
+  <h2>New question</h2>
+  <form (ngSubmit)="onSubmit()" #questionForm="ngForm">
+    <div>
+      <label for="question-text">Question:</label>
+      <input type="text" id="question-text" name="question-text" required [(ngModel)]="model.text">
+    </div>
+    <button type="submit" [disabled]="!questionForm.form.valid">Submit</button>
+  </form>
+</div>

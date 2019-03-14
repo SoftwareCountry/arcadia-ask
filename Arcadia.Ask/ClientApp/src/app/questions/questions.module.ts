@@ -3,14 +3,16 @@ import { CommonModule } from '@angular/common';
 
 import { QuestionsRoutingModule } from './questions-routing.module';
 import { QuestionsListComponent } from './questions-list/questions-list.component';
-import { AddQuestionComponent } from './add-question/add-question.component';
+import { AddQuestionFormComponent } from './add-question-form/add-question-form.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [QuestionsListComponent, AddQuestionComponent],
-  exports: [QuestionsListComponent, AddQuestionComponent],
+  declarations: [QuestionsListComponent, AddQuestionFormComponent],
+  exports: [QuestionsListComponent, AddQuestionFormComponent],
   imports: [
     CommonModule,
-    QuestionsRoutingModule
+    QuestionsRoutingModule,
+    FormsModule
   ]
 })
 export class QuestionsModule { }

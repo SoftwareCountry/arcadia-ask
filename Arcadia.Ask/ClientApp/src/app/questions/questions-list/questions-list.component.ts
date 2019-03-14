@@ -1,5 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Question } from '../question';
+import { QuestionsStore } from '../questions-store.service';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-questions-list',
@@ -9,12 +12,19 @@ import { Question } from '../question';
 })
 export class QuestionsListComponent implements OnInit {
 
-  @Input()
-  questions: Question[];
+  public readonly questions: Observable<Question[]>;
 
-  constructor() { }
+  constructor(questionsStore: QuestionsStore) {
+    this.questions = questionsStore
+      .questions
+      .pipe(map(x => x.valueSeq().toArray()));
+  }
 
   ngOnInit() {
+  }
+
+  questionIdTrack(x: Question) {
+    return x.questionId;
   }
 
 }

@@ -1,10 +1,10 @@
-import { Injectable, Inject } from '@angular/core';
+import { Injectable, Inject, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Question } from './question';
 import { HubConnectionBuilder, HubConnection } from '@aspnet/signalr';
 import { async } from '@angular/core/testing';
-import { Subject, Observable, from, merge } from 'rxjs';
-import { flatMap, concat, scan, map, switchMap, startWith } from 'rxjs/operators';
+import { Subject, Observable, from, merge, Subscription, ReplaySubject, ConnectableObservable } from 'rxjs';
+import { flatMap, concat, scan, map, switchMap, startWith, multicast } from 'rxjs/operators';
 import { Map } from 'immutable';
 
 type QuestionChange = { type: 'added', question: Question } | { type: 'removed', id: string };
@@ -12,33 +12,56 @@ type QuestionChange = { type: 'added', question: Question } | { type: 'removed',
 @Injectable({
   providedIn: 'root'
 })
-export class QuestionsStore {
+export class QuestionsStore implements OnDestroy {
+  private readonly hubConnection: Promise<HubConnection>;
 
-  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
+  public questions: Observable<Map<string, Question>>;
+
+  private questionsSubscription: Subscription;
+
+  constructor() {
+    this.hubConnection = this.connect();
+    this.questions = from(this.hubConnection).pipe(
+      flatMap(x => this.getQuestionsStream(x)),
+      multicast(new ReplaySubject(1))
+    );
+    this.questionsSubscription = (this.questions as ConnectableObservable<Map<string, Question>>).connect();
   }
 
-  getData() {
-    return from(this.connect()).pipe(
-      flatMap(con => {
-        const initialArray = from(this.getInitialArray(con));
-        return initialArray.pipe(
-          switchMap(seed => {
-            return this.onQuestionChanges(con).pipe(
-              scan((acc, value: QuestionChange) => this.applyQuestionsChange(acc, value), seed),
-              startWith(seed)
-            );
-          })
+  public createQuestion(text: string) {
+    return this.invoke('CreateQuestion', text);
+  }
+
+  public async approveQuestion(questionId: string) {
+    return this.invoke('ApproveQuestion', questionId);
+  }
+
+  public async upvoteQuestion(questionId: string) {
+    return this.invoke('UpvoteQuestion', questionId);
+  }
+
+  public async downvoteQuestion(questionId: string) {
+    return this.invoke('DownvoteQuestion', questionId);
+  }
+
+  public async removeQuestion(questionId: string) {
+    return this.invoke('RemoveQuestion', questionId);
+  }
+
+  public ngOnDestroy() {
+    this.dispose().catch((x) => console.error(x));
+  }
+
+  private getQuestionsStream(hubConnection: HubConnection) {
+    const initialArray = from(this.getInitialArray());
+    return initialArray.pipe(
+      switchMap(seed => {
+        return this.onQuestionChanges(hubConnection).pipe(
+          scan((acc, value: QuestionChange) => this.applyQuestionsChange(acc, value), seed),
+          startWith(seed)
         );
       })
     );
-  }
-
-  private applyQuestionsChange(acc: Map<string, Question>, change: QuestionChange): Map<string, Question> {
-    if (change.type === 'added') {
-      return acc.set(change.question.questionId, change.question);
-    } else {
-      return acc.remove(change.id);
-    }
   }
 
   private async connect() {
@@ -47,21 +70,42 @@ export class QuestionsStore {
     return connection;
   }
 
-  private async getInitialArray(hubConnection: HubConnection) {
-    const data = await hubConnection.invoke<Question[]>('GetQuestions');
+  private async dispose() {
+    try {
+      await (await this.hubConnection).stop();
+    } finally {
+      this.questionsSubscription.unsubscribe();
+    }
+  }
+
+  private async getQuestions() {
+    return this.invoke<Question[]>('GetQuestions');
+  }
+
+  private async getInitialArray() {
+    const data = await this.getQuestions();
     const mappedData = data.map<[string, Question]>(x => [x.questionId, x]);
     return Map(mappedData);
   }
 
+  private async invoke<T>(methodName: string, ...args: any[]) {
+    const connection = await this.hubConnection;
+    return connection.invoke<T>(methodName, ...args);
+  }
+
   private onQuestionChanges(hubConnection: HubConnection) {
     return new Observable<QuestionChange>(subscriber => {
-      hubConnection.on('QuestionIsChanged', (question: Question) => {
-        subscriber.next({ type: 'added', question });
-      });
 
-      hubConnection.on('QuestionIsRemoved', (id: string) => {
+      const onQuestionChanged = (question: Question) => {
+        subscriber.next({ type: 'added', question });
+      };
+
+      const onQuestionRemoved = (id: string) => {
         subscriber.next({ type: 'removed', id });
-      });
+      };
+
+      hubConnection.on('QuestionIsChanged', onQuestionChanged);
+      hubConnection.on('QuestionIsRemoved', onQuestionRemoved);
 
       hubConnection.onclose(error => {
         if (error) {
@@ -70,30 +114,19 @@ export class QuestionsStore {
           subscriber.complete();
         }
       });
+
+      return () => {
+        hubConnection.off('QuestionIsChanged', onQuestionChanged);
+        hubConnection.off('QuestionIsRemoved', onQuestionRemoved);
+      };
     });
   }
 
-  private async getQuestions(hubConnection: HubConnection) {
-    return hubConnection.invoke<Question>('GetQuestions');
-  }
-
-  private async createQuestion(hubConnection: HubConnection, text: string) {
-    await hubConnection.invoke('CreateQuestion', text);
-  }
-
-  private async approveQuestion(hubConnection: HubConnection, questionId: string) {
-    await hubConnection.invoke('ApproveQuestion', questionId);
-  }
-
-  private async upvoteQuestion(hubConnection: HubConnection, questionId: string) {
-    await hubConnection.invoke('UpvoteQuestion', questionId);
-  }
-
-  private async downvoteQuestion(hubConnection: HubConnection, questionId: string) {
-    await hubConnection.invoke('DownvoteQuestion', questionId);
-  }
-
-  private async removeQuestion(hubConnection: HubConnection, questionId: string) {
-    await hubConnection.invoke('RemoveQuestion', questionId);
+  private applyQuestionsChange(acc: Map<string, Question>, change: QuestionChange): Map<string, Question> {
+    if (change.type === 'added') {
+      return acc.set(change.question.questionId, change.question);
+    } else {
+      return acc.remove(change.id);
+    }
   }
 }
