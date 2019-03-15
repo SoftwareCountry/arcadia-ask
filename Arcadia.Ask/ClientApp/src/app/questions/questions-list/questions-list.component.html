@@ -1,3 +1,3 @@
 <ul *ngFor="let question of questions | async; trackBy: questionIdTrack">
-  <li>{{question.text}}</li>
+  <app-question-card [question]="question" (voted)="onVoted(question.questionId, $event)"></app-question-card>
 </ul>
