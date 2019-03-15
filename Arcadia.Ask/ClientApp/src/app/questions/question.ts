@@ -3,5 +3,5 @@ export interface Question {
     text: string;
     author: string;
     votes: number;
-    isApproved: string;
+    isApproved: boolean;
 }

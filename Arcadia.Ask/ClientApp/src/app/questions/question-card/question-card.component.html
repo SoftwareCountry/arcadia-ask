@@ -2,4 +2,8 @@
   <button (click)="vote(true)" [disabled]="didVote">▲</button>
   {{question.votes}}
   {{question.text}}
+  <span *ngIf="editable">
+    <button *ngIf="!question.isApproved" (click)="approve()">✓</button>
+    <button (click)="delete()">❌</button>
+  </span>
 </div>

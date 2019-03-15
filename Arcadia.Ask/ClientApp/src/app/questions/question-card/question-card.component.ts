@@ -10,10 +10,19 @@ import { Question } from '../question';
 export class QuestionCardComponent {
 
   @Input()
+  public editable: boolean;
+
+  @Input()
   public question: Question;
 
   @Output()
   public voted = new EventEmitter<boolean>();
+
+  @Output()
+  public deleted = new EventEmitter();
+
+  @Output()
+  public approved = new EventEmitter();
 
   public didVote = false;
 
@@ -22,6 +31,14 @@ export class QuestionCardComponent {
   public vote() {
     this.didVote = true;
     this.voted.emit(true);
+  }
+
+  public approve() {
+    this.approved.emit();
+  }
+
+  public delete() {
+    this.deleted.emit();
   }
 
 }

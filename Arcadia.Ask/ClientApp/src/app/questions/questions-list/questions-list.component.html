@@ -1,3 +1,10 @@
 <ul *ngFor="let question of questions | async; trackBy: questionIdTrack">
-  <app-question-card [question]="question" (voted)="onVoted(question.questionId, $event)"></app-question-card>
+  <app-question-card 
+    [question]="question"
+    [editable]="editable"
+    (voted)="onVoted(question.questionId, $event)"
+    (approved)="onApproved(question.questionId)"
+    (deleted)="onDeleted(question.questionId)"
+    >
+  </app-question-card>
 </ul>

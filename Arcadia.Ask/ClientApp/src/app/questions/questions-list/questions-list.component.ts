@@ -4,6 +4,7 @@ import { QuestionsStore } from '../questions-store.service';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { async } from '@angular/core/testing';
+import { Map } from 'immutable';
 
 @Component({
   selector: 'app-questions-list',
@@ -13,14 +14,16 @@ import { async } from '@angular/core/testing';
 })
 export class QuestionsListComponent implements OnInit {
 
+  @Input()
+  public readonly editable: boolean;
+
   public readonly questions: Observable<Question[]>;
 
   constructor(private readonly questionsStore: QuestionsStore) {
     this.questions = this.questionsStore
       .questions
       .pipe(
-        map(x => x.valueSeq().sortBy(q => -q.votes).toArray()),
-        tap(console.log)
+        map(x => this.extractQuestions(x))
       );
   }
 
@@ -39,4 +42,27 @@ export class QuestionsListComponent implements OnInit {
     }
   }
 
+  async onDeleted(questionId: string) {
+    await this.questionsStore.removeQuestion(questionId);
+  }
+
+  async onApproved(questionId: string) {
+    console.log('approved');
+    await this.questionsStore.approveQuestion(questionId);
+  }
+
+  private extractQuestions(source: Map<string, Question>) {
+    let seq = source.valueSeq();
+    if (!this.editable) {
+      seq = seq.filter(x => x.isApproved);
+    }
+
+    return seq.sort((a, b) => {
+      if (a.isApproved) {
+        return -1;
+      }
+
+      return b.votes - a.votes;
+    }).toArray();
+  }
 }
