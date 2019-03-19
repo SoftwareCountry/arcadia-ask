@@ -8,6 +8,8 @@ import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { QuestionsModule } from './questions/questions.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatToolbarModule } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -15,12 +17,14 @@ import { DashboardModule } from './dashboard/dashboard.module';
     NavMenuComponent
   ],
   imports: [
+    MatToolbarModule,
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
     QuestionsModule,
     DashboardModule,
-    RouterModule.forRoot([])
+    RouterModule.forRoot([]),
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
