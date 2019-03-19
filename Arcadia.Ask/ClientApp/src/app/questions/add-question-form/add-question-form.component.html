@@ -1,8 +1,10 @@
 <div>
   <form (ngSubmit)="onSubmit()" #questionForm="ngForm">
-    <div>
+    <mat-form-field>
       <input matInput placeholder="New question" type="text" id="question-text" name="question-text" required [(ngModel)]="model.text">
+    </mat-form-field>
+    <div>
+      <button mat-raised-button color="accent" type="submit" [disabled]="!questionForm.form.valid">Submit</button>
     </div>
-    <button type="submit" [disabled]="!questionForm.form.valid">Submit</button>
   </form>
 </div>
