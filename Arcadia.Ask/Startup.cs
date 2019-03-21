@@ -2,6 +2,8 @@ namespace Arcadia.Ask
 {
     using Arcadia.Ask.Hubs;
     using Arcadia.Ask.Questions;
+    using Arcadia.Ask.Storage;
+    using Microsoft.EntityFrameworkCore;
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -22,6 +24,7 @@ namespace Arcadia.Ask
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<DatabaseContext>(options => options.UseInMemoryDatabase());
             services.AddSingleton<IQuestionStorage, QuestionStorage>();
 
             services.AddSignalR();
