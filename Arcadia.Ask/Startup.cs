@@ -25,8 +25,12 @@ namespace Arcadia.Ask
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DatabaseContext>(options => options.UseInMemoryDatabase());
-            services.AddSingleton<IQuestionStorage, QuestionStorage>();
+            services.AddEntityFrameworkInMemoryDatabase();
+            services.AddDbContext<DatabaseContext>((sp, options) =>
+            {
+                options.UseInMemoryDatabase().UseInternalServiceProvider(sp);
+            });
+            services.AddTransient<IQuestionStorage, QuestionStorage>();
 
             services.AddSignalR();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
