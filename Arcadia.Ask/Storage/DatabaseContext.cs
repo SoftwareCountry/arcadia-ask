@@ -10,6 +10,8 @@ namespace Arcadia.Ask.Storage
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<VoteEntity>()
+                .HasKey(v => new { v.QuestionId, v.UserId });
             modelBuilder.Entity<QuestionEntity>().HasData(
                 new QuestionEntity
                 {
