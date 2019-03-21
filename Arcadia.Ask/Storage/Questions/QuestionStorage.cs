@@ -84,7 +84,7 @@
             await this._dbCtx.SaveChangesAsync();
         }
 
-        private Question ThrowQuestionNotFound(Guid _) => throw new InvalidOperationException("No question found");
+        private void ThrowQuestionNotFound(Guid _) => throw new InvalidOperationException("No question found");
 
         public async Task<QuestionDTO> ApproveQuestion(Guid questionId)
         {
