@@ -17,6 +17,6 @@ namespace Arcadia.Ask.Models.DTO
 
         public bool IsApproved { get; set; }
 
-        public IEnumerable<Guid> Votes { get; set; }
+        public int Votes { get; set; }
     }
 }
