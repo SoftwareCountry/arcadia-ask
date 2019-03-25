@@ -12,7 +12,7 @@ import { Map } from 'immutable';
   styleUrls: ['./questions-list.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class QuestionsListComponent implements OnInit {
+export class QuestionsListComponent {
 
   @Input()
   public readonly editable: boolean;
@@ -25,9 +25,6 @@ export class QuestionsListComponent implements OnInit {
       .pipe(
         map(x => this.extractQuestions(x))
       );
-  }
-
-  public ngOnInit() {
   }
 
   public questionIdTrack(index: number, x: Question) {

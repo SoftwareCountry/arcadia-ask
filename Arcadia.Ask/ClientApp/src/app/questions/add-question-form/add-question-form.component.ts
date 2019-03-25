@@ -8,15 +8,12 @@ import { QuestionsStore } from '../questions-store.service';
   styleUrls: ['./add-question-form.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AddQuestionFormComponent implements OnInit {
+export class AddQuestionFormComponent {
   public model = {
     text: ''
   };
 
   constructor(private readonly questionsStore: QuestionsStore) { }
-
-  public ngOnInit() {
-  }
 
   public onSubmit() {
     this.questionsStore.createQuestion(this.model.text).catch(x => console.error(x));

@@ -26,8 +26,6 @@ export class QuestionCardComponent {
 
   public didVote = false;
 
-  constructor() { }
-
   public vote() {
     this.didVote = true;
     this.voted.emit(true);
