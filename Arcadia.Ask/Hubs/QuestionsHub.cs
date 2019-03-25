@@ -21,7 +21,7 @@
 
         public async Task CreateQuestion(string text)
         {
-            var question = await this.questionsStorage.UpsertQuestion(new QuestionDTO()
+            var question = await this.questionsStorage.UpsertQuestion(new QuestionDto()
             {
                 Text = text,
                 Author = "author",
@@ -57,7 +57,7 @@
             await this.Clients.Client(this.Context.ConnectionId).QuestionIsChanged(question);
         }
 
-        public Task<IEnumerable<QuestionDTO>> GetQuestions()
+        public Task<IEnumerable<QuestionDto>> GetQuestions()
         {
             return this.questionsStorage.GetQuestionsForSpecificUser(this.currentUserGuid);
         }
