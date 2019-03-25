@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Arcadia.Ask.Models.DTO
+﻿namespace Arcadia.Ask.Models.DTO
 {
+    using System;
+
     public class QuestionDto
     {
         public Guid QuestionId { get; set; }

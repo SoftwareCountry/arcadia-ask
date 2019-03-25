@@ -1,17 +1,23 @@
-﻿using Arcadia.Ask.Models.Entities;
-using Microsoft.EntityFrameworkCore;
-using System;
-
-namespace Arcadia.Ask.Storage
+﻿namespace Arcadia.Ask.Storage
 {
+    using System;
+    using Microsoft.EntityFrameworkCore;
+    using Models.Entities;
+
     public class DatabaseContext : DbContext
     {
-        public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
+        public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
+        {
+        }
+
+        public DbSet<QuestionEntity> Questions { get; set; }
+
+        public DbSet<VoteEntity> Votes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<VoteEntity>()
-                .HasKey(v => new { v.QuestionId, v.UserId });
+                .HasKey(v => new {v.QuestionId, v.UserId});
 
             modelBuilder.Entity<QuestionEntity>().HasData(
                 new QuestionEntity
@@ -24,9 +30,5 @@ namespace Arcadia.Ask.Storage
                 }
             );
         }
-
-        public DbSet<QuestionEntity> Questions { get; set; }
-
-        public DbSet<VoteEntity> Votes { get; set; }
     }
 }

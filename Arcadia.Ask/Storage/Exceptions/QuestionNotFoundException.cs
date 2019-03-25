@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Arcadia.Ask.Storage.Exceptions
+﻿namespace Arcadia.Ask.Storage.Exceptions
 {
+    using System;
+
     public class QuestionNotFoundException : Exception
     {
-        public QuestionNotFoundException(Guid questionId) : base($"Question with id {questionId} was not found") { }
+        public QuestionNotFoundException(Guid questionId) : base($"Question with id {questionId} was not found")
+        {
+        }
     }
 }
