@@ -11,7 +11,7 @@
     public class QuestionsHub : Hub<IQuestionsClient>
     {
         private readonly IQuestionStorage questionsStorage;
-        private Guid currentUserGuid;
+        private readonly Guid currentUserGuid;
 
         public QuestionsHub(IQuestionStorage questionsStorage)
         {
