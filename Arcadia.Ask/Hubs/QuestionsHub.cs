@@ -3,63 +3,62 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Arcadia.Ask.Models.DTO;
-    using Storage.Questions;
-
     using Microsoft.AspNetCore.SignalR;
+    using Models.DTO;
+    using Storage.Questions;
 
     public class QuestionsHub : Hub<IQuestionsClient>
     {
-        private readonly IQuestionStorage questionsStorage;
         private readonly Guid currentUserGuid;
+        private readonly IQuestionStorage questionsStorage;
 
         public QuestionsHub(IQuestionStorage questionsStorage)
         {
             this.questionsStorage = questionsStorage;
-            this.currentUserGuid = Guid.NewGuid();
+            currentUserGuid = Guid.NewGuid();
         }
 
         public async Task CreateQuestion(string text)
         {
-            var question = await this.questionsStorage.UpsertQuestion(new QuestionDto()
+            var question = await questionsStorage.UpsertQuestion(new QuestionDto
             {
                 Text = text,
                 Author = "author",
                 IsApproved = false,
                 PostedAt = DateTimeOffset.Now
             });
-            await this.Clients.All.QuestionIsChanged(question);
+            await Clients.All.QuestionIsChanged(question);
         }
 
         public async Task ApproveQuestion(Guid questionId)
         {
-            var question = await this.questionsStorage.ApproveQuestion(questionId);
-            await this.Clients.All.QuestionIsApproved(questionId);
+            await questionsStorage.ApproveQuestion(questionId);
+            await Clients.All.QuestionIsApproved(questionId);
         }
 
         public async Task RemoveQuestion(Guid questionId)
         {
-            await this.questionsStorage.DeleteQuestion(questionId);
-            await this.Clients.All.QuestionIsRemoved(questionId);
+            await questionsStorage.DeleteQuestion(questionId);
+            await Clients.All.QuestionIsRemoved(questionId);
         }
 
         public async Task UpvoteQuestion(Guid questionId)
         {
-            var question = await this.questionsStorage.UpvoteQuestion(questionId, this.currentUserGuid);
-            await this.Clients.AllExcept(this.Context.ConnectionId).QuestionVotesAreChanged(question.QuestionId, question.Votes);
-            await this.Clients.Client(this.Context.ConnectionId).QuestionIsChanged(question);
+            var question = await questionsStorage.UpvoteQuestion(questionId, currentUserGuid);
+            await Clients.AllExcept(Context.ConnectionId).QuestionVotesAreChanged(question.QuestionId, question.Votes);
+            await Clients.Client(Context.ConnectionId).QuestionIsChanged(question);
         }
 
         public async Task DownvoteQuestion(Guid questionId)
         {
-            var question = await this.questionsStorage.DownvoteQuestion(questionId, this.currentUserGuid);
-            await this.Clients.AllExcept(this.Context.ConnectionId).QuestionVotesAreChanged(question.QuestionId, question.Votes);
-            await this.Clients.Client(this.Context.ConnectionId).QuestionIsChanged(question);
+            var question = await questionsStorage.DownvoteQuestion(questionId, currentUserGuid);
+            await Clients.AllExcept(Context.ConnectionId).QuestionVotesAreChanged(question.QuestionId, question.Votes);
+            await Clients.Client(Context.ConnectionId).QuestionIsChanged(question);
         }
 
         public Task<IEnumerable<QuestionDto>> GetQuestions()
         {
-            return this.questionsStorage.GetQuestionsForSpecificUser(this.currentUserGuid);
+            return questionsStorage.GetQuestionsForSpecificUser(currentUserGuid);
         }
     }
 }
