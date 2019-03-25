@@ -138,19 +138,38 @@ export class QuestionsStore implements OnDestroy {
   }
 
   private applyQuestionsChange(acc: Map<string, Question>, change: QuestionChange): Map<string, Question> {
+    var updateAcc: Map<string, Question>;
     switch (change.type) {
       case 'added':
-        return acc.set(change.question.questionId, change.question);
+        updateAcc = acc.set(change.question.questionId, change.question);
+        break;
       case 'removed':
-        return acc.remove(change.id);
+        updateAcc = acc.remove(change.id);
+        break;
       case 'votesChanged':
         const oldQuestion = acc.get(change.id);
-        const questionWithUpdatedVotes = new QuestionImpl(oldQuestion.text, oldQuestion.author, change.votes, oldQuestion.isApproved);
-        return acc.set(change.id, questionWithUpdatedVotes);
+        const questionWithUpdatedVotes = new QuestionImpl(
+          oldQuestion.text,
+          oldQuestion.author,
+          change.votes,
+          oldQuestion.isApproved,
+          oldQuestion.didVote
+        );
+        updateAcc = acc.set(change.id, questionWithUpdatedVotes);
+        break;
       case 'approved':
         const unapprovedQuestion = acc.get(change.id);
-        const approvedQuestion = new QuestionImpl(unapprovedQuestion.text, unapprovedQuestion.author, unapprovedQuestion.votes, true);
-        return acc.set(change.id, approvedQuestion);
+        const approvedQuestion = new QuestionImpl(
+          unapprovedQuestion.text,
+          unapprovedQuestion.author,
+          unapprovedQuestion.votes,
+          true,
+          unapprovedQuestion.didVote
+        );
+        updateAcc = acc.set(change.id, approvedQuestion);
+        break;
     }
+
+    return updateAcc;
   }
 }

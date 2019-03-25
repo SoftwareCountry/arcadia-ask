@@ -4,6 +4,7 @@ export interface Question {
     author: string;
     votes: number;
     isApproved: boolean;
+    didVote: boolean;
 }
 
 export class QuestionImpl implements Question {
@@ -12,16 +13,19 @@ export class QuestionImpl implements Question {
     author: string;
     votes: number;
     isApproved: boolean;
+    didVote: boolean;
 
     constructor(
         text: string,
         author: string,
         votes: number,
-        isApproved: boolean
+        isApproved: boolean,
+        didVote: boolean
     ) {
         this.text = text;
         this.author = author;
         this.votes = votes;
         this.isApproved = isApproved;
+        this.didVote = didVote;
     }
 }
