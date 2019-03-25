@@ -3,6 +3,7 @@
     using Arcadia.Ask.Models.DTO;
     using Arcadia.Ask.Models.Entities;
     using Arcadia.Ask.Storage;
+    using Arcadia.Ask.Storage.Exceptions;
     using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
@@ -51,7 +52,6 @@
             var foundQuestion = await this.FindQuestionEntityByIdAsync(questionId);
 
             if (foundQuestion == null)
-                //TODO: add custom exception
                 ThrowQuestionNotFound(questionId);
 
             return this.EntityToDTO(foundQuestion);
@@ -84,7 +84,7 @@
             await this._dbCtx.SaveChangesAsync();
         }
 
-        private void ThrowQuestionNotFound(Guid _) => throw new InvalidOperationException("No question found");
+        private void ThrowQuestionNotFound(Guid questionId) => throw new QuestionNotFoundException(questionId);
 
         public async Task<QuestionDTO> ApproveQuestion(Guid questionId)
         {
