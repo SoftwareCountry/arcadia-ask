@@ -1,5 +1,5 @@
 <div>
-  {{question.votes.length}}
+  {{question.votes && question.votes.length}}
   <button mat-icon-button color="primary" (click)="vote(true)" [disabled]="didVote">
     <mat-icon>thumb_up</mat-icon>
   </button>
