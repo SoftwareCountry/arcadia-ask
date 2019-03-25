@@ -1,7 +1,7 @@
 namespace Arcadia.Ask
 {
     using Arcadia.Ask.Hubs;
-    using Arcadia.Ask.Questions;
+    using Storage.Questions;
     using Arcadia.Ask.Storage;
     using Microsoft.EntityFrameworkCore;
 
