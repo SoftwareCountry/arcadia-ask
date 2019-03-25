@@ -48,8 +48,8 @@
                 PostedAt = entity.PostedAt,
                 QuestionId = entity.QuestionId,
                 Text = entity.Text,
-                Votes = entity.Votes?.Count ?? 0,
-                DidVote = entity.Votes?.Count(voteEntity => voteEntity.UserId == userId) > 0
+                Votes = entity.Votes?.Count(v => v.QuestionId == entity.QuestionId) ?? 0,
+                DidVote = entity.Votes?.Count(voteEntity => voteEntity.UserId == userId && voteEntity.QuestionId == entity.QuestionId) > 0
             };
         }
 

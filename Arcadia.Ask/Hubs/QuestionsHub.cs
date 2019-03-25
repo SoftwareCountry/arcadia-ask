@@ -1,7 +1,6 @@
 ﻿namespace Arcadia.Ask.Hubs
 {
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Arcadia.Ask.Models.DTO;
@@ -17,12 +16,7 @@
         public QuestionsHub(IQuestionStorage questionsStorage)
         {
             this.questionsStorage = questionsStorage;
-        }
-
-        public override Task OnConnectedAsync()
-        {
             this.currentUserGuid = Guid.NewGuid();
-            return Task.CompletedTask;
         }
 
         public async Task CreateQuestion(string text)
@@ -52,7 +46,8 @@
         public async Task UpvoteQuestion(Guid questionId)
         {
             var question = await this.questionsStorage.UpvoteQuestion(questionId, this.currentUserGuid);
-            await this.Clients.All.QuestionVotesAreChanged(question.QuestionId, question.Votes);
+            await this.Clients.AllExcept(this.Context.ConnectionId).QuestionVotesAreChanged(question.QuestionId, question.Votes);
+            await this.Clients.Client(this.Context.ConnectionId).QuestionIsChanged(question);
         }
 
         public async Task DownvoteQuestion(Guid questionId)
