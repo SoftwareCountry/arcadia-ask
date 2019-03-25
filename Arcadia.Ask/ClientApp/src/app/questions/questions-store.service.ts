@@ -13,9 +13,9 @@ type QuestionChange = { type: 'added', question: Question } | { type: 'removed',
   providedIn: 'root'
 })
 export class QuestionsStore implements OnDestroy {
-  private readonly hubConnection: Promise<HubConnection>;
-
   public questions: Observable<Map<string, Question>>;
+
+  private readonly hubConnection: Promise<HubConnection>;
 
   private questionsSubscription: Subscription;
 
