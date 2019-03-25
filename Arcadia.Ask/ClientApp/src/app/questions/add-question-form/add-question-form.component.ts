@@ -15,10 +15,10 @@ export class AddQuestionFormComponent implements OnInit {
 
   constructor(private readonly questionsStore: QuestionsStore) { }
 
-  ngOnInit() {
+  public ngOnInit() {
   }
 
-  onSubmit() {
+  public onSubmit() {
     this.questionsStore.createQuestion(this.model.text).catch(x => console.error(x));
   }
 }

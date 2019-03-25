@@ -27,14 +27,14 @@ export class QuestionsListComponent implements OnInit {
       );
   }
 
-  ngOnInit() {
+  public ngOnInit() {
   }
 
-  questionIdTrack(index: number, x: Question) {
+  public questionIdTrack(index: number, x: Question) {
     return x.questionId;
   }
 
-  async onVoted(questionId: string, upvoted: boolean) {
+  public async onVoted(questionId: string, upvoted: boolean) {
     if (upvoted) {
       await this.questionsStore.upvoteQuestion(questionId);
     } else {
@@ -42,11 +42,11 @@ export class QuestionsListComponent implements OnInit {
     }
   }
 
-  async onDeleted(questionId: string) {
+  public async onDeleted(questionId: string) {
     await this.questionsStore.removeQuestion(questionId);
   }
 
-  async onApproved(questionId: string) {
+  public async onApproved(questionId: string) {
     console.log('approved');
     await this.questionsStore.approveQuestion(questionId);
   }
