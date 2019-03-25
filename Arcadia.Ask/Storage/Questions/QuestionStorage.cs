@@ -1,4 +1,4 @@
-﻿namespace Arcadia.Ask.Questions
+﻿namespace Arcadia.Ask.Storage.Questions
 {
     using Arcadia.Ask.Models.DTO;
     using Arcadia.Ask.Models.Entities;
