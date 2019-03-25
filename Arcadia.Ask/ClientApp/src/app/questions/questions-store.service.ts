@@ -1,10 +1,8 @@
-import { Injectable, Inject, OnDestroy } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Question } from './question';
 import { HubConnectionBuilder, HubConnection } from '@aspnet/signalr';
-import { async } from '@angular/core/testing';
-import { Subject, Observable, from, merge, Subscription, ReplaySubject, ConnectableObservable } from 'rxjs';
-import { flatMap, concat, scan, map, switchMap, startWith, multicast } from 'rxjs/operators';
+import { Observable, from, Subscription, ReplaySubject, ConnectableObservable } from 'rxjs';
+import { flatMap, scan, switchMap, startWith, multicast } from 'rxjs/operators';
 import { Map } from 'immutable';
 
 type QuestionChange = { type: 'added', question: Question } | { type: 'removed', id: string };

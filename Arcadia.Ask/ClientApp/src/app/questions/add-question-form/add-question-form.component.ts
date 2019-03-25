@@ -1,5 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
-import { Question } from '../question';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { QuestionsStore } from '../questions-store.service';
 
 @Component({

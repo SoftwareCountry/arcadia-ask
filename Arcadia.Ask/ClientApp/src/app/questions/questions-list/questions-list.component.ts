@@ -1,9 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Question } from '../question';
 import { QuestionsStore } from '../questions-store.service';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
-import { async } from '@angular/core/testing';
+import { map } from 'rxjs/operators';
 import { Map } from 'immutable';
 
 @Component({
