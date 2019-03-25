@@ -19,12 +19,12 @@
             this.dbCtx = dbCtx;
         }
 
-        private QuestionDTO EntityToDTO(QuestionEntity entity)
+        private QuestionDto EntityToDto(QuestionEntity entity)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            return new QuestionDTO
+            return new QuestionDto
             {
                 Author = entity.Author,
                 IsApproved = entity.IsApproved,
@@ -36,12 +36,12 @@
             };
         }
 
-        private QuestionDTO EntityToDTO(QuestionEntity entity, Guid userId)
+        private QuestionDto EntityToDto(QuestionEntity entity, Guid userId)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
-            return new QuestionDTO
+            return new QuestionDto
             {
                 Author = entity.Author,
                 IsApproved = entity.IsApproved,
@@ -61,23 +61,23 @@
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<QuestionDTO>> GetQuestions()
+        public async Task<IEnumerable<QuestionDto>> GetQuestions()
         {
             var questions = await this.dbCtx.Questions.Include(q => q.Votes).ToListAsync();
-            return questions.Select(q => this.EntityToDTO(q));
+            return questions.Select(q => this.EntityToDto(q));
         }
 
-        public async Task<QuestionDTO> GetQuestion(Guid questionId)
+        public async Task<QuestionDto> GetQuestion(Guid questionId)
         {
             var foundQuestion = await this.FindQuestionEntityByIdAsync(questionId);
 
             if (foundQuestion == null)
                 ThrowQuestionNotFound(questionId);
 
-            return this.EntityToDTO(foundQuestion);
+            return this.EntityToDto(foundQuestion);
         }
 
-        public async Task<QuestionDTO> UpsertQuestion(QuestionDTO question)
+        public async Task<QuestionDto> UpsertQuestion(QuestionDto question)
         {
             var entity = new QuestionEntity()
             {
@@ -91,7 +91,7 @@
             await this.dbCtx.Questions.AddAsync(entity);
             await this.dbCtx.SaveChangesAsync();
 
-            return this.EntityToDTO(entity);
+            return this.EntityToDto(entity);
         }
 
         public async Task DeleteQuestion(Guid questionId)
@@ -108,7 +108,7 @@
 
         private void ThrowQuestionUpvoted(Guid questionId) => throw new QuestionUpvotedException(questionId);
 
-        public async Task<QuestionDTO> ApproveQuestion(Guid questionId)
+        public async Task<QuestionDto> ApproveQuestion(Guid questionId)
         {
             var entity = await this.FindQuestionEntityByIdAsync(questionId);
             if (entity == null)
@@ -116,10 +116,10 @@
 
             entity.IsApproved = true;
             await this.dbCtx.SaveChangesAsync();
-            return EntityToDTO(entity);
+            return EntityToDto(entity);
         }
 
-        public async Task<QuestionDTO> UpvoteQuestion(Guid questionId, Guid userId)
+        public async Task<QuestionDto> UpvoteQuestion(Guid questionId, Guid userId)
         {
             var entity = await FindQuestionEntityByIdAsync(questionId);
             if (entity == null)
@@ -131,7 +131,7 @@
             await this.dbCtx.Votes.AddAsync(new VoteEntity() { QuestionId = questionId, UserId = userId });
             await this.dbCtx.SaveChangesAsync();
 
-            var questionDto = EntityToDTO(entity);
+            var questionDto = EntityToDto(entity);
             questionDto.Votes = await this.dbCtx.Votes
                 .Where(v => v.QuestionId == questionId)
                 .Select(v => v.UserId)
@@ -141,7 +141,7 @@
             return questionDto;
         }
 
-        public async Task<QuestionDTO> DownvoteQuestion(Guid questionId, Guid userId)
+        public async Task<QuestionDto> DownvoteQuestion(Guid questionId, Guid userId)
         {
             var entity = await FindQuestionEntityByIdAsync(questionId);
             if (entity == null)
@@ -151,12 +151,12 @@
                 .Where(v => v.QuestionId == questionId && v.UserId == userId)
                 .FirstOrDefaultAsync();
             if (voteEntity == null)
-                return EntityToDTO(entity);
+                return EntityToDto(entity);
 
             this.dbCtx.Remove(voteEntity);
             await this.dbCtx.SaveChangesAsync();
 
-            var questionDto = EntityToDTO(entity);
+            var questionDto = EntityToDto(entity);
             questionDto.Votes = await this.dbCtx.Votes
                 .Where(v => v.QuestionId == questionId)
                 .Select(v => v.UserId)

@@ -7,18 +7,18 @@
 
     public interface IQuestionStorage
     {
-        Task<IEnumerable<QuestionDTO>> GetQuestions();
+        Task<IEnumerable<QuestionDto>> GetQuestions();
 
-        Task<QuestionDTO> GetQuestion(Guid questionId);
+        Task<QuestionDto> GetQuestion(Guid questionId);
         
-        Task<QuestionDTO> UpsertQuestion(QuestionDTO question);
+        Task<QuestionDto> UpsertQuestion(QuestionDto question);
 
         Task DeleteQuestion(Guid questionId);
 
-        Task<QuestionDTO> ApproveQuestion(Guid questionId);
+        Task<QuestionDto> ApproveQuestion(Guid questionId);
 
-        Task<QuestionDTO> UpvoteQuestion(Guid questionId, Guid userId);
+        Task<QuestionDto> UpvoteQuestion(Guid questionId, Guid userId);
 
-        Task<QuestionDTO> DownvoteQuestion(Guid questionId, Guid userId);
+        Task<QuestionDto> DownvoteQuestion(Guid questionId, Guid userId);
     }
 }

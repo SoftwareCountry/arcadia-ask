@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Arcadia.Ask.Models.DTO
 {
-    public class QuestionDTO
+    public class QuestionDto
     {
         public Guid QuestionId { get; set; }
 

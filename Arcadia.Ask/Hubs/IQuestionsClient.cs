@@ -7,7 +7,7 @@
 
     public interface IQuestionsClient
     {
-        Task QuestionIsChanged(QuestionDTO question);
+        Task QuestionIsChanged(QuestionDto question);
 
         Task QuestionIsRemoved(Guid questionId);
     }
