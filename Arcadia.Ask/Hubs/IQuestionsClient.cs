@@ -10,5 +10,9 @@
         Task QuestionIsChanged(QuestionDTO question);
 
         Task QuestionIsRemoved(Guid questionId);
+
+        Task QuestionVotesAreChanged(Guid questionId, int votes);
+
+        Task QuestionIsApproved(Guid questionId);
     }
 }

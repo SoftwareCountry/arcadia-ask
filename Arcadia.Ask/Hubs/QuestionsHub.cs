@@ -1,6 +1,7 @@
 ﻿namespace Arcadia.Ask.Hubs
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Arcadia.Ask.Models.DTO;
@@ -11,10 +12,17 @@
     public class QuestionsHub : Hub<IQuestionsClient>
     {
         private readonly IQuestionStorage questionsStorage;
+        private Guid currentUserGuid;
 
         public QuestionsHub(IQuestionStorage questionsStorage)
         {
             this.questionsStorage = questionsStorage;
+        }
+
+        public override Task OnConnectedAsync()
+        {
+            this.currentUserGuid = Guid.NewGuid();
+            return Task.CompletedTask;
         }
 
         public async Task CreateQuestion(string text)
@@ -32,7 +40,7 @@
         public async Task ApproveQuestion(Guid questionId)
         {
             var question = await this.questionsStorage.ApproveQuestion(questionId);
-            await this.Clients.All.QuestionIsChanged(question);
+            await this.Clients.All.QuestionIsApproved(questionId);
         }
 
         public async Task RemoveQuestion(Guid questionId)
@@ -43,19 +51,20 @@
 
         public async Task UpvoteQuestion(Guid questionId)
         {
-            var question = await this.questionsStorage.ChangeVotes(questionId, 1);
-            await this.Clients.All.QuestionIsChanged(question);
+            var question = await this.questionsStorage.UpvoteQuestion(questionId, this.currentUserGuid);
+            await this.Clients.All.QuestionVotesAreChanged(question.QuestionId, question.Votes);
         }
 
         public async Task DownvoteQuestion(Guid questionId)
         {
-            var question = await this.questionsStorage.ChangeVotes(questionId, -1);
-            await this.Clients.All.QuestionIsChanged(question);
+            var question = await this.questionsStorage.DownvoteQuestion(questionId, this.currentUserGuid);
+            await this.Clients.AllExcept(this.Context.ConnectionId).QuestionVotesAreChanged(question.QuestionId, question.Votes);
+            await this.Clients.Client(this.Context.ConnectionId).QuestionIsChanged(question);
         }
 
         public Task<IEnumerable<QuestionDTO>> GetQuestions()
         {
-            return this.questionsStorage.GetQuestions();
+            return this.questionsStorage.GetQuestionsForSpecificUser(this.currentUserGuid);
         }
     }
 }

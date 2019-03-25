@@ -1,13 +1,16 @@
 import { Injectable, Inject, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Question } from './question';
+import { Question, QuestionImpl } from './question';
 import { HubConnectionBuilder, HubConnection } from '@aspnet/signalr';
 import { async } from '@angular/core/testing';
 import { Subject, Observable, from, merge, Subscription, ReplaySubject, ConnectableObservable } from 'rxjs';
 import { flatMap, concat, scan, map, switchMap, startWith, multicast } from 'rxjs/operators';
 import { Map } from 'immutable';
 
-type QuestionChange = { type: 'added', question: Question } | { type: 'removed', id: string };
+type QuestionChange = { type: 'added', question: Question } |
+  { type: 'removed', id: string } |
+  { type: 'approved', id: string } |
+  { type: 'votesChanged', id: string, votes: number };
 
 @Injectable({
   providedIn: 'root'
@@ -104,7 +107,17 @@ export class QuestionsStore implements OnDestroy {
         subscriber.next({ type: 'removed', id });
       };
 
+      const onQuestionVotesChanged = (id: string, votes: number) => {
+        subscriber.next({ type: 'votesChanged', id, votes });
+      };
+
+      const onQuestionApproved = (id: string) => {
+        subscriber.next({ type: 'approved', id });
+      };
+
       hubConnection.on('QuestionIsChanged', onQuestionChanged);
+      hubConnection.on('QuestionVotesAreChanged', onQuestionVotesChanged);
+      hubConnection.on('QuestionIsApproved', onQuestionApproved);
       hubConnection.on('QuestionIsRemoved', onQuestionRemoved);
 
       hubConnection.onclose(error => {
@@ -117,16 +130,27 @@ export class QuestionsStore implements OnDestroy {
 
       return () => {
         hubConnection.off('QuestionIsChanged', onQuestionChanged);
+        hubConnection.off('QuestionVotesAreChanged', onQuestionVotesChanged);
+        hubConnection.off('QuestionIsApproved', onQuestionApproved);
         hubConnection.off('QuestionIsRemoved', onQuestionRemoved);
       };
     });
   }
 
   private applyQuestionsChange(acc: Map<string, Question>, change: QuestionChange): Map<string, Question> {
-    if (change.type === 'added') {
-      return acc.set(change.question.questionId, change.question);
-    } else {
-      return acc.remove(change.id);
+    switch (change.type) {
+      case 'added':
+        return acc.set(change.question.questionId, change.question);
+      case 'removed':
+        return acc.remove(change.id);
+      case 'votesChanged':
+        const oldQuestion = acc.get(change.id);
+        const questionWithUpdatedVotes = new QuestionImpl(oldQuestion.text, oldQuestion.author, change.votes, oldQuestion.isApproved);
+        return acc.set(change.id, questionWithUpdatedVotes);
+      case 'approved':
+        const unapprovedQuestion = acc.get(change.id);
+        const approvedQuestion = new QuestionImpl(unapprovedQuestion.text, unapprovedQuestion.author, unapprovedQuestion.votes, true);
+        return acc.set(change.id, approvedQuestion);
     }
   }
 }
