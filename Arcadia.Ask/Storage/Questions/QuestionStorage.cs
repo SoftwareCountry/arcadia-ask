@@ -31,6 +31,7 @@
                 PostedAt = entity.PostedAt,
                 QuestionId = entity.QuestionId,
                 Text = entity.Text,
+                Votes = entity.Votes?.Count ?? 0
             };
         }
 
@@ -38,12 +39,13 @@
         {
             return await this._dbCtx.Questions
                 .Where(q => q.QuestionId == questionId)
+                .Include(q => q.Votes)
                 .FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<QuestionDTO>> GetQuestions()
         {
-            var questions = await this._dbCtx.Questions.ToListAsync();
+            var questions = await this._dbCtx.Questions.Include(q => q.Votes).ToListAsync();
             return questions.Select(q => this.EntityToDTO(q));
         }
 
@@ -110,7 +112,7 @@
             questionDto.Votes = await this._dbCtx.Votes
                 .Where(v => v.QuestionId == questionId)
                 .Select(v => v.UserId)
-                .ToListAsync();
+                .CountAsync();
 
             return questionDto;
         }
