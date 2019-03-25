@@ -138,14 +138,16 @@ export class QuestionsStore implements OnDestroy {
   }
 
   private applyQuestionsChange(acc: Map<string, Question>, change: QuestionChange): Map<string, Question> {
-    var updateAcc: Map<string, Question>;
+    let updateAcc: Map<string, Question>;
     switch (change.type) {
       case 'added':
         updateAcc = acc.set(change.question.questionId, change.question);
         break;
+
       case 'removed':
         updateAcc = acc.remove(change.id);
         break;
+
       case 'votesChanged':
         const oldQuestion = acc.get(change.id);
         const questionWithUpdatedVotes = new QuestionImpl(
@@ -157,6 +159,7 @@ export class QuestionsStore implements OnDestroy {
         );
         updateAcc = acc.set(change.id, questionWithUpdatedVotes);
         break;
+
       case 'approved':
         const unapprovedQuestion = acc.get(change.id);
         const approvedQuestion = new QuestionImpl(
