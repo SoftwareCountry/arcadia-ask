@@ -19,10 +19,10 @@ export class QuestionCardComponent {
   public voted = new EventEmitter<boolean>();
 
   @Output()
-  public deleted = new EventEmitter();
+  public deleted = new EventEmitter<void>();
 
   @Output()
-  public approved = new EventEmitter();
+  public approved = new EventEmitter<void>();
 
   public didVote = false;
 
