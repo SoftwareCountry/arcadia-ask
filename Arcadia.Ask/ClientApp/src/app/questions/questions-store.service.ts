@@ -15,7 +15,7 @@ export class QuestionsStore implements OnDestroy {
 
   private readonly hubConnection: Promise<HubConnection>;
 
-  private questionsSubscription: Subscription;
+  private readonly questionsSubscription: Subscription;
 
   constructor() {
     this.hubConnection = this.connect();
