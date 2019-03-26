@@ -1,15 +1,14 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SpaServices.AngularCli;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-
 namespace Arcadia.Ask
 {
     using Arcadia.Ask.Hubs;
     using Arcadia.Ask.Questions;
+
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.SpaServices.AngularCli;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
 
     public class Startup
     {
@@ -53,17 +52,16 @@ namespace Arcadia.Ask
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
-            app.UseSignalR(
-                routes =>
-                    {
-                        routes.MapHub<QuestionsHub>("/questions");
-                    });
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<QuestionsHub>("/questions");
+            });
 
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                    name: "default",
-                    template: "{controller}/{action=Index}/{id?}");
+                    "default",
+                    "{controller}/{action=Index}/{id?}");
             });
 
             app.UseSpa(spa =>
@@ -75,7 +73,7 @@ namespace Arcadia.Ask
 
                 if (env.IsDevelopment())
                 {
-                    spa.UseAngularCliServer(npmScript: "start");
+                    spa.UseAngularCliServer("start");
                 }
             });
         }
