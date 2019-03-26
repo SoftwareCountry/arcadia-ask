@@ -17,7 +17,7 @@
         public int Votes { get; private set; }
 
         public Question(Guid questionId, string text, string author, DateTimeOffset postedAt)
-            :this(questionId, text, author, postedAt, false, 0)
+            : this(questionId, text, author, postedAt, false, 0)
         {
         }
 

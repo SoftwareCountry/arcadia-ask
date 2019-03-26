@@ -8,7 +8,7 @@
         Task<Question[]> GetQuestions();
 
         Task<Question> GetQuestion(Guid questionId);
-        
+
         Task<Question> UpsertQuestion(Question question);
 
         Task DeleteQuestion(Guid questionId);
