@@ -26,23 +26,23 @@ export class QuestionsStore implements OnDestroy {
     this.questionsSubscription = (this.questions as ConnectableObservable<Map<string, Question>>).connect();
   }
 
-  public async createQuestion(text: string) {
+  public createQuestion(text: string) {
     return this.invoke('CreateQuestion', text);
   }
 
-  public async approveQuestion(questionId: string) {
+  public approveQuestion(questionId: string) {
     return this.invoke('ApproveQuestion', questionId);
   }
 
-  public async upvoteQuestion(questionId: string) {
+  public upvoteQuestion(questionId: string) {
     return this.invoke('UpvoteQuestion', questionId);
   }
 
-  public async downvoteQuestion(questionId: string) {
+  public downvoteQuestion(questionId: string) {
     return this.invoke('DownvoteQuestion', questionId);
   }
 
-  public async removeQuestion(questionId: string) {
+  public removeQuestion(questionId: string) {
     return this.invoke('RemoveQuestion', questionId);
   }
 
