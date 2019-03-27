@@ -3,22 +3,22 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Models.DTO;
+    using Models.Entities;
 
     public interface IQuestionStorage
     {
-        Task<IEnumerable<QuestionDto>> GetQuestionsForSpecificUser(Guid userId);
+        Task<IEnumerable<QuestionEntity>> GetQuestions();
 
-        Task<QuestionDto> GetQuestionForSpecificUser(Guid questionId, Guid userId);
+        Task<QuestionEntity> GetQuestion(Guid questionId);
 
-        Task<QuestionDto> UpsertQuestion(QuestionDto question);
+        Task<QuestionEntity> UpsertQuestion(QuestionEntity question);
 
         Task DeleteQuestion(Guid questionId);
 
-        Task<QuestionDto> ApproveQuestion(Guid questionId);
+        Task<QuestionEntity> ApproveQuestion(Guid questionId);
 
-        Task<QuestionDto> UpvoteQuestion(Guid questionId, Guid userId);
+        Task<QuestionEntity> UpvoteQuestion(Guid questionId, Guid userId);
 
-        Task<QuestionDto> DownvoteQuestion(Guid questionId, Guid userId);
+        Task<QuestionEntity> DownvoteQuestion(Guid questionId, Guid userId);
     }
 }

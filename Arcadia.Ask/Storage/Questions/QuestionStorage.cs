@@ -6,7 +6,6 @@
     using System.Threading.Tasks;
     using Exceptions;
     using Microsoft.EntityFrameworkCore;
-    using Models.DTO;
     using Models.Entities;
 
     public class QuestionStorage : IQuestionStorage
@@ -18,37 +17,27 @@
             this.dbCtx = dbCtx;
         }
 
-        public async Task<IEnumerable<QuestionDto>> GetQuestionsForSpecificUser(Guid userId)
+        public async Task<IEnumerable<QuestionEntity>> GetQuestions()
         {
-            var questions = await dbCtx.Questions.Include(q => q.Votes).ToListAsync();
-            return questions.Select(q => EntityToDto(q, userId));
+            return await dbCtx.Questions.Include(q => q.Votes).ToListAsync();
         }
 
-        public async Task<QuestionDto> GetQuestionForSpecificUser(Guid questionId, Guid userId)
+        public async Task<QuestionEntity> GetQuestion(Guid questionId)
         {
             var foundQuestion = await FindQuestionEntityByIdAsync(questionId);
 
             if (foundQuestion == null)
                 ThrowQuestionNotFound(questionId);
 
-            return EntityToDto(foundQuestion, userId);
+            return foundQuestion;
         }
 
-        public async Task<QuestionDto> UpsertQuestion(QuestionDto question)
+        public async Task<QuestionEntity> UpsertQuestion(QuestionEntity question)
         {
-            var entity = new QuestionEntity
-            {
-                QuestionId = Guid.NewGuid(),
-                Author = question.Author,
-                IsApproved = question.IsApproved,
-                PostedAt = question.PostedAt,
-                Text = question.Text
-            };
-
-            await dbCtx.Questions.AddAsync(entity);
+            await dbCtx.AddAsync(question);
             await dbCtx.SaveChangesAsync();
 
-            return EntityToDto(entity);
+            return question;
         }
 
         public async Task DeleteQuestion(Guid questionId)
@@ -61,7 +50,7 @@
             await dbCtx.SaveChangesAsync();
         }
 
-        public async Task<QuestionDto> ApproveQuestion(Guid questionId)
+        public async Task<QuestionEntity> ApproveQuestion(Guid questionId)
         {
             var entity = await FindQuestionEntityByIdAsync(questionId);
             if (entity == null)
@@ -69,10 +58,10 @@
 
             entity.IsApproved = true;
             await dbCtx.SaveChangesAsync();
-            return EntityToDto(entity);
+            return entity;
         }
 
-        public async Task<QuestionDto> UpvoteQuestion(Guid questionId, Guid userId)
+        public async Task<QuestionEntity> UpvoteQuestion(Guid questionId, Guid userId)
         {
             var entity = await FindQuestionEntityByIdAsync(questionId);
             if (entity == null)
@@ -84,17 +73,10 @@
             await dbCtx.Votes.AddAsync(new VoteEntity { QuestionId = questionId, UserId = userId });
             await dbCtx.SaveChangesAsync();
 
-            var questionDto = EntityToDto(entity);
-            questionDto.Votes = await dbCtx.Votes
-                .Where(v => v.QuestionId == questionId)
-                .Select(v => v.UserId)
-                .CountAsync();
-            questionDto.DidVote = true;
-
-            return questionDto;
+            return await FindQuestionEntityByIdAsync(questionId);
         }
 
-        public async Task<QuestionDto> DownvoteQuestion(Guid questionId, Guid userId)
+        public async Task<QuestionEntity> DownvoteQuestion(Guid questionId, Guid userId)
         {
             var entity = await FindQuestionEntityByIdAsync(questionId);
             if (entity == null)
@@ -104,53 +86,12 @@
                 .Where(v => v.QuestionId == questionId && v.UserId == userId)
                 .FirstOrDefaultAsync();
             if (voteEntity == null)
-                return EntityToDto(entity);
+                return entity;
 
             dbCtx.Remove(voteEntity);
             await dbCtx.SaveChangesAsync();
 
-            var questionDto = EntityToDto(entity);
-            questionDto.Votes = await dbCtx.Votes
-                .Where(v => v.QuestionId == questionId)
-                .Select(v => v.UserId)
-                .CountAsync();
-            questionDto.DidVote = false;
-
-            return questionDto;
-        }
-
-        private QuestionDto EntityToDto(QuestionEntity entity)
-        {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
-
-            return new QuestionDto
-            {
-                Author = entity.Author,
-                IsApproved = entity.IsApproved,
-                PostedAt = entity.PostedAt,
-                QuestionId = entity.QuestionId,
-                Text = entity.Text,
-                Votes = entity.Votes?.Count ?? 0
-
-            };
-        }
-
-        private QuestionDto EntityToDto(QuestionEntity entity, Guid userId)
-        {
-            if (entity == null)
-                throw new ArgumentNullException(nameof(entity));
-
-            return new QuestionDto
-            {
-                Author = entity.Author,
-                IsApproved = entity.IsApproved,
-                PostedAt = entity.PostedAt,
-                QuestionId = entity.QuestionId,
-                Text = entity.Text,
-                Votes = entity.Votes?.Count(v => v.QuestionId == entity.QuestionId) ?? 0,
-                DidVote = entity.Votes?.Count(voteEntity => voteEntity.UserId == userId && voteEntity.QuestionId == entity.QuestionId) > 0
-            };
+            return await FindQuestionEntityByIdAsync(questionId);
         }
 
         private async Task<QuestionEntity> FindQuestionEntityByIdAsync(Guid questionId)
@@ -161,12 +102,12 @@
                 .FirstOrDefaultAsync();
         }
 
-        private void ThrowQuestionNotFound(Guid questionId)
+        private static void ThrowQuestionNotFound(Guid questionId)
         {
             throw new QuestionNotFoundException(questionId);
         }
 
-        private void ThrowQuestionUpvoted(Guid questionId)
+        private static void ThrowQuestionUpvoted(Guid questionId)
         {
             throw new QuestionUpvotedException(questionId);
         }
