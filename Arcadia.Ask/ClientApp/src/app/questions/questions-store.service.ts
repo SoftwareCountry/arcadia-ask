@@ -1,10 +1,8 @@
-import { Injectable, Inject, OnDestroy } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Question, QuestionImpl } from './question';
+import { Injectable, OnDestroy } from '@angular/core';
+import { Question } from './question';
 import { HubConnectionBuilder, HubConnection } from '@aspnet/signalr';
-import { async } from '@angular/core/testing';
-import { Subject, Observable, from, merge, Subscription, ReplaySubject, ConnectableObservable } from 'rxjs';
-import { flatMap, concat, scan, map, switchMap, startWith, multicast } from 'rxjs/operators';
+import { Observable, from, Subscription, ReplaySubject, ConnectableObservable } from 'rxjs';
+import { flatMap, scan, switchMap, startWith, multicast } from 'rxjs/operators';
 import { Map } from 'immutable';
 
 type QuestionChange = { type: 'added', question: Question } |
@@ -16,11 +14,11 @@ type QuestionChange = { type: 'added', question: Question } |
   providedIn: 'root'
 })
 export class QuestionsStore implements OnDestroy {
-  private readonly hubConnection: Promise<HubConnection>;
-
   public questions: Observable<Map<string, Question>>;
 
-  private questionsSubscription: Subscription;
+  private readonly hubConnection: Promise<HubConnection>;
+
+  private readonly questionsSubscription: Subscription;
 
   constructor() {
     this.hubConnection = this.connect();
@@ -35,19 +33,19 @@ export class QuestionsStore implements OnDestroy {
     return this.invoke('CreateQuestion', text);
   }
 
-  public async approveQuestion(questionId: string) {
+  public approveQuestion(questionId: string) {
     return this.invoke('ApproveQuestion', questionId);
   }
 
-  public async upvoteQuestion(questionId: string) {
+  public upvoteQuestion(questionId: string) {
     return this.invoke('UpvoteQuestion', questionId);
   }
 
-  public async downvoteQuestion(questionId: string) {
+  public downvoteQuestion(questionId: string) {
     return this.invoke('DownvoteQuestion', questionId);
   }
 
-  public async removeQuestion(questionId: string) {
+  public removeQuestion(questionId: string) {
     return this.invoke('RemoveQuestion', questionId);
   }
 

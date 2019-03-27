@@ -1,5 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
-import { Question } from '../question';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { QuestionsStore } from '../questions-store.service';
 
 @Component({
@@ -8,17 +7,14 @@ import { QuestionsStore } from '../questions-store.service';
   styleUrls: ['./add-question-form.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AddQuestionFormComponent implements OnInit {
+export class AddQuestionFormComponent {
   public model = {
     text: ''
   };
 
   constructor(private readonly questionsStore: QuestionsStore) { }
 
-  ngOnInit() {
-  }
-
-  onSubmit() {
+  public onSubmit() {
     this.questionsStore.createQuestion(this.model.text).catch(x => console.error(x));
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, EventEmitter, Output } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, EventEmitter, Output } from '@angular/core';
 import { Question } from '../question';
 
 @Component({
@@ -19,14 +19,12 @@ export class QuestionCardComponent {
   public voted = new EventEmitter<boolean>();
 
   @Output()
-  public deleted = new EventEmitter();
+  public deleted = new EventEmitter<void>();
 
   @Output()
-  public approved = new EventEmitter();
+  public approved = new EventEmitter<void>();
 
   public didVote = false;
-
-  constructor() { }
 
   public vote() {
     this.didVote = true;

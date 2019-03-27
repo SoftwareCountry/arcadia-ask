@@ -4,8 +4,11 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+
     using Exceptions;
+
     using Microsoft.EntityFrameworkCore;
+
     using Models.Entities;
 
     public class QuestionStorage : IQuestionStorage
@@ -19,97 +22,106 @@
 
         public async Task<IEnumerable<QuestionEntity>> GetQuestions()
         {
-            return await dbCtx.Questions.Include(q => q.Votes).ToListAsync();
+            return await this.dbCtx.Questions.Include(q => q.Votes).ToListAsync();
         }
 
         public async Task<QuestionEntity> GetQuestion(Guid questionId)
         {
-            var foundQuestion = await FindQuestionEntityByIdAsync(questionId);
+            var foundQuestion = await this.FindQuestionEntityByIdAsync(questionId);
 
             if (foundQuestion == null)
-                ThrowQuestionNotFound(questionId);
+            {
+                throw new QuestionNotFoundException(questionId);
+            }
 
             return foundQuestion;
         }
 
         public async Task<QuestionEntity> UpsertQuestion(QuestionEntity question)
         {
-            await dbCtx.AddAsync(question);
-            await dbCtx.SaveChangesAsync();
+            await this.dbCtx.AddAsync(question);
+            await this.dbCtx.SaveChangesAsync();
 
             return question;
         }
 
         public async Task DeleteQuestion(Guid questionId)
         {
-            var entity = await FindQuestionEntityByIdAsync(questionId);
-            if (entity == null)
-                ThrowQuestionNotFound(questionId);
+            var entity = await this.FindQuestionEntityByIdAsync(questionId);
 
-            dbCtx.Questions.Remove(entity);
-            await dbCtx.SaveChangesAsync();
+            if (entity == null)
+            {
+                throw new QuestionNotFoundException(questionId);
+            }
+
+            this.dbCtx.Questions.Remove(entity);
+            await this.dbCtx.SaveChangesAsync();
         }
 
         public async Task<QuestionEntity> ApproveQuestion(Guid questionId)
         {
-            var entity = await FindQuestionEntityByIdAsync(questionId);
+            var entity = await this.FindQuestionEntityByIdAsync(questionId);
+
             if (entity == null)
-                ThrowQuestionNotFound(questionId);
+            {
+                throw new QuestionNotFoundException(questionId);
+            }
 
             entity.IsApproved = true;
-            await dbCtx.SaveChangesAsync();
+            await this.dbCtx.SaveChangesAsync();
             return entity;
         }
 
         public async Task<QuestionEntity> UpvoteQuestion(Guid questionId, Guid userId)
         {
-            var entity = await FindQuestionEntityByIdAsync(questionId);
+            var entity = await this.FindQuestionEntityByIdAsync(questionId);
+
             if (entity == null)
-                ThrowQuestionNotFound(questionId);
+            {
+                throw new QuestionNotFoundException(questionId);
+            }
 
-            if (await dbCtx.Votes.Where(v => v.QuestionId == questionId && v.UserId == userId).FirstOrDefaultAsync() != null)
-                ThrowQuestionUpvoted(questionId);
+            if (await this.dbCtx.Votes.Where(v => v.QuestionId == questionId && v.UserId == userId).FirstOrDefaultAsync() != null)
+            {
+                throw new QuestionUpvotedException(questionId);
+            }
 
-            await dbCtx.Votes.AddAsync(new VoteEntity { QuestionId = questionId, UserId = userId });
-            await dbCtx.SaveChangesAsync();
+            await this.dbCtx.Votes.AddAsync(new VoteEntity { QuestionId = questionId, UserId = userId });
+            await this.dbCtx.SaveChangesAsync();
 
-            return await FindQuestionEntityByIdAsync(questionId);
+            return await this.FindQuestionEntityByIdAsync(questionId);
         }
 
         public async Task<QuestionEntity> DownvoteQuestion(Guid questionId, Guid userId)
         {
-            var entity = await FindQuestionEntityByIdAsync(questionId);
-            if (entity == null)
-                ThrowQuestionNotFound(questionId);
+            var entity = await this.FindQuestionEntityByIdAsync(questionId);
 
-            var voteEntity = await dbCtx.Votes
+            if (entity == null)
+            {
+                throw new QuestionNotFoundException(questionId);
+            }
+
+            var voteEntity = await this.dbCtx.Votes
                 .Where(v => v.QuestionId == questionId && v.UserId == userId)
                 .FirstOrDefaultAsync();
+
             if (voteEntity == null)
+            {
                 return entity;
+            }
 
-            dbCtx.Remove(voteEntity);
-            await dbCtx.SaveChangesAsync();
+            this.dbCtx.Remove(voteEntity);
+            await this.dbCtx.SaveChangesAsync();
 
-            return await FindQuestionEntityByIdAsync(questionId);
+            return await this.FindQuestionEntityByIdAsync(questionId);
         }
 
         private async Task<QuestionEntity> FindQuestionEntityByIdAsync(Guid questionId)
         {
-            return await dbCtx.Questions
+            return await this.dbCtx.Questions
                 .Where(q => q.QuestionId == questionId)
                 .Include(q => q.Votes)
                 .FirstOrDefaultAsync();
-        }
-
-        private static void ThrowQuestionNotFound(Guid questionId)
-        {
-            throw new QuestionNotFoundException(questionId);
-        }
-
-        private static void ThrowQuestionUpvoted(Guid questionId)
-        {
-            throw new QuestionUpvotedException(questionId);
         }
     }
 }

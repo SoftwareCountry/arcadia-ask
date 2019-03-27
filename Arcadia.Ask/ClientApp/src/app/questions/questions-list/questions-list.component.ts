@@ -1,9 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Question } from '../question';
 import { QuestionsStore } from '../questions-store.service';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
-import { async } from '@angular/core/testing';
+import { map } from 'rxjs/operators';
 import { Map } from 'immutable';
 
 @Component({
@@ -12,7 +11,7 @@ import { Map } from 'immutable';
   styleUrls: ['./questions-list.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class QuestionsListComponent implements OnInit {
+export class QuestionsListComponent {
 
   @Input()
   public readonly editable: boolean;
@@ -27,14 +26,11 @@ export class QuestionsListComponent implements OnInit {
       );
   }
 
-  ngOnInit() {
-  }
-
-  questionIdTrack(index: number, x: Question) {
+  public questionIdTrack(index: number, x: Question) {
     return x.questionId;
   }
 
-  async onVoted(questionId: string, upvoted: boolean) {
+  public async onVoted(questionId: string, upvoted: boolean) {
     if (upvoted) {
       await this.questionsStore.upvoteQuestion(questionId);
     } else {
@@ -42,11 +38,11 @@ export class QuestionsListComponent implements OnInit {
     }
   }
 
-  async onDeleted(questionId: string) {
+  public async onDeleted(questionId: string) {
     await this.questionsStore.removeQuestion(questionId);
   }
 
-  async onApproved(questionId: string) {
+  public async onApproved(questionId: string) {
     await this.questionsStore.approveQuestion(questionId);
   }
 
