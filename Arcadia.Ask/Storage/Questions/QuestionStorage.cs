@@ -88,7 +88,11 @@
                 throw new QuestionNotFoundException(questionId);
             }
 
-            if (await this.dbCtx.Votes.Where(v => v.QuestionId == questionId && v.UserId == userId).FirstOrDefaultAsync() != null)
+            if (
+                await this.dbCtx.Votes
+                    .Where(v => v.QuestionId == questionId && v.UserId == userId)
+                    .FirstOrDefaultAsync() != null
+            )
             {
                 throw new QuestionUpvotedException(questionId);
             }
