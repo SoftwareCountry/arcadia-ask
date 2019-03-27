@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Question } from './question';
+import { Question, QuestionImpl } from './question';
 import { HubConnectionBuilder, HubConnection } from '@aspnet/signalr';
 import { Observable, from, Subscription, ReplaySubject, ConnectableObservable } from 'rxjs';
 import { flatMap, scan, switchMap, startWith, multicast } from 'rxjs/operators';
