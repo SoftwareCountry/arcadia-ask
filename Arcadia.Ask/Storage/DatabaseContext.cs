@@ -1,7 +1,9 @@
 ﻿namespace Arcadia.Ask.Storage
 {
     using System;
+
     using Microsoft.EntityFrameworkCore;
+
     using Models.Entities;
 
     public class DatabaseContext : DbContext
@@ -17,7 +19,7 @@
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<VoteEntity>()
-                .HasKey(v => new {v.QuestionId, v.UserId});
+                .HasKey(v => new { v.QuestionId, v.UserId });
 
             modelBuilder.Entity<QuestionEntity>().HasData(
                 new QuestionEntity
