@@ -39,6 +39,7 @@ export class QuestionsListComponent {
   }
 
   public async onDeleted(questionId: string) {
+    console.log(questionId);
     await this.questionsStore.removeQuestion(questionId);
   }
 

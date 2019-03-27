@@ -149,6 +149,7 @@ export class QuestionsStore implements OnDestroy {
       case 'votesChanged':
         const oldQuestion = acc.get(change.id);
         const questionWithUpdatedVotes = new QuestionImpl(
+          oldQuestion.questionId,
           oldQuestion.text,
           oldQuestion.author,
           change.votes,
@@ -161,6 +162,7 @@ export class QuestionsStore implements OnDestroy {
       case 'approved':
         const unapprovedQuestion = acc.get(change.id);
         const approvedQuestion = new QuestionImpl(
+          unapprovedQuestion.questionId,
           unapprovedQuestion.text,
           unapprovedQuestion.author,
           unapprovedQuestion.votes,

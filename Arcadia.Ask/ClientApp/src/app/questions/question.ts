@@ -8,20 +8,22 @@ export interface Question {
 }
 
 export class QuestionImpl implements Question {
-    questionId: string;
-    text: string;
-    author: string;
-    votes: number;
-    isApproved: boolean;
-    didVote: boolean;
+    public questionId: string;
+    public text: string;
+    public author: string;
+    public votes: number;
+    public isApproved: boolean;
+    public didVote: boolean;
 
     constructor(
+        questionId: string,
         text: string,
         author: string,
         votes: number,
         isApproved: boolean,
         didVote: boolean
     ) {
+        this.questionId = questionId;
         this.text = text;
         this.author = author;
         this.votes = votes;
