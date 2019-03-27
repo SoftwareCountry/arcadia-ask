@@ -5,7 +5,8 @@ import { Observable, from, Subscription, ReplaySubject, ConnectableObservable } 
 import { flatMap, scan, switchMap, startWith, multicast } from 'rxjs/operators';
 import { Map } from 'immutable';
 
-type QuestionChange = { type: 'added', question: Question } |
+type QuestionChange =
+  { type: 'added', question: Question } |
   { type: 'removed', id: string } |
   { type: 'approved', id: string } |
   { type: 'votesChanged', id: string, votes: number };
