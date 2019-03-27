@@ -169,6 +169,8 @@ export class QuestionsStore implements OnDestroy {
         );
         updateAcc = acc.set(change.id, approvedQuestion);
         break;
+      default:
+        console.warn('unknown action');
     }
 
     return updateAcc;
