@@ -22,18 +22,22 @@
 
         public async Task<IEnumerable<QuestionEntity>> GetQuestions()
         {
-            return await this.dbCtx.Questions.Include(q => q.Votes).ToListAsync();
+            return await this.dbCtx.Questions
+                .Include(q => q.Votes)
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<QuestionEntity> GetQuestion(Guid questionId)
         {
-            var foundQuestion = await this.FindQuestionEntityByIdAsync(questionId);
+            var foundQuestion = await this.FindDetachedQuestionEntityByIdAsync(questionId);
 
             if (foundQuestion == null)
             {
                 throw new QuestionNotFoundException(questionId);
             }
 
+            this.DetachQuestionEntity(foundQuestion);
             return foundQuestion;
         }
 
@@ -42,6 +46,7 @@
             await this.dbCtx.AddAsync(question);
             await this.dbCtx.SaveChangesAsync();
 
+            this.DetachQuestionEntity(question);
             return question;
         }
 
@@ -69,6 +74,8 @@
 
             entity.IsApproved = true;
             await this.dbCtx.SaveChangesAsync();
+
+            this.DetachQuestionEntity(entity);
             return entity;
         }
 
@@ -89,7 +96,7 @@
             await this.dbCtx.Votes.AddAsync(new VoteEntity { QuestionId = questionId, UserId = userId });
             await this.dbCtx.SaveChangesAsync();
 
-            return await this.FindQuestionEntityByIdAsync(questionId);
+            return await this.FindDetachedQuestionEntityByIdAsync(questionId);
         }
 
         public async Task<QuestionEntity> DownvoteQuestion(Guid questionId, Guid userId)
@@ -113,7 +120,7 @@
             this.dbCtx.Remove(voteEntity);
             await this.dbCtx.SaveChangesAsync();
 
-            return await this.FindQuestionEntityByIdAsync(questionId);
+            return await this.FindDetachedQuestionEntityByIdAsync(questionId);
         }
 
         private async Task<QuestionEntity> FindQuestionEntityByIdAsync(Guid questionId)
@@ -122,6 +129,18 @@
                 .Where(q => q.QuestionId == questionId)
                 .Include(q => q.Votes)
                 .FirstOrDefaultAsync();
+        }
+
+        private async Task<QuestionEntity> FindDetachedQuestionEntityByIdAsync(Guid questionId)
+        {
+            var foundQuestion = await this.FindQuestionEntityByIdAsync(questionId);
+            this.DetachQuestionEntity(foundQuestion);
+            return foundQuestion;
+        }
+
+        private void DetachQuestionEntity(QuestionEntity question)
+        {
+            this.dbCtx.Entry(question).State = EntityState.Detached;
         }
     }
 }
