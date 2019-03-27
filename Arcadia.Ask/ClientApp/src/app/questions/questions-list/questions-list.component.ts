@@ -47,7 +47,6 @@ export class QuestionsListComponent implements OnInit {
   }
 
   async onApproved(questionId: string) {
-    console.log('approved');
     await this.questionsStore.approveQuestion(questionId);
   }
 
