@@ -6,12 +6,11 @@
     using System.Linq;
     using System.Threading.Tasks;
 
+    using Arcadia.Ask.Models.DTO;
+    using Arcadia.Ask.Models.Entities;
+    using Arcadia.Ask.Storage.Questions;
+
     using Microsoft.AspNetCore.SignalR;
-
-    using Models.DTO;
-    using Models.Entities;
-
-    using Storage.Questions;
 
     public class QuestionsHub : Hub<IQuestionsClient>
     {

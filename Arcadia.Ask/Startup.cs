@@ -1,14 +1,14 @@
 namespace Arcadia.Ask
 {
     using Arcadia.Ask.Hubs;
-    using Storage.Questions;
     using Arcadia.Ask.Storage;
-    using Microsoft.EntityFrameworkCore;
+    using Arcadia.Ask.Storage.Questions;
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.SpaServices.AngularCli;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
@@ -25,6 +25,7 @@ namespace Arcadia.Ask
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddEntityFrameworkInMemoryDatabase();
+
             services.AddDbContext<DatabaseContext>((sp, options) =>
             {
                 options

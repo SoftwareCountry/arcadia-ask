@@ -2,7 +2,8 @@
 {
     using System;
     using System.Threading.Tasks;
-    using Models.DTO;
+
+    using Arcadia.Ask.Models.DTO;
 
     public interface IQuestionsClient
     {

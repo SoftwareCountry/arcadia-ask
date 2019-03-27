@@ -2,9 +2,9 @@
 {
     using System;
 
-    using Microsoft.EntityFrameworkCore;
+    using Arcadia.Ask.Models.Entities;
 
-    using Models.Entities;
+    using Microsoft.EntityFrameworkCore;
 
     public class DatabaseContext : DbContext
     {

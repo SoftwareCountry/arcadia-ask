@@ -5,11 +5,10 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    using Exceptions;
+    using Arcadia.Ask.Models.Entities;
+    using Arcadia.Ask.Storage.Exceptions;
 
     using Microsoft.EntityFrameworkCore;
-
-    using Models.Entities;
 
     public class QuestionStorage : IQuestionStorage
     {
