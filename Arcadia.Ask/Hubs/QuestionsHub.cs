@@ -1,14 +1,16 @@
 ﻿namespace Arcadia.Ask.Hubs
 {
     using System;
-    using System.Linq;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
-    using Models.DTO;
-    using Models.Entities;
-    using Storage.Questions;
 
     using Microsoft.AspNetCore.SignalR;
+
+    using Arcadia.Ask.Models.DTO;
+    using Arcadia.Ask.Models.Entities;
+
+    using Storage.Questions;
 
     public class QuestionsHub : Hub<IQuestionsClient>
     {
@@ -21,20 +23,20 @@
 
         public async Task CreateQuestion(string text)
         {
-            var question = await questionsStorage.UpsertQuestion(new QuestionEntity()
+            var question = await this.questionsStorage.UpsertQuestion(new QuestionEntity
             {
                 Text = text,
                 Author = "author",
                 IsApproved = false,
                 PostedAt = DateTimeOffset.Now
             });
-            await Clients.All.QuestionIsChanged(EntityToDto(question));
+            await this.Clients.All.QuestionIsChanged(this.EntityToDto(question));
         }
 
         public async Task ApproveQuestion(Guid questionId)
         {
             var question = await this.questionsStorage.ApproveQuestion(questionId);
-            await this.Clients.All.QuestionIsChanged(EntityToDto(question));
+            await this.Clients.All.QuestionIsChanged(this.EntityToDto(question));
         }
 
         public async Task RemoveQuestion(Guid questionId)
@@ -45,29 +47,29 @@
 
         public async Task UpvoteQuestion(Guid questionId)
         {
-            var question = await questionsStorage.UpvoteQuestion(questionId, Guid.NewGuid());
-            var questionDto = EntityToDto(question);
+            var question = await this.questionsStorage.UpvoteQuestion(questionId, Guid.NewGuid());
+            var questionDto = this.EntityToDto(question);
 
-            await VotesAreChanged(questionDto);
+            await this.VotesAreChanged(questionDto);
         }
 
         public async Task DownvoteQuestion(Guid questionId)
         {
-            var question = await questionsStorage.DownvoteQuestion(questionId, Guid.NewGuid());
-            var questionDto = EntityToDto(question);
+            var question = await this.questionsStorage.DownvoteQuestion(questionId, Guid.NewGuid());
+            var questionDto = this.EntityToDto(question);
 
-            await VotesAreChanged(questionDto);
+            await this.VotesAreChanged(questionDto);
         }
 
         public async Task<IEnumerable<QuestionDto>> GetQuestions()
         {
-            var questions = await questionsStorage.GetQuestions();
-            return questions.Select(q => EntityToDto(q));
+            var questions = await this.questionsStorage.GetQuestions();
+            return questions.Select(q => this.EntityToDto(q));
         }
 
         private async Task VotesAreChanged(QuestionDto question)
         {
-            await Clients.All.QuestionIsChanged(question);
+            await this.Clients.All.QuestionIsChanged(question);
         }
 
         private QuestionDto EntityToDto(QuestionEntity entity)
@@ -77,14 +79,14 @@
                 throw new ArgumentNullException(nameof(entity));
             }
 
-            return new QuestionDto()
+            return new QuestionDto
             {
                 QuestionId = entity.QuestionId,
                 Author = entity.Author,
                 Text = entity.Text,
                 PostedAt = entity.PostedAt,
                 IsApproved = entity.IsApproved,
-                Votes = entity.Votes?.Count ?? 0,
+                Votes = entity.Votes?.Count ?? 0
             };
         }
     }

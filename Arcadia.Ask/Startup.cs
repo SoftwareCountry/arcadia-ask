@@ -27,7 +27,9 @@ namespace Arcadia.Ask
             services.AddEntityFrameworkInMemoryDatabase();
             services.AddDbContext<DatabaseContext>((sp, options) =>
             {
-                options.UseInMemoryDatabase().UseInternalServiceProvider(sp);
+                options
+                    .UseInMemoryDatabase("InMemoryDatabase")
+                    .UseInternalServiceProvider(sp);
             });
             services.AddTransient<IQuestionStorage, QuestionStorage>();
 

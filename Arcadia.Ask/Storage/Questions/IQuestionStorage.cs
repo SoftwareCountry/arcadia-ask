@@ -1,6 +1,5 @@
 ﻿namespace Arcadia.Ask.Storage.Questions
 {
-    using Arcadia.Ask.Models.DTO;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
