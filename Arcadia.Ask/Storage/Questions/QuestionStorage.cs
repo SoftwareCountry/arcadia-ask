@@ -34,7 +34,7 @@
 
             if (foundQuestion == null)
             {
-                ThrowQuestionNotFound(questionId);
+                throw new QuestionNotFoundException(questionId);
             }
 
             this.DetachEntity(foundQuestion);
@@ -56,7 +56,7 @@
 
             if (entity == null)
             {
-                ThrowQuestionNotFound(questionId);
+                throw new QuestionNotFoundException(questionId);
             }
 
             this.dbCtx.Questions.Remove(entity);
@@ -69,7 +69,7 @@
 
             if (entity == null)
             {
-                ThrowQuestionNotFound(questionId);
+                throw new QuestionNotFoundException(questionId);
             }
 
             entity.IsApproved = true;
@@ -85,7 +85,7 @@
 
             if (entity == null)
             {
-                ThrowQuestionNotFound(questionId);
+                throw new QuestionNotFoundException(questionId);
             }
 
             if (
@@ -94,7 +94,7 @@
                     .FirstOrDefaultAsync() != null
                 )
             {
-                ThrowQuestionUpvoted(questionId);
+                throw new QuestionUpvotedException(questionId);
             }
 
             await this.dbCtx.Votes.AddAsync(new VoteEntity
@@ -111,7 +111,7 @@
 
             if (entity == null)
             {
-                ThrowQuestionNotFound(questionId);
+                throw new QuestionNotFoundException(questionId);
             }
 
             var voteEntity = await this.dbCtx.Votes
@@ -141,16 +141,6 @@
         private void DetachEntity(QuestionEntity entity)
         {
             this.dbCtx.Entry(entity).State = EntityState.Detached;
-        }
-
-        private static void ThrowQuestionNotFound(Guid questionId)
-        {
-            throw new QuestionNotFoundException(questionId);
-        }
-
-        private static void ThrowQuestionUpvoted(Guid questionId)
-        {
-            throw new QuestionUpvotedException(questionId);
         }
     }
 }
