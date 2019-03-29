@@ -1,9 +1,8 @@
 ﻿namespace Arcadia.Ask.Models.Entities
 {
-    using System.ComponentModel.DataAnnotations;
     using System;
+    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-
 
     public class VoteEntity
     {

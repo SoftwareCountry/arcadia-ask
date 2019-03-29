@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-
-namespace Arcadia.Ask.Models.Entities
+﻿namespace Arcadia.Ask.Models.Entities
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+
     public class QuestionEntity
     {
         [Key]

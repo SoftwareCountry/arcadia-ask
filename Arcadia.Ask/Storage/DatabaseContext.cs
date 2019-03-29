@@ -1,12 +1,16 @@
-﻿using Arcadia.Ask.Models.Entities;
-using Microsoft.EntityFrameworkCore;
-using System;
-
-namespace Arcadia.Ask.Storage
+﻿namespace Arcadia.Ask.Storage
 {
+    using System;
+
+    using Arcadia.Ask.Models.Entities;
+
+    using Microsoft.EntityFrameworkCore;
+
     public class DatabaseContext : DbContext
     {
-        public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options) { }
+        public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
+        {
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

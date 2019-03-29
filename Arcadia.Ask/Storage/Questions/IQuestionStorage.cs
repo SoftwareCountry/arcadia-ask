@@ -3,7 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Models.Entities;
+
+    using Arcadia.Ask.Models.Entities;
 
     public interface IQuestionStorage
     {
