@@ -43,13 +43,13 @@
 
         public async Task UpvoteQuestion(Guid questionId)
         {
-            var question = await this.questionsStorage.ChangeVotes(questionId, 1);
+            var question = await this.questionsStorage.UpvoteQuestion(questionId, Guid.NewGuid());
             await this.Clients.All.QuestionIsChanged(question);
         }
 
         public async Task DownvoteQuestion(Guid questionId)
         {
-            var question = await this.questionsStorage.ChangeVotes(questionId, -1);
+            var question = await this.questionsStorage.DownvoteQuestion(questionId, Guid.NewGuid());
             await this.Clients.All.QuestionIsChanged(question);
         }
 

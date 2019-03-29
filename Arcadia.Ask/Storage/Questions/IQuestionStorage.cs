@@ -17,6 +17,8 @@
 
         Task<QuestionDTO> ApproveQuestion(Guid questionId);
 
-        Task<QuestionDTO> ChangeVotes(Guid questionId, int diff);
+        Task<QuestionDTO> UpvoteQuestion(Guid questionId, Guid userId);
+
+        Task<QuestionDTO> DownvoteQuestion(Guid questionId, Guid userId);
     }
 }

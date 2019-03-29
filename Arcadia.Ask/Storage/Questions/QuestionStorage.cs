@@ -31,7 +31,25 @@
                 PostedAt = entity.PostedAt,
                 QuestionId = entity.QuestionId,
                 Text = entity.Text,
-                Votes = entity.Votes?.Count ?? 0
+                Votes = entity.Votes?.Count ?? 0,
+
+            };
+        }
+
+        private QuestionDTO EntityToDTO(QuestionEntity entity, Guid userId)
+        {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            return new QuestionDTO
+            {
+                Author = entity.Author,
+                IsApproved = entity.IsApproved,
+                PostedAt = entity.PostedAt,
+                QuestionId = entity.QuestionId,
+                Text = entity.Text,
+                Votes = entity.Votes?.Count ?? 0,
+                DidVote = entity.Votes?.Count(voteEntity => voteEntity.UserId == userId) > 0
             };
         }
 
@@ -88,6 +106,8 @@
 
         private void ThrowQuestionNotFound(Guid questionId) => throw new QuestionNotFoundException(questionId);
 
+        private void ThrowQuestionUpvoted(Guid questionId) => throw new QuestionUpvotedException(questionId);
+
         public async Task<QuestionDTO> ApproveQuestion(Guid questionId)
         {
             var entity = await this.FindQuestionEntityByIdAsync(questionId);
@@ -99,13 +119,16 @@
             return EntityToDTO(entity);
         }
 
-        public async Task<QuestionDTO> ChangeVotes(Guid questionId, int diff)
+        public async Task<QuestionDTO> UpvoteQuestion(Guid questionId, Guid userId)
         {
             var entity = await FindQuestionEntityByIdAsync(questionId);
             if (entity == null)
                 this.ThrowQuestionNotFound(questionId);
 
-            await this._dbCtx.Votes.AddAsync(new VoteEntity() { QuestionId = questionId, UserId = Guid.NewGuid() });
+            if (await this._dbCtx.Votes.Where(v => v.QuestionId == questionId && v.UserId == userId).FirstOrDefaultAsync() != null)
+                this.ThrowQuestionUpvoted(questionId);
+
+            await this._dbCtx.Votes.AddAsync(new VoteEntity() { QuestionId = questionId, UserId = userId });
             await this._dbCtx.SaveChangesAsync();
 
             var questionDto = EntityToDTO(entity);
@@ -113,6 +136,32 @@
                 .Where(v => v.QuestionId == questionId)
                 .Select(v => v.UserId)
                 .CountAsync();
+            questionDto.DidVote = true;
+
+            return questionDto;
+        }
+
+        public async Task<QuestionDTO> DownvoteQuestion(Guid questionId, Guid userId)
+        {
+            var entity = await FindQuestionEntityByIdAsync(questionId);
+            if (entity == null)
+                this.ThrowQuestionNotFound(questionId);
+
+            var voteEntity = await this._dbCtx.Votes
+                .Where(v => v.QuestionId == questionId && v.UserId == userId)
+                .FirstOrDefaultAsync();
+            if (voteEntity == null)
+                return EntityToDTO(entity);
+
+            this._dbCtx.Remove(voteEntity);
+            await this._dbCtx.SaveChangesAsync();
+
+            var questionDto = EntityToDTO(entity);
+            questionDto.Votes = await this._dbCtx.Votes
+                .Where(v => v.QuestionId == questionId)
+                .Select(v => v.UserId)
+                .CountAsync();
+            questionDto.DidVote = false;
 
             return questionDto;
         }
