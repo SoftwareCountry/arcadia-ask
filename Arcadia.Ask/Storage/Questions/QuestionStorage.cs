@@ -22,7 +22,10 @@
 
         public async Task<IEnumerable<QuestionEntity>> GetQuestions()
         {
-            return await this.dbCtx.Questions.Include(q => q.Votes).ToListAsync();
+            return await this.dbCtx.Questions
+                .Include(q => q.Votes)
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<QuestionEntity> GetQuestion(Guid questionId)
@@ -34,6 +37,7 @@
                 ThrowQuestionNotFound(questionId);
             }
 
+            this.DetachEntity(foundQuestion);
             return foundQuestion;
         }
 
@@ -42,6 +46,7 @@
             await this.dbCtx.AddAsync(question);
             await this.dbCtx.SaveChangesAsync();
 
+            this.DetachEntity(question);
             return question;
         }
 
@@ -69,6 +74,8 @@
 
             entity.IsApproved = true;
             await this.dbCtx.SaveChangesAsync();
+
+            this.DetachEntity(entity);
             return entity;
         }
 
@@ -90,7 +97,8 @@
                 { QuestionId = questionId, UserId = userId });
             await this.dbCtx.SaveChangesAsync();
 
-            return await this.FindQuestionEntityByIdAsync(questionId);
+            this.DetachEntity(entity);
+            return entity;
         }
 
         public async Task<QuestionEntity> DownvoteQuestion(Guid questionId, Guid userId)
@@ -114,7 +122,8 @@
             this.dbCtx.Remove(voteEntity);
             await this.dbCtx.SaveChangesAsync();
 
-            return await this.FindQuestionEntityByIdAsync(questionId);
+            this.DetachEntity(entity);
+            return entity;
         }
 
         private async Task<QuestionEntity> FindQuestionEntityByIdAsync(Guid questionId)
@@ -123,6 +132,11 @@
                 .Where(q => q.QuestionId == questionId)
                 .Include(q => q.Votes)
                 .FirstOrDefaultAsync();
+        }
+
+        private void DetachEntity(QuestionEntity entity)
+        {
+            this.dbCtx.Entry(entity).State = EntityState.Detached;
         }
 
         private static void ThrowQuestionNotFound(Guid questionId)
