@@ -2,8 +2,8 @@
 
 namespace Arcadia.Ask.Storage.Exceptions
 {
-    public class QuestionUpvotedException : Exception
+    public class QuestionVotedException : Exception
     {
-        public QuestionUpvotedException(Guid questionId) : base($"Question with id {questionId} already upvoted by user") { }
+        public QuestionVotedException(Guid questionId) : base($"Question with id {questionId} already upvoted by user") { }
     }
 }
