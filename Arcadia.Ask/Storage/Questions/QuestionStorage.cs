@@ -5,11 +5,10 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    using Exceptions;
+    using Arcadia.Ask.Models.Entities;
+    using Arcadia.Ask.Storage.Exceptions;
 
     using Microsoft.EntityFrameworkCore;
-
-    using Arcadia.Ask.Models.Entities;
 
     public class QuestionStorage : IQuestionStorage
     {
@@ -115,7 +114,7 @@
                 await this.dbCtx.Votes
                     .Where(v => v.QuestionId == questionId && v.UserId == userId)
                     .FirstOrDefaultAsync() != null
-                )
+            )
             {
                 throw new QuestionVotedException(questionId);
             }
@@ -131,7 +130,7 @@
             this.DetachEntity(entity);
             return entity;
         }
-        
+
         private enum VoteStatus
         {
             Upvoted,
