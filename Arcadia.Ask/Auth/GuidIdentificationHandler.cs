@@ -1,11 +1,10 @@
-﻿using System.Threading.Tasks;
-
-namespace Arcadia.Ask.Auth
+﻿namespace Arcadia.Ask.Auth
 {
     using System;
     using System.Net.Http.Headers;
     using System.Security.Claims;
     using System.Text.Encodings.Web;
+    using System.Threading.Tasks;
 
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.Extensions.Logging;
@@ -50,7 +49,7 @@ namespace Arcadia.Ask.Auth
             {
                 Guid.Parse(guid);
             }
-            catch(FormatException)
+            catch (FormatException)
             {
                 return Task.FromResult(AuthenticateResult.Fail("Invalid guid format"));
             }
