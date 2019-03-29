@@ -117,7 +117,7 @@
                     .FirstOrDefaultAsync() != null
                 )
             {
-                throw new QuestionUpvotedException(questionId);
+                throw new QuestionVotedException(questionId);
             }
 
             await this.dbCtx.Votes.AddAsync(new VoteEntity
