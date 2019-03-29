@@ -24,7 +24,7 @@
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {
             const string authorizationHeaderName = "Authorization";
-            const string schemeName = "guid";
+            const string schemeName = "Guid";
 
             if (!this.Request.Headers.ContainsKey(authorizationHeaderName))
             {
@@ -40,7 +40,7 @@
 
             var guid = authHeaderValue.Parameter;
 
-            if (String.IsNullOrEmpty(guid))
+            if (string.IsNullOrEmpty(guid))
             {
                 return Task.FromResult(AuthenticateResult.Fail("no Guid was provided"));
             }
