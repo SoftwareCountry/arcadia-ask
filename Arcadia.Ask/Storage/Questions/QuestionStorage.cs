@@ -81,6 +81,29 @@
 
         public async Task<QuestionEntity> UpvoteQuestion(Guid questionId, Guid userId)
         {
+            return await this.VoteForQuestion(questionId, userId, VoteStatus.Upvoted);
+        }
+
+        public async Task<QuestionEntity> DownvoteQuestion(Guid questionId, Guid userId)
+        {
+            return await this.VoteForQuestion(questionId, userId, VoteStatus.Downvoted);
+        }
+
+        private async Task<QuestionEntity> FindQuestionEntityByIdAsync(Guid questionId)
+        {
+            return await this.dbCtx.Questions
+                .Where(q => q.QuestionId == questionId)
+                .Include(q => q.Votes)
+                .FirstOrDefaultAsync();
+        }
+
+        private void DetachEntity(QuestionEntity entity)
+        {
+            this.dbCtx.Entry(entity).State = EntityState.Detached;
+        }
+
+        private async Task<QuestionEntity> VoteForQuestion(Guid questionId, Guid userId, VoteStatus voteStatus)
+        {
             var entity = await this.FindQuestionEntityByIdAsync(questionId);
 
             if (entity == null)
@@ -98,49 +121,21 @@
             }
 
             await this.dbCtx.Votes.AddAsync(new VoteEntity
-                { QuestionId = questionId, UserId = userId });
+            {
+                QuestionId = questionId,
+                UserId = userId,
+                IsUpvoted = voteStatus == VoteStatus.Upvoted
+            });
             await this.dbCtx.SaveChangesAsync();
 
             this.DetachEntity(entity);
             return entity;
         }
-
-        public async Task<QuestionEntity> DownvoteQuestion(Guid questionId, Guid userId)
+        
+        private enum VoteStatus
         {
-            var entity = await this.FindQuestionEntityByIdAsync(questionId);
-
-            if (entity == null)
-            {
-                throw new QuestionNotFoundException(questionId);
-            }
-
-            var voteEntity = await this.dbCtx.Votes
-                .Where(v => v.QuestionId == questionId && v.UserId == userId)
-                .FirstOrDefaultAsync();
-
-            if (voteEntity == null)
-            {
-                return entity;
-            }
-
-            this.dbCtx.Remove(voteEntity);
-            await this.dbCtx.SaveChangesAsync();
-
-            this.DetachEntity(entity);
-            return entity;
-        }
-
-        private async Task<QuestionEntity> FindQuestionEntityByIdAsync(Guid questionId)
-        {
-            return await this.dbCtx.Questions
-                .Where(q => q.QuestionId == questionId)
-                .Include(q => q.Votes)
-                .FirstOrDefaultAsync();
-        }
-
-        private void DetachEntity(QuestionEntity entity)
-        {
-            this.dbCtx.Entry(entity).State = EntityState.Detached;
+            Upvoted,
+            Downvoted
         }
     }
 }
