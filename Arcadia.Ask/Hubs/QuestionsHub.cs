@@ -9,8 +9,10 @@
     using Arcadia.Ask.Models.Entities;
     using Arcadia.Ask.Storage.Questions;
 
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.SignalR;
 
+    [Authorize]
     public class QuestionsHub : Hub<IQuestionsClient>
     {
         private readonly IQuestionStorage questionsStorage;
@@ -46,7 +48,7 @@
 
         public async Task UpvoteQuestion(Guid questionId)
         {
-            var question = await this.questionsStorage.UpvoteQuestion(questionId, Guid.NewGuid());
+            var question = await this.questionsStorage.UpvoteQuestion(questionId, this.CurrentUserGuid);
             var questionDto = this.EntityToDto(question);
 
             await this.VotesAreChanged(questionDto);
@@ -54,7 +56,7 @@
 
         public async Task DownvoteQuestion(Guid questionId)
         {
-            var question = await this.questionsStorage.DownvoteQuestion(questionId, Guid.NewGuid());
+            var question = await this.questionsStorage.DownvoteQuestion(questionId, this.CurrentUserGuid);
             var questionDto = this.EntityToDto(question);
 
             await this.VotesAreChanged(questionDto);
@@ -88,5 +90,7 @@
                 Votes = entity.Votes?.Count ?? 0
             };
         }
+
+        private Guid CurrentUserGuid => Guid.Parse(this.Context.User.Identity.Name);
     }
 }
