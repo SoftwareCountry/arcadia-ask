@@ -1,26 +1,48 @@
 ﻿namespace Arcadia.Ask.Hubs
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
+    using Arcadia.Ask.Models.DTO;
+    using Arcadia.Ask.Models.Entities;
+    using Arcadia.Ask.Storage.Questions;
+
     using Microsoft.AspNetCore.SignalR;
-
-    using Models.DTO;
-    using Models.Entities;
-
-    using Storage.Questions;
 
     public class QuestionsHub : Hub<IQuestionsClient>
     {
-        private readonly Guid currentUserGuid;
         private readonly IQuestionStorage questionsStorage;
+
+        private static readonly ConcurrentDictionary<string, Guid> guidByConnection =
+            new ConcurrentDictionary<string, Guid>();
+
+        private Guid CurrentUserGuid
+        {
+            get
+            {
+                guidByConnection.TryGetValue(this.Context.ConnectionId, out var guid);
+                return guid;
+            }
+        }
 
         public QuestionsHub(IQuestionStorage questionsStorage)
         {
             this.questionsStorage = questionsStorage;
-            this.currentUserGuid = Guid.NewGuid();
+        }
+
+        public override Task OnConnectedAsync()
+        {
+            guidByConnection.TryAdd(this.Context.ConnectionId, Guid.NewGuid());
+            return Task.CompletedTask;
+        }
+
+        public override Task OnDisconnectedAsync(Exception exception)
+        {
+            guidByConnection.TryRemove(this.Context.ConnectionId, out _);
+            return Task.CompletedTask;
         }
 
         public async Task CreateQuestion(string text)
@@ -49,16 +71,16 @@
 
         public async Task UpvoteQuestion(Guid questionId)
         {
-            var question = await this.questionsStorage.UpvoteQuestion(questionId, this.currentUserGuid);
-            var questionDto = this.EntityToDtoForSpecificUser(question, this.currentUserGuid);
+            var question = await this.questionsStorage.UpvoteQuestion(questionId, this.CurrentUserGuid);
+            var questionDto = this.EntityToDtoForSpecificUser(question, this.CurrentUserGuid);
 
             await this.VotesAreChanged(questionDto);
         }
 
         public async Task DownvoteQuestion(Guid questionId)
         {
-            var question = await this.questionsStorage.DownvoteQuestion(questionId, this.currentUserGuid);
-            var questionDto = this.EntityToDtoForSpecificUser(question, this.currentUserGuid);
+            var question = await this.questionsStorage.DownvoteQuestion(questionId, this.CurrentUserGuid);
+            var questionDto = this.EntityToDtoForSpecificUser(question, this.CurrentUserGuid);
 
             await this.VotesAreChanged(questionDto);
         }
@@ -66,7 +88,7 @@
         public async Task<IEnumerable<QuestionDto>> GetQuestions()
         {
             var questions = await this.questionsStorage.GetQuestions();
-            return questions.Select(q => this.EntityToDtoForSpecificUser(q, this.currentUserGuid));
+            return questions.Select(q => this.EntityToDtoForSpecificUser(q, this.CurrentUserGuid));
         }
 
         private async Task VotesAreChanged(QuestionDto question)
