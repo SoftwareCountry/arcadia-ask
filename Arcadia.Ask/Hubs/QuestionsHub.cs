@@ -64,7 +64,7 @@
         public async Task<IEnumerable<QuestionDto>> GetQuestions()
         {
             var questions = await this.questionsStorage.GetQuestions();
-            return questions.Select(q => this.EntityToDto(q));
+            return questions.Select(this.EntityToDto);
         }
 
         private async Task VotesAreChanged(QuestionDto question)
