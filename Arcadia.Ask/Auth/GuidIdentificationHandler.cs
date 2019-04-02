@@ -23,22 +23,12 @@
 
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            const string authorizationHeaderName = "Authorization";
-            const string schemeName = "Guid";
+            const string guidParamName = "guid";
 
-            if (!this.Request.Headers.ContainsKey(authorizationHeaderName))
+            if (!this.Request.Query.TryGetValue(guidParamName, out var guid))
             {
-                return Task.FromResult(AuthenticateResult.Fail("Missing authorization header"));
+                return Task.FromResult(AuthenticateResult.Fail("Missing guid query param"));
             }
-
-            var authHeaderValue = AuthenticationHeaderValue.Parse(this.Request.Headers[authorizationHeaderName]);
-
-            if (authHeaderValue.Scheme != schemeName)
-            {
-                return Task.FromResult(AuthenticateResult.Fail("Authentication type should be guid"));
-            }
-
-            var guid = authHeaderValue.Parameter;
 
             if (string.IsNullOrEmpty(guid))
             {
@@ -59,9 +49,9 @@
                 new Claim(ClaimTypes.Name, guid),
             };
 
-            var identity = new ClaimsIdentity(claims, schemeName);
+            var identity = new ClaimsIdentity(claims, this.Scheme.Name);
             var principal = new ClaimsPrincipal(identity);
-            var ticket = new AuthenticationTicket(principal, schemeName);
+            var ticket = new AuthenticationTicket(principal, this.Scheme.Name);
 
             return Task.FromResult(AuthenticateResult.Success(ticket));
         }
