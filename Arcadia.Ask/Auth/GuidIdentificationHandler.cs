@@ -1,7 +1,6 @@
 ﻿namespace Arcadia.Ask.Auth
 {
     using System;
-    using System.Net.Http.Headers;
     using System.Security.Claims;
     using System.Text.Encodings.Web;
     using System.Threading.Tasks;
@@ -46,7 +45,7 @@
 
             var claims = new[]
             {
-                new Claim(ClaimTypes.Name, guid),
+                new Claim(ClaimTypes.Name, guid)
             };
 
             var identity = new ClaimsIdentity(claims, this.Scheme.Name);
