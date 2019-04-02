@@ -3,7 +3,7 @@ import { Guid } from 'guid-typescript';
 
 @Injectable()
 export class UserService {
-  public getCurrentUserGuid(): String {
+  public getCurrentUserGuid(): string {
     const guid = localStorage.getItem('guid');
 
     if (guid === null || guid === undefined || guid.length === 0) {
