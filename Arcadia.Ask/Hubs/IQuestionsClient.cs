@@ -2,12 +2,11 @@
 {
     using System;
     using System.Threading.Tasks;
-
-    using Arcadia.Ask.Questions;
+    using Arcadia.Ask.Models.DTO;
 
     public interface IQuestionsClient
     {
-        Task QuestionIsChanged(Question question);
+        Task QuestionIsChanged(QuestionDto question);
 
         Task QuestionIsRemoved(Guid questionId);
     }

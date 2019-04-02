@@ -1,12 +1,14 @@
 namespace Arcadia.Ask
 {
     using Arcadia.Ask.Hubs;
-    using Arcadia.Ask.Questions;
+    using Arcadia.Ask.Storage;
+    using Arcadia.Ask.Storage.Questions;
 
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.SpaServices.AngularCli;
+    using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
@@ -22,7 +24,15 @@ namespace Arcadia.Ask
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IQuestionStorage, QuestionStorage>();
+            services.AddEntityFrameworkInMemoryDatabase();
+
+            services.AddDbContext<DatabaseContext>((sp, options) =>
+            {
+                options
+                    .UseInMemoryDatabase("InMemoryDatabase")
+                    .UseInternalServiceProvider(sp);
+            });
+            services.AddTransient<IQuestionStorage, QuestionStorage>();
 
             services.AddSignalR();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
