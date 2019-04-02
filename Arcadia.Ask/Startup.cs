@@ -68,6 +68,8 @@ namespace Arcadia.Ask
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
+            app.UseAuthentication();
+
             app.UseSignalR(routes =>
             {
                 routes.MapHub<QuestionsHub>("/questions");
@@ -79,8 +81,6 @@ namespace Arcadia.Ask
                     "default",
                     "{controller}/{action=Index}/{id?}");
             });
-
-            app.UseAuthentication();
 
             app.UseSpa(spa =>
             {
