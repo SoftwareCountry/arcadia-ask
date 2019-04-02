@@ -10,6 +10,7 @@ import { QuestionsModule } from './questions/questions.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatToolbarModule } from '@angular/material';
+import { UserService } from './services/user.service';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,7 @@ import { MatToolbarModule } from '@angular/material';
     RouterModule.forRoot([]),
     BrowserAnimationsModule
   ],
-  providers: [],
+  providers: [UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
