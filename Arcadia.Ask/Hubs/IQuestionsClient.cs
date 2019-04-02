@@ -9,5 +9,7 @@
         Task QuestionIsChanged(QuestionDto question);
 
         Task QuestionIsRemoved(Guid questionId);
+
+        Task QuestionIsVoted(Guid questionId);
     }
 }

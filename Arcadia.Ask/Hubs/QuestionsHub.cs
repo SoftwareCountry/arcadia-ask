@@ -71,6 +71,7 @@
         private async Task VotesAreChanged(QuestionDto question)
         {
             await this.Clients.All.QuestionIsChanged(question);
+            await this.Clients.Caller.QuestionIsVoted(question.QuestionId);
         }
 
         private QuestionDto EntityToDto(QuestionEntity entity)
