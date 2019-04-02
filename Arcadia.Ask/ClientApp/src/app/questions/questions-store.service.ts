@@ -6,7 +6,9 @@ import { flatMap, scan, switchMap, startWith, multicast } from 'rxjs/operators';
 import { Map } from 'immutable';
 import { UserService } from '../services/user.service';
 
-type QuestionChange = { type: 'added', question: Question } | { type: 'removed', id: string };
+type QuestionChange = { type: 'changed', question: Question } |
+  { type: 'removed', id: string } |
+  { type: 'voted', id: string };
 
 @Injectable({
   providedIn: 'root'
@@ -111,15 +113,20 @@ export class QuestionsStore implements OnDestroy {
     return new Observable<QuestionChange>(subscriber => {
 
       const onQuestionChanged = (question: Question) => {
-        subscriber.next({ type: 'added', question });
+        subscriber.next({ type: 'changed', question });
       };
 
       const onQuestionRemoved = (id: string) => {
         subscriber.next({ type: 'removed', id });
       };
 
+      const onQuestionVoted = (id: string) => {
+        subscriber.next({ type: 'voted', id });
+      };
+
       hubConnection.on('QuestionIsChanged', onQuestionChanged);
       hubConnection.on('QuestionIsRemoved', onQuestionRemoved);
+      hubConnection.on('QuestionIsVoted', onQuestionVoted);
 
       hubConnection.onclose(error => {
         if (error) {
@@ -132,15 +139,51 @@ export class QuestionsStore implements OnDestroy {
       return () => {
         hubConnection.off('QuestionIsChanged', onQuestionChanged);
         hubConnection.off('QuestionIsRemoved', onQuestionRemoved);
+        hubConnection.off('QuestionIsVoted', onQuestionVoted);
       };
     });
   }
 
   private applyQuestionsChange(acc: Map<string, Question>, change: QuestionChange): Map<string, Question> {
-    if (change.type === 'added') {
-      return acc.set(change.question.questionId, change.question);
-    } else {
-      return acc.remove(change.id);
+    switch (change.type) {
+      case 'changed':
+        return this.changeQuestion(acc, change.question);
+      case 'removed':
+        return acc.remove(change.id);
+      case 'voted':
+        const oldQuestion = acc.get(change.id);
+        return acc.set(
+          change.id,
+          new QuestionImpl(
+            oldQuestion.questionId,
+            oldQuestion.text,
+            oldQuestion.author,
+            oldQuestion.votes,
+            oldQuestion.isApproved,
+            true
+          )
+        );
+      default:
+        console.error('Unknown change type');
     }
+  }
+
+  private changeQuestion(acc: Map<string, Question>, question: Question): Map<string, Question> {
+    const oldQuestion = acc.get(question.questionId);
+    const didVote = oldQuestion !== undefined &&
+      oldQuestion !== null &&
+      oldQuestion.didVote;
+
+    return acc.set(
+      question.questionId,
+      new QuestionImpl(
+        question.questionId,
+        question.text,
+        question.author,
+        question.votes,
+        question.isApproved,
+        didVote
+      )
+    );
   }
 }
