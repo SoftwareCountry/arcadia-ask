@@ -6,7 +6,8 @@ import { flatMap, scan, switchMap, startWith, multicast } from 'rxjs/operators';
 import { Map } from 'immutable';
 import { UserService } from '../services/user.service';
 
-type QuestionChange = { type: 'changed', question: Question } |
+type QuestionChange =
+  { type: 'changed', question: Question } |
   { type: 'removed', id: string } |
   { type: 'voted', id: string };
 
@@ -90,6 +91,7 @@ export class QuestionsStore implements OnDestroy {
 
   private async getInitialArray() {
     const data = await this.getQuestions();
+
     const mappedData = data.map<[string, Question]>(x => [
       x.question.questionId,
       new QuestionImpl(
@@ -101,6 +103,7 @@ export class QuestionsStore implements OnDestroy {
         x.didVote,
       ),
     ]);
+
     return Map(mappedData);
   }
 
@@ -148,8 +151,10 @@ export class QuestionsStore implements OnDestroy {
     switch (change.type) {
       case 'changed':
         return this.changeQuestion(acc, change.question);
+
       case 'removed':
         return acc.remove(change.id);
+
       case 'voted':
         const oldQuestion = acc.get(change.id);
         return acc.set(
@@ -163,6 +168,7 @@ export class QuestionsStore implements OnDestroy {
             true
           )
         );
+
       default:
         console.error('Unknown change type');
     }
@@ -170,7 +176,8 @@ export class QuestionsStore implements OnDestroy {
 
   private changeQuestion(acc: Map<string, Question>, question: Question): Map<string, Question> {
     const oldQuestion = acc.get(question.questionId);
-    const didVote = oldQuestion !== undefined &&
+    const didVote =
+      oldQuestion !== undefined &&
       oldQuestion !== null &&
       oldQuestion.didVote;
 
