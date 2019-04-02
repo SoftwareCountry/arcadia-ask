@@ -24,10 +24,7 @@ export class QuestionCardComponent {
   @Output()
   public approved = new EventEmitter<void>();
 
-  public didVote = false;
-
   public vote() {
-    this.didVote = true;
     this.voted.emit(true);
   }
 
