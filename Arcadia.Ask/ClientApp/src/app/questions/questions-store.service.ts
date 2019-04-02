@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Question } from './question';
+import { Question, QuestionForSpecificUser, QuestionImpl } from './question';
 import { HubConnectionBuilder, HubConnection } from '@aspnet/signalr';
 import { Observable, from, Subscription, ReplaySubject, ConnectableObservable } from 'rxjs';
 import { flatMap, scan, switchMap, startWith, multicast } from 'rxjs/operators';
@@ -83,12 +83,22 @@ export class QuestionsStore implements OnDestroy {
   }
 
   private async getQuestions() {
-    return this.invoke<Question[]>('GetQuestions');
+    return this.invoke<QuestionForSpecificUser[]>('GetQuestions');
   }
 
   private async getInitialArray() {
     const data = await this.getQuestions();
-    const mappedData = data.map<[string, Question]>(x => [x.questionId, x]);
+    const mappedData = data.map<[string, Question]>(x => [
+      x.question.questionId,
+      new QuestionImpl(
+        x.question.questionId,
+        x.question.text,
+        x.question.author,
+        x.question.votes,
+        x.question.isApproved,
+        x.didVote,
+      ),
+    ]);
     return Map(mappedData);
   }
 
