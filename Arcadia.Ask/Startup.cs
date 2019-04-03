@@ -5,7 +5,7 @@ namespace Arcadia.Ask
     using Arcadia.Ask.Storage;
     using Arcadia.Ask.Storage.Questions;
 
-    using Microsoft.AspNetCore.Authentication;
+    using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Mvc;
@@ -40,8 +40,12 @@ namespace Arcadia.Ask
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services
-                .AddAuthentication("GuidIdentification")
-                .AddScheme<AuthenticationSchemeOptions, GuidIdentificationHandler>("GuidIdentification", null);
+                .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.Cookie.Name = IdentificationMiddleware.CookieName;
+                    options.Cookie.IsEssential = true;
+                });
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -69,6 +73,8 @@ namespace Arcadia.Ask
             app.UseSpaStaticFiles();
 
             app.UseAuthentication();
+
+            app.UseGuidIdentification();
 
             app.UseSignalR(routes =>
             {
