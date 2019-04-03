@@ -43,7 +43,7 @@ namespace Arcadia.Ask
                 .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
-                    options.Cookie.Name = "Guid";
+                    options.Cookie.Name = IdentificationMiddleware.CookieName;
                     options.Cookie.IsEssential = true;
                 });
 
