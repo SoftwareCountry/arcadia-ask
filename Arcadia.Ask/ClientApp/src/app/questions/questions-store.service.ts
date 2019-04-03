@@ -4,7 +4,6 @@ import { HubConnectionBuilder, HubConnection } from '@aspnet/signalr';
 import { Observable, from, Subscription, ReplaySubject, ConnectableObservable } from 'rxjs';
 import { flatMap, scan, switchMap, startWith, multicast } from 'rxjs/operators';
 import { Map } from 'immutable';
-import { UserService } from '../services/user.service';
 
 type QuestionChange = { type: 'added', question: Question } | { type: 'removed', id: string };
 
@@ -18,7 +17,7 @@ export class QuestionsStore implements OnDestroy {
 
   private readonly questionsSubscription: Subscription;
 
-  constructor(private readonly userService: UserService) {
+  constructor() {
     this.hubConnection = this.connect();
     this.questions = from(this.hubConnection).pipe(
       flatMap(x => this.getQuestionsStream(x)),
@@ -64,12 +63,7 @@ export class QuestionsStore implements OnDestroy {
   }
 
   private async connect() {
-    const guidOfCurrentUser = this.userService.getCurrentUserGuid();
-    const url = `/questions?guid=${guidOfCurrentUser}`;
-
-    const connection = new HubConnectionBuilder().withUrl(url, {
-    }).build();
-
+    const connection = new HubConnectionBuilder().withUrl('/questions').build();
     await connection.start();
     return connection;
   }
