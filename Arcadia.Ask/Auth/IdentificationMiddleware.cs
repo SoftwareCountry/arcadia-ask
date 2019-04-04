@@ -18,10 +18,10 @@
                     var claims = new[]
                     {
                         new Claim(ClaimTypes.Name, Guid.NewGuid().ToString()),
-                        new Claim(ClaimTypes.Role, "User")
                     };
                     var identity = new ClaimsIdentity(claims, cookieName);
                     var principal = new ClaimsPrincipal(identity);
+
                     await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
                 }
 
