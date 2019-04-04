@@ -7,7 +7,7 @@
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Mvc;
 
-    [Route("auth/moderator")]
+    [Route("api/auth/moderator")]
     [ApiController]
     public class ModeratorAuthorizationController : ControllerBase
     {
