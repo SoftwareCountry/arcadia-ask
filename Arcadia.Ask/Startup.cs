@@ -19,6 +19,19 @@ namespace Arcadia.Ask
         public Startup(IConfiguration configuration)
         {
             this.Configuration = configuration;
+            this.LoadUserCookieNameFromConfiguration();
+        }
+
+        private string userCookieName;
+
+        private void LoadUserCookieNameFromConfiguration()
+        {
+            const string defaultValue = "User";
+            const string sectionName = "UserCookieName";
+
+            var configUserCookieNameValue = this.Configuration.GetSection(sectionName).Value;
+
+            this.userCookieName = string.IsNullOrEmpty(configUserCookieNameValue) ? defaultValue : configUserCookieNameValue;
         }
 
         public IConfiguration Configuration { get; }
@@ -43,7 +56,7 @@ namespace Arcadia.Ask
                 .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
-                    options.Cookie.Name = IdentificationMiddleware.CookieName;
+                    options.Cookie.Name = this.userCookieName;
                     options.Cookie.IsEssential = true;
                 });
 
@@ -74,7 +87,7 @@ namespace Arcadia.Ask
 
             app.UseAuthentication();
 
-            app.UseGuidIdentification();
+            app.UseGuidIdentification(this.userCookieName);
 
             app.UseSignalR(routes =>
             {

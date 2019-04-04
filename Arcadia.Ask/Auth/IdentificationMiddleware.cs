@@ -9,20 +9,18 @@
 
     public static class IdentificationMiddleware
     {
-        public const string CookieName = "User";
-
-        public static IApplicationBuilder UseGuidIdentification(this IApplicationBuilder app)
+        public static IApplicationBuilder UseGuidIdentification(this IApplicationBuilder app, string cookieName)
         {
             return app.Use(async (context, next) =>
             {
-                if (string.IsNullOrEmpty(context.Request.Cookies[CookieName]))
+                if (string.IsNullOrEmpty(context.Request.Cookies[cookieName]))
                 {
                     var claims = new[]
                     {
                         new Claim(ClaimTypes.Name, Guid.NewGuid().ToString()),
                         new Claim(ClaimTypes.Role, "User")
                     };
-                    var identity = new ClaimsIdentity(claims, CookieName);
+                    var identity = new ClaimsIdentity(claims, cookieName);
                     var principal = new ClaimsPrincipal(identity);
                     await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
                 }
