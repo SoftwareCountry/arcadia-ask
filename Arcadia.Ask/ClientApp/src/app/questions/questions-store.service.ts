@@ -1,12 +1,12 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Question, QuestionForSpecificUser, QuestionImpl } from './question';
+import { Question, QuestionMetadata } from './question';
 import { HubConnectionBuilder, HubConnection } from '@aspnet/signalr';
 import { Observable, from, Subscription, ReplaySubject, ConnectableObservable } from 'rxjs';
 import { flatMap, scan, switchMap, startWith, multicast } from 'rxjs/operators';
 import { Map } from 'immutable';
 
 type QuestionChange =
-  { type: 'changed', question: Question } |
+  { type: 'added', question: QuestionMetadata } |
   { type: 'removed', id: string } |
   { type: 'voted', id: string };
 
@@ -66,7 +66,11 @@ export class QuestionsStore implements OnDestroy {
   }
 
   private async connect() {
-    const connection = new HubConnectionBuilder().withUrl('/questions').build();
+    const url = `/questions`;
+
+    const connection = new HubConnectionBuilder().withUrl(url, {
+    }).build();
+
     await connection.start();
     return connection;
   }
@@ -80,24 +84,12 @@ export class QuestionsStore implements OnDestroy {
   }
 
   private async getQuestions() {
-    return this.invoke<QuestionForSpecificUser[]>('GetQuestions');
+    return this.invoke<Question[]>('GetQuestions');
   }
 
   private async getInitialArray() {
     const data = await this.getQuestions();
-
-    const mappedData = data.map<[string, Question]>(x => [
-      x.question.questionId,
-      new QuestionImpl(
-        x.question.questionId,
-        x.question.text,
-        x.question.author,
-        x.question.votes,
-        x.question.isApproved,
-        x.didVote,
-      ),
-    ]);
-
+    const mappedData = data.map<[string, Question]>(x => [ x.question.questionId, x ]);
     return Map(mappedData);
   }
 
@@ -109,8 +101,8 @@ export class QuestionsStore implements OnDestroy {
   private onQuestionChanges(hubConnection: HubConnection) {
     return new Observable<QuestionChange>(subscriber => {
 
-      const onQuestionChanged = (question: Question) => {
-        subscriber.next({ type: 'changed', question });
+      const onQuestionChanged = (question: QuestionMetadata) => {
+        subscriber.next({ type: 'added', question });
       };
 
       const onQuestionRemoved = (id: string) => {
@@ -143,48 +135,17 @@ export class QuestionsStore implements OnDestroy {
 
   private applyQuestionsChange(acc: Map<string, Question>, change: QuestionChange): Map<string, Question> {
     switch (change.type) {
-      case 'changed':
-        return this.changeQuestion(acc, change.question);
+      case 'added':
+        return acc.set(change.question.questionId, new Question(change.question, false));
 
       case 'removed':
         return acc.remove(change.id);
-
       case 'voted':
         const oldQuestion = acc.get(change.id);
-        return acc.set(
-          change.id,
-          new QuestionImpl(
-            oldQuestion.questionId,
-            oldQuestion.text,
-            oldQuestion.author,
-            oldQuestion.votes,
-            oldQuestion.isApproved,
-            true
-          )
-        );
+        return acc.set(change.id, new Question(oldQuestion.question, true));
 
       default:
         console.error('Unknown change type');
     }
-  }
-
-  private changeQuestion(acc: Map<string, Question>, question: Question): Map<string, Question> {
-    const oldQuestion = acc.get(question.questionId);
-    const didVote =
-      oldQuestion !== undefined &&
-      oldQuestion !== null &&
-      oldQuestion.didVote;
-
-    return acc.set(
-      question.questionId,
-      new QuestionImpl(
-        question.questionId,
-        question.text,
-        question.author,
-        question.votes,
-        question.isApproved,
-        didVote
-      )
-    );
   }
 }
