@@ -1,6 +1,7 @@
 namespace Arcadia.Ask
 {
     using Arcadia.Ask.Auth;
+    using Arcadia.Ask.Configuration;
     using Arcadia.Ask.Hubs;
     using Arcadia.Ask.Storage;
     using Arcadia.Ask.Storage.Questions;
@@ -18,23 +19,10 @@ namespace Arcadia.Ask
     {
         public Startup(IConfiguration configuration)
         {
-            this.Configuration = configuration;
-            this.LoadUserCookieNameFromConfiguration();
+            this.ApplicationSettings = configuration.Get<ApplicationSettings>();
         }
 
-        private string userCookieName;
-
-        private void LoadUserCookieNameFromConfiguration()
-        {
-            const string defaultValue = "User";
-            const string sectionName = "UserCookieName";
-
-            var configUserCookieNameValue = this.Configuration.GetSection(sectionName).Value;
-
-            this.userCookieName = string.IsNullOrEmpty(configUserCookieNameValue) ? defaultValue : configUserCookieNameValue;
-        }
-
-        public IConfiguration Configuration { get; }
+        public ApplicationSettings ApplicationSettings { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -56,7 +44,7 @@ namespace Arcadia.Ask
                 .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
-                    options.Cookie.Name = this.userCookieName;
+                    options.Cookie.Name = this.ApplicationSettings.AuthSettings.UserCookieName;
                     options.Cookie.IsEssential = true;
                 });
 
@@ -85,7 +73,7 @@ namespace Arcadia.Ask
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
-            app.UseGuidIdentification(this.userCookieName);
+            app.UseGuidIdentification(this.ApplicationSettings.AuthSettings.UserCookieName);
 
             app.UseAuthentication();
 
