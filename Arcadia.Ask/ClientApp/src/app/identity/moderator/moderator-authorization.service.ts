@@ -6,6 +6,6 @@ export class ModeratorAuthorizationService {
   constructor(private readonly http: HttpClient) { }
 
   public signInAsModerator() {
-    this.http.post('/api/auth/moderator/sign-in', '').subscribe(res => console.log(res));
+    this.http.post('/api/auth/moderator/sign-in', '');
   }
 }
