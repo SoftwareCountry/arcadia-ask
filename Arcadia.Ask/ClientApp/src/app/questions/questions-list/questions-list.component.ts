@@ -43,7 +43,6 @@ export class QuestionsListComponent {
   }
 
   public async onApproved(questionId: string) {
-    console.debug('approved');
     await this.questionsStore.approveQuestion(questionId);
   }
 
