@@ -9,7 +9,8 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { QuestionsModule } from './questions/questions.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatToolbarModule } from '@angular/material';
+import { MatToolbarModule, MatButtonModule } from '@angular/material';
+import { ModeratorAuthorizationService } from './identity/moderator/moderator-authorization.service';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { MatToolbarModule } from '@angular/material';
   ],
   imports: [
     MatToolbarModule,
+    MatButtonModule,
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
@@ -26,7 +28,7 @@ import { MatToolbarModule } from '@angular/material';
     RouterModule.forRoot([]),
     BrowserAnimationsModule
   ],
-  providers: [],
+  providers: [ModeratorAuthorizationService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
