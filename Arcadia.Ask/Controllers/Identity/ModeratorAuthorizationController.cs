@@ -4,6 +4,8 @@
     using System.Security.Claims;
     using System.Threading.Tasks;
 
+    using Arcadia.Ask.Auth;
+
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Mvc;
 
@@ -15,7 +17,7 @@
         [HttpPost]
         public async Task<IActionResult> AuthorizeModerator()
         {
-            const string roleName = "Moderator";
+            var roleName = RolesEnum.Moderator.ToString();
 
             if (this.User.IsInRole(roleName))
             {
