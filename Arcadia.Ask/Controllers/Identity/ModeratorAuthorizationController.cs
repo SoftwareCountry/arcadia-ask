@@ -8,7 +8,8 @@
     using Microsoft.AspNetCore.Mvc;
 
     [Route("auth/moderator")]
-    public class ModeratorAuthorizationController : Controller
+    [ApiController]
+    public class ModeratorAuthorizationController : ControllerBase
     {
         [Route("sign-in")]
         [HttpPost]
