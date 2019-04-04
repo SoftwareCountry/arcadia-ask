@@ -85,9 +85,9 @@ namespace Arcadia.Ask
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
-            app.UseAuthentication();
-
             app.UseGuidIdentification(this.userCookieName);
+
+            app.UseAuthentication();
 
             app.UseSignalR(routes =>
             {
