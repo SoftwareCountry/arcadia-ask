@@ -66,10 +66,8 @@ export class QuestionsStore implements OnDestroy {
   }
 
   private async connect() {
-    const url = `/questions`;
-
-    const connection = new HubConnectionBuilder().withUrl(url, {
-    }).build();
+    const url = '/questions';
+    const connection = new HubConnectionBuilder().withUrl(url).build();
 
     await connection.start();
     return connection;
