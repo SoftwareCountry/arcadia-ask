@@ -35,7 +35,7 @@
 
             await this.HttpContext.SignInAsync(principal);
 
-            return this.Ok();
+            return this.Redirect("/");
         }
     }
 }

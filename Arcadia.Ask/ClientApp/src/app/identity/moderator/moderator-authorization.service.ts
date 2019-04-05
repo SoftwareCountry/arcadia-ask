@@ -6,6 +6,6 @@ export class ModeratorAuthorizationService {
   constructor(private readonly http: HttpClient) { }
 
   public signInAsModerator() {
-    return this.http.post('/api/auth/moderator/sign-in', '');
+    return this.http.post('/api/auth/moderator/sign-in', '', { responseType: 'text' });
   }
 }
