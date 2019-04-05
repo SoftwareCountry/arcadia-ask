@@ -11,6 +11,6 @@ export class NavMenuComponent {
   constructor(public moderatorAuthService: ModeratorAuthorizationService) { }
 
   public signInAsModerator() {
-    this.moderatorAuthService.signInAsModerator();
+    this.moderatorAuthService.signInAsModerator().subscribe();
   }
 }
