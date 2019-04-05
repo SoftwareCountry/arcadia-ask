@@ -18,7 +18,7 @@
         [Authorize]
         public async Task<IActionResult> AuthorizeModerator()
         {
-            var roleName = RolesEnum.Moderator.ToString();
+            var roleName = Roles.Moderator;
 
             if (this.User.IsInRole(roleName))
             {

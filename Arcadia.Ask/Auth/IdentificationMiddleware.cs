@@ -18,7 +18,7 @@
                     var claims = new[]
                     {
                         new Claim(ClaimTypes.Name, Guid.NewGuid().ToString()),
-                        new Claim(ClaimTypes.Role, RolesEnum.User.ToString()), 
+                        new Claim(ClaimTypes.Role, Roles.User), 
                     };
                     var identity = new ClaimsIdentity(claims, cookieName);
                     var principal = new ClaimsPrincipal(identity);
