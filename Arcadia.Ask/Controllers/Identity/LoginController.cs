@@ -14,7 +14,7 @@
     public class LoginController : ControllerBase
     {
         [Route("moderator/sign-in")]
-        [HttpPost]
+        [HttpGet]
         [Authorize]
         public async Task<IActionResult> SignInAsModerator()
         {
