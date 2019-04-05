@@ -6,7 +6,7 @@ import { flatMap, scan, switchMap, startWith, multicast } from 'rxjs/operators';
 import { Map } from 'immutable';
 
 type QuestionChange =
-  { type: 'added', question: QuestionMetadata } |
+  { type: 'changed', question: QuestionMetadata } |
   { type: 'removed', id: string } |
   { type: 'voted', id: string };
 
@@ -100,7 +100,7 @@ export class QuestionsStore implements OnDestroy {
     return new Observable<QuestionChange>(subscriber => {
 
       const onQuestionChanged = (question: QuestionMetadata) => {
-        subscriber.next({ type: 'added', question });
+        subscriber.next({ type: 'changed', question });
       };
 
       const onQuestionRemoved = (id: string) => {
@@ -133,11 +133,8 @@ export class QuestionsStore implements OnDestroy {
 
   private applyQuestionsChange(acc: Map<string, Question>, change: QuestionChange): Map<string, Question> {
     switch (change.type) {
-      case 'added':
-        return acc.set(change.question.questionId, {
-          question: change.question,
-          didVote: false
-        });
+      case 'changed':
+        return this.questionChanged(acc, change.question);
 
       case 'removed':
         return acc.remove(change.id);
@@ -152,5 +149,18 @@ export class QuestionsStore implements OnDestroy {
       default:
         console.error('Unknown change type');
     }
+  }
+
+  private questionChanged(acc: Map<string, Question>, question: QuestionMetadata): Map<string, Question> {
+    const oldQuestion = acc.get(question.questionId);
+    const didVote =
+      oldQuestion !== null &&
+      oldQuestion !== undefined &&
+      oldQuestion.didVote;
+
+    return acc.set(question.questionId, {
+      question: question,
+      didVote: didVote
+    });
   }
 }
