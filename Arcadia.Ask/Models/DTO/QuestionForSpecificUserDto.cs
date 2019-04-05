@@ -2,7 +2,7 @@
 {
     public class QuestionForSpecificUserDto
     {
-        public QuestionDto Question { get; set; }
+        public QuestionDto Metadata { get; set; }
 
         public bool DidVote { get; set; }
     }

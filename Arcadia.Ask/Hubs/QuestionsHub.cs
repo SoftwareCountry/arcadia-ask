@@ -101,7 +101,7 @@
 
             return new QuestionForSpecificUserDto
             {
-                Question = new QuestionDto
+                Metadata = new QuestionDto
                 {
                     QuestionId = entity.QuestionId,
                     Author = entity.Author,

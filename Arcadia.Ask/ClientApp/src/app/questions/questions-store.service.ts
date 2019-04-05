@@ -87,7 +87,7 @@ export class QuestionsStore implements OnDestroy {
 
   private async getInitialArray() {
     const data = await this.getQuestions();
-    const mappedData = data.map<[string, Question]>(x => [ x.question.questionId, x ]);
+    const mappedData = data.map<[string, Question]>(x => [ x.metadata.questionId, x ]);
     return Map(mappedData);
   }
 
@@ -142,7 +142,7 @@ export class QuestionsStore implements OnDestroy {
       case 'voted':
         const oldQuestion = acc.get(change.id);
         return acc.set(change.id, {
-          question: oldQuestion.question,
+          metadata: oldQuestion.metadata,
           didVote: true
         });
 
@@ -159,7 +159,7 @@ export class QuestionsStore implements OnDestroy {
       oldQuestion.didVote;
 
     return acc.set(question.questionId, {
-      question: question,
+      metadata: question,
       didVote: didVote
     });
   }

@@ -3,9 +3,9 @@
     <app-question-card 
       [question]="question"
       [editable]="editable"
-      (voted)="onVoted(question.question.questionId, $event)"
-      (approved)="onApproved(question.question.questionId)"
-      (deleted)="onDeleted(question.question.questionId)"
+      (voted)="onVoted(question.metadata.questionId, $event)"
+      (approved)="onApproved(question.metadata.questionId)"
+      (deleted)="onDeleted(question.metadata.questionId)"
       >
     </app-question-card>
   </mat-list-item>

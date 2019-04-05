@@ -7,6 +7,6 @@ export interface QuestionMetadata {
 }
 
 export interface Question {
-    readonly question: QuestionMetadata;
+    readonly metadata: QuestionMetadata;
     readonly didVote: boolean;
 }
