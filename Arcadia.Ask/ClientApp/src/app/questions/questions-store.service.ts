@@ -1,11 +1,14 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Question } from './question';
+import { Question, QuestionMetadata } from './question';
 import { HubConnectionBuilder, HubConnection } from '@aspnet/signalr';
 import { Observable, from, Subscription, ReplaySubject, ConnectableObservable } from 'rxjs';
 import { flatMap, scan, switchMap, startWith, multicast } from 'rxjs/operators';
 import { Map } from 'immutable';
 
-type QuestionChange = { type: 'added', question: Question } | { type: 'removed', id: string };
+type QuestionChange =
+  { type: 'changed', question: QuestionMetadata } |
+  { type: 'removed', id: string } |
+  { type: 'voted', id: string };
 
 @Injectable({
   providedIn: 'root'
@@ -63,7 +66,9 @@ export class QuestionsStore implements OnDestroy {
   }
 
   private async connect() {
-    const connection = new HubConnectionBuilder().withUrl('/questions').build();
+    const url = '/questions';
+    const connection = new HubConnectionBuilder().withUrl(url).build();
+
     await connection.start();
     return connection;
   }
@@ -82,7 +87,7 @@ export class QuestionsStore implements OnDestroy {
 
   private async getInitialArray() {
     const data = await this.getQuestions();
-    const mappedData = data.map<[string, Question]>(x => [x.questionId, x]);
+    const mappedData = data.map<[string, Question]>(x => [ x.metadata.questionId, x ]);
     return Map(mappedData);
   }
 
@@ -94,16 +99,21 @@ export class QuestionsStore implements OnDestroy {
   private onQuestionChanges(hubConnection: HubConnection) {
     return new Observable<QuestionChange>(subscriber => {
 
-      const onQuestionChanged = (question: Question) => {
-        subscriber.next({ type: 'added', question });
+      const onQuestionChanged = (question: QuestionMetadata) => {
+        subscriber.next({ type: 'changed', question });
       };
 
       const onQuestionRemoved = (id: string) => {
         subscriber.next({ type: 'removed', id });
       };
 
+      const onQuestionVoted = (id: string) => {
+        subscriber.next({ type: 'voted', id });
+      };
+
       hubConnection.on('QuestionIsChanged', onQuestionChanged);
       hubConnection.on('QuestionIsRemoved', onQuestionRemoved);
+      hubConnection.on('QuestionIsVoted', onQuestionVoted);
 
       hubConnection.onclose(error => {
         if (error) {
@@ -116,15 +126,41 @@ export class QuestionsStore implements OnDestroy {
       return () => {
         hubConnection.off('QuestionIsChanged', onQuestionChanged);
         hubConnection.off('QuestionIsRemoved', onQuestionRemoved);
+        hubConnection.off('QuestionIsVoted', onQuestionVoted);
       };
     });
   }
 
   private applyQuestionsChange(acc: Map<string, Question>, change: QuestionChange): Map<string, Question> {
-    if (change.type === 'added') {
-      return acc.set(change.question.questionId, change.question);
-    } else {
-      return acc.remove(change.id);
+    switch (change.type) {
+      case 'changed':
+        return this.questionChanged(acc, change.question);
+
+      case 'removed':
+        return acc.remove(change.id);
+
+      case 'voted':
+        const oldQuestion = acc.get(change.id);
+        return acc.set(change.id, {
+          metadata: oldQuestion.metadata,
+          didVote: true
+        });
+
+      default:
+        console.error('Unknown change type');
     }
+  }
+
+  private questionChanged(acc: Map<string, Question>, question: QuestionMetadata): Map<string, Question> {
+    const oldQuestion = acc.get(question.questionId);
+    const didVote =
+      oldQuestion !== null &&
+      oldQuestion !== undefined &&
+      oldQuestion.didVote;
+
+    return acc.set(question.questionId, {
+      metadata: question,
+      didVote: didVote
+    });
   }
 }

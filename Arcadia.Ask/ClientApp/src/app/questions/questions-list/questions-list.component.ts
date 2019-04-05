@@ -27,7 +27,7 @@ export class QuestionsListComponent {
   }
 
   public questionIdTrack(index: number, x: Question) {
-    return x.questionId;
+    return x.metadata.questionId;
   }
 
   public async onVoted(questionId: string, upvoted: boolean) {
@@ -49,15 +49,15 @@ export class QuestionsListComponent {
   private extractQuestions(source: Map<string, Question>) {
     let seq = source.valueSeq();
     if (!this.editable) {
-      seq = seq.filter(x => x.isApproved);
+      seq = seq.filter(x => x.metadata.isApproved);
     }
 
     return seq.sort((a, b) => {
-      if (a.isApproved) {
+      if (a.metadata.isApproved) {
         return -1;
       }
 
-      return b.votes - a.votes;
+      return b.metadata.votes - a.metadata.votes;
     }).toArray();
   }
 }

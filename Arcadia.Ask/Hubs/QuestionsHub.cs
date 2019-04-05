@@ -62,15 +62,16 @@
             await this.VotesAreChanged(questionDto);
         }
 
-        public async Task<IEnumerable<QuestionDto>> GetQuestions()
+        public async Task<IEnumerable<QuestionForSpecificUserDto>> GetQuestions()
         {
             var questions = await this.questionsStorage.GetQuestions();
-            return questions.Select(this.EntityToDto);
+            return questions.Select(q => this.EntityToDtoForSpecificUser(q, this.CurrentUserGuid));
         }
 
         private async Task VotesAreChanged(QuestionDto question)
         {
             await this.Clients.All.QuestionIsChanged(question);
+            await this.Clients.Caller.QuestionIsVoted(question.QuestionId);
         }
 
         private QuestionDto EntityToDto(QuestionEntity entity)
@@ -88,6 +89,28 @@
                 PostedAt = entity.PostedAt,
                 IsApproved = entity.IsApproved,
                 Votes = entity.Votes?.Count ?? 0
+            };
+        }
+
+        private QuestionForSpecificUserDto EntityToDtoForSpecificUser(QuestionEntity entity, Guid userId)
+        {
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+
+            return new QuestionForSpecificUserDto
+            {
+                Metadata = new QuestionDto
+                {
+                    QuestionId = entity.QuestionId,
+                    Author = entity.Author,
+                    Text = entity.Text,
+                    PostedAt = entity.PostedAt,
+                    IsApproved = entity.IsApproved,
+                    Votes = entity.Votes?.Count ?? 0
+                },
+                DidVote = entity.Votes?.Any(v => v.UserId == userId) ?? false
             };
         }
 
