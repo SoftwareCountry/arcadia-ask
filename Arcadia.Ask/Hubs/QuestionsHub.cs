@@ -110,7 +110,7 @@
                     IsApproved = entity.IsApproved,
                     Votes = entity.Votes?.Count ?? 0
                 },
-                DidVote = entity.Votes?.Any() ?? false
+                DidVote = entity.Votes?.Any(v => v.UserId == userId) ?? false
             };
         }
 
