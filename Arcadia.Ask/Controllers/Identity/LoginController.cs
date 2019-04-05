@@ -9,14 +9,14 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
-    [Route("api/auth/moderator")]
+    [Route("api/auth")]
     [ApiController]
-    public class ModeratorAuthorizationController : ControllerBase
+    public class LoginController : ControllerBase
     {
-        [Route("sign-in")]
+        [Route("moderator/sign-in")]
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> AuthorizeModerator()
+        public async Task<IActionResult> SignInAsModerator()
         {
             var roleName = Roles.Moderator;
 
