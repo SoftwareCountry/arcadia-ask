@@ -1,6 +1,5 @@
 ﻿namespace Arcadia.Ask.Controllers.Identity
 {
-    using System;
     using System.Security.Claims;
     using System.Threading.Tasks;
 
@@ -26,12 +25,10 @@
                 return this.Ok();
             }
 
-            var guid = Guid.Parse(this.User.Identity.Name);
-
             var claims = new[]
             {
-                new Claim(ClaimTypes.Name, guid.ToString()),
-                new Claim(ClaimTypes.Role, roleName), 
+                new Claim(ClaimTypes.Name, this.User.Identity.Name),
+                new Claim(ClaimTypes.Role, roleName)
             };
             var identity = new ClaimsIdentity(claims, roleName);
             var principal = new ClaimsPrincipal(identity);
