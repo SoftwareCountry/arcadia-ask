@@ -6,9 +6,7 @@ export interface QuestionMetadata {
     isApproved: boolean;
 }
 
-export class Question {
-    constructor(
-        public question: QuestionMetadata,
-        public didVote: boolean
-    ) {}
+export interface Question {
+    question: QuestionMetadata;
+    didVote: boolean;
 }

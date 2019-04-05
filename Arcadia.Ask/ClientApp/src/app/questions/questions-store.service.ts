@@ -134,13 +134,20 @@ export class QuestionsStore implements OnDestroy {
   private applyQuestionsChange(acc: Map<string, Question>, change: QuestionChange): Map<string, Question> {
     switch (change.type) {
       case 'added':
-        return acc.set(change.question.questionId, new Question(change.question, false));
+        return acc.set(change.question.questionId, {
+          question: change.question,
+          didVote: false
+        });
 
       case 'removed':
         return acc.remove(change.id);
+
       case 'voted':
         const oldQuestion = acc.get(change.id);
-        return acc.set(change.id, new Question(oldQuestion.question, true));
+        return acc.set(change.id, {
+          question: oldQuestion.question,
+          didVote: true
+        });
 
       default:
         console.error('Unknown change type');
