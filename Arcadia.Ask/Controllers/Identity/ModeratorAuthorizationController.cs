@@ -7,6 +7,7 @@
     using Arcadia.Ask.Auth;
 
     using Microsoft.AspNetCore.Authentication;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     [Route("api/auth/moderator")]
@@ -15,6 +16,7 @@
     {
         [Route("sign-in")]
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AuthorizeModerator()
         {
             var roleName = RolesEnum.Moderator.ToString();
@@ -24,8 +26,7 @@
                 return this.Ok();
             }
 
-            var guid = this.User.Identity.IsAuthenticated ? 
-                Guid.Parse(this.User.Identity.Name) : Guid.NewGuid();
+            var guid = Guid.Parse(this.User.Identity.Name);
 
             var claims = new[]
             {
