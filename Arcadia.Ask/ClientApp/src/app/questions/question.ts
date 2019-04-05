@@ -1,12 +1,12 @@
 export interface QuestionMetadata {
-    questionId: string;
-    text: string;
-    author: string;
-    votes: number;
-    isApproved: boolean;
+    readonly questionId: string;
+    readonly text: string;
+    readonly author: string;
+    readonly votes: number;
+    readonly isApproved: boolean;
 }
 
 export interface Question {
-    question: QuestionMetadata;
-    didVote: boolean;
+    readonly question: QuestionMetadata;
+    readonly didVote: boolean;
 }
