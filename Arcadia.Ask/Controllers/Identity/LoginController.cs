@@ -22,7 +22,7 @@
 
             if (this.User.IsInRole(roleName))
             {
-                return this.Ok();
+                return this.Redirect("/");
             }
 
             var claims = new[]
