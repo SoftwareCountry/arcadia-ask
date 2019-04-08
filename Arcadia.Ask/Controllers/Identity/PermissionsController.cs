@@ -22,8 +22,7 @@
 
         [HttpGet]
         [Route("")]
-        [Authorize(Roles = RoleNames.User)]
-        [Authorize(Roles = RoleNames.Moderator)]
+        [Authorize(Roles = RoleNames.User + ", " + RoleNames.Moderator)]
         public ActionResult<IPermissions> Get()
         {
             var role = this.User.Claims
