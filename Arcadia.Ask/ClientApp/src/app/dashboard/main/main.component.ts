@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { PermissionService } from 'src/app/identity/permissions.service';
+import { PermissionService } from '../../identity/permissions.service';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
