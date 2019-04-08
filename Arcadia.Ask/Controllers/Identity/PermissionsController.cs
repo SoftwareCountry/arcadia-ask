@@ -4,6 +4,7 @@
     using System.Security.Claims;
 
     using Arcadia.Ask.Auth.Permissions;
+    using Arcadia.Ask.Auth.Roles;
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -12,22 +13,22 @@
     [ApiController]
     public class PermissionsController : ControllerBase
     {
-        private readonly PermissionsByRoleCreator permissionsCreator;
+        private readonly IPermissionsByRoleLoader permissionsLoader;
 
-        public PermissionsController(PermissionsByRoleCreator permissionsCreator)
+        public PermissionsController(IPermissionsByRoleLoader permissionsLoader)
         {
-            this.permissionsCreator = permissionsCreator;
+            this.permissionsLoader = permissionsLoader;
         }
 
         [HttpGet]
         [Route("")]
-        [Authorize]
+        [Authorize(Roles = RoleNames.User + ", " + RoleNames.Moderator)]
         public ActionResult<IPermissions> Get()
         {
             var role = this.User.Claims
                 .FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
 
-            var permissions = this.permissionsCreator.Create(role);
+            var permissions = this.permissionsLoader.GetByRole(role);
 
             return this.Ok(permissions);
         }
