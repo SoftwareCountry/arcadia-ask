@@ -18,9 +18,7 @@
         public ActionResult<IPermissions> Get()
         {
             var role = this.User.Claims
-                .Where(c => ClaimTypes.Role == c.Type)
-                .Select(c => c.Value)
-                .FirstOrDefault();
+                .FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
 
             var permissions = new PermissionsByRoleCreator(role).Permissions;
 
