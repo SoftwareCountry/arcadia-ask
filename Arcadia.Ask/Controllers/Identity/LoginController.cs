@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using Arcadia.Ask.Auth;
+    using Arcadia.Ask.Auth.Roles;
 
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authorization;
@@ -18,7 +19,7 @@
         [Authorize]
         public async Task<IActionResult> SignInAsModerator()
         {
-            var roleName = Roles.Moderator;
+            var roleName = RoleNames.Moderator;
 
             if (this.User.IsInRole(roleName))
             {
