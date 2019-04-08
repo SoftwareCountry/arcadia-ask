@@ -8,11 +8,11 @@
 
         public PermissionsByRoleCreator(string role)
         {
-            if (role == Roles.Moderator)
+            if (role == RoleNames.Moderator)
             {
                 this.Permissions = new ModeratorPermissions();
             }
-            else if (role == Roles.User)
+            else if (role == RoleNames.User)
             {
                 this.Permissions = new UserPermissions();
             }
