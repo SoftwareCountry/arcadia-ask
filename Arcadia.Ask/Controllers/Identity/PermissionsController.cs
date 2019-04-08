@@ -12,6 +12,13 @@
     [ApiController]
     public class PermissionsController : ControllerBase
     {
+        private readonly PermissionsByRoleCreator permissionsCreator;
+
+        public PermissionsController(PermissionsByRoleCreator permissionsCreator)
+        {
+            this.permissionsCreator = permissionsCreator;
+        }
+
         [HttpGet]
         [Route("")]
         [Authorize]
@@ -20,7 +27,7 @@
             var role = this.User.Claims
                 .FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
 
-            var permissions = new PermissionsByRoleCreator(role).Permissions;
+            var permissions = this.permissionsCreator.Create(role);
 
             return this.Ok(permissions);
         }

@@ -6,9 +6,7 @@
 
     public class PermissionsByRoleCreator
     {
-        public IPermissions Permissions { get; }
-
-        public PermissionsByRoleCreator(string role)
+        public IPermissions Create(string role)
         {
             if (role == null)
             {
@@ -18,11 +16,9 @@
             switch (role)
             {
                 case RoleNames.Moderator:
-                    this.Permissions = new ModeratorPermissions();
-                    break;
+                    return new ModeratorPermissions();
                 case RoleNames.User:
-                    this.Permissions = new UserPermissions();
-                    break;
+                    return new UserPermissions();
                 default:
                     throw new ArgumentException($"Role {role} is unknown");
             }

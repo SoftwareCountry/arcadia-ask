@@ -1,6 +1,7 @@
 namespace Arcadia.Ask
 {
     using Arcadia.Ask.Auth;
+    using Arcadia.Ask.Auth.Permissions;
     using Arcadia.Ask.Configuration;
     using Arcadia.Ask.Hubs;
     using Arcadia.Ask.Storage;
@@ -36,6 +37,7 @@ namespace Arcadia.Ask
                     .UseInternalServiceProvider(sp);
             });
             services.AddTransient<IQuestionStorage, QuestionStorage>();
+            services.AddTransient<PermissionsByRoleCreator>();
 
             services.AddSignalR();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
