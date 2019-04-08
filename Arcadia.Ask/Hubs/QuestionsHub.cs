@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
+    using Arcadia.Ask.Auth.Roles;
     using Arcadia.Ask.Models.DTO;
     using Arcadia.Ask.Models.Entities;
     using Arcadia.Ask.Storage.Questions;
@@ -65,6 +66,8 @@
         public async Task<IEnumerable<QuestionForSpecificUserDto>> GetQuestions()
         {
             var questions = await this.questionsStorage.GetQuestions();
+            questions = this.Context.User.IsInRole(Roles.Moderator) ? questions : questions.Where(q => q.IsApproved);
+
             return questions.Select(q => this.EntityToDtoForSpecificUser(q, this.CurrentUserGuid));
         }
 
