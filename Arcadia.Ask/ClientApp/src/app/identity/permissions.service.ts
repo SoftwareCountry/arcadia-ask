@@ -2,8 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Permissions } from './permissions';
+import { IdentityModule } from './identity.module';
 
-@Injectable()
+@Injectable({
+  providedIn: IdentityModule
+})
 export class PermissionService {
   constructor(private readonly http: HttpClient) { }
 

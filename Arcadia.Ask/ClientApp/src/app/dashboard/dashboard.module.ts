@@ -5,7 +5,7 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
 import { MainComponent } from './main/main.component';
 import { QuestionsModule } from '../questions/questions.module';
 import { MatGridListModule } from '@angular/material';
-import { PermissionService } from '../identity/permissions.service';
+import { IdentityModule } from '../identity/identity.module';
 
 @NgModule({
   declarations: [MainComponent],
@@ -13,8 +13,9 @@ import { PermissionService } from '../identity/permissions.service';
     MatGridListModule,
     CommonModule,
     DashboardRoutingModule,
-    QuestionsModule
+    QuestionsModule,
+    IdentityModule
   ],
-  providers: [PermissionService]
+  providers: []
 })
 export class DashboardModule { }
