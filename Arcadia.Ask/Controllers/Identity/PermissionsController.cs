@@ -4,6 +4,7 @@
     using System.Security.Claims;
 
     using Arcadia.Ask.Auth.Permissions;
+    using Arcadia.Ask.Auth.Roles;
 
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -21,7 +22,8 @@
 
         [HttpGet]
         [Route("")]
-        [Authorize]
+        [Authorize(Roles = RoleNames.User)]
+        [Authorize(Roles = RoleNames.Moderator)]
         public ActionResult<IPermissions> Get()
         {
             var role = this.User.Claims
