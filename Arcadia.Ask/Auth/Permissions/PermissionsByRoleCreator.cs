@@ -1,5 +1,7 @@
 ﻿namespace Arcadia.Ask.Auth.Permissions
 {
+    using System;
+
     using Arcadia.Ask.Auth.Roles;
 
     public class PermissionsByRoleCreator
@@ -17,7 +19,7 @@
                     this.Permissions = new UserPermissions();
                     break;
                 default:
-                    throw new UnknownRoleException(role);
+                    throw new ArgumentException($"Role {role} is unknown");
             }
         }
     }
