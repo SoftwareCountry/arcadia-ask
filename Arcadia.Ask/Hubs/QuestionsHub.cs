@@ -17,10 +17,27 @@
     public class QuestionsHub : Hub<IQuestionsClient>
     {
         private readonly IQuestionStorage questionsStorage;
+        private const string ModeratorsGroupName = "ModeratorsGroup";
 
         public QuestionsHub(IQuestionStorage questionsStorage)
         {
             this.questionsStorage = questionsStorage;
+        }
+
+        public override async Task OnConnectedAsync()
+        {
+            if (this.Context.User.IsInRole(RoleNames.Moderator))
+            {
+                await this.Groups.AddToGroupAsync(this.Context.ConnectionId, ModeratorsGroupName);
+            }
+        }
+
+        public override async Task OnDisconnectedAsync(Exception exception)
+        {
+            if (this.Context.User.IsInRole(RoleNames.Moderator))
+            {
+                await this.Groups.RemoveFromGroupAsync(this.Context.ConnectionId, ModeratorsGroupName);
+            }
         }
 
         public async Task CreateQuestion(string text)
@@ -32,7 +49,8 @@
                 IsApproved = false,
                 PostedAt = DateTimeOffset.Now
             });
-            await this.Clients.All.QuestionIsChanged(this.EntityToDto(question));
+
+            await this.Clients.Group(ModeratorsGroupName).QuestionIsChanged(this.EntityToDto(question));
         }
 
         [Authorize(Roles = RoleNames.Moderator)]
