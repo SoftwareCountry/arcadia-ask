@@ -66,7 +66,7 @@
         public async Task<IEnumerable<QuestionForSpecificUserDto>> GetQuestions()
         {
             var questions = await this.questionsStorage.GetQuestions();
-            questions = this.Context.User.IsInRole(Roles.Moderator) ? questions : questions.Where(q => q.IsApproved);
+            questions = this.Context.User.IsInRole(RoleNames.Moderator) ? questions : questions.Where(q => q.IsApproved);
 
             return questions.Select(q => this.EntityToDtoForSpecificUser(q, this.CurrentUserGuid));
         }
