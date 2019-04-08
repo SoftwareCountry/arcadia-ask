@@ -35,12 +35,14 @@
             await this.Clients.All.QuestionIsChanged(this.EntityToDto(question));
         }
 
+        [Authorize(Roles = RoleNames.Moderator)]
         public async Task ApproveQuestion(Guid questionId)
         {
             var question = await this.questionsStorage.ApproveQuestion(questionId);
             await this.Clients.All.QuestionIsChanged(this.EntityToDto(question));
         }
 
+        [Authorize(Roles = RoleNames.Moderator)]
         public async Task RemoveQuestion(Guid questionId)
         {
             await this.questionsStorage.DeleteQuestion(questionId);
