@@ -10,6 +10,11 @@
 
         public PermissionsByRoleCreator(string role)
         {
+            if (role == null)
+            {
+                throw new ArgumentNullException(nameof(role));
+            }
+
             switch (role)
             {
                 case RoleNames.Moderator:
