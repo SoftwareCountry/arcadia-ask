@@ -12,9 +12,9 @@
     [ApiController]
     public class PermissionsController : ControllerBase
     {
-        private readonly PermissionsByRoleCreator permissionsCreator;
+        private readonly IPermissionsByRoleCreator permissionsCreator;
 
-        public PermissionsController(PermissionsByRoleCreator permissionsCreator)
+        public PermissionsController(IPermissionsByRoleCreator permissionsCreator)
         {
             this.permissionsCreator = permissionsCreator;
         }

@@ -37,7 +37,7 @@ namespace Arcadia.Ask
                     .UseInternalServiceProvider(sp);
             });
             services.AddTransient<IQuestionStorage, QuestionStorage>();
-            services.AddTransient<PermissionsByRoleCreator>();
+            services.AddTransient<IPermissionsByRoleCreator, PermissionsByRoleCreator>();
 
             services.AddSignalR();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);

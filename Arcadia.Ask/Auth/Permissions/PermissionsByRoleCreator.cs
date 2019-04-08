@@ -4,7 +4,7 @@
 
     using Arcadia.Ask.Auth.Roles;
 
-    public class PermissionsByRoleCreator
+    public class PermissionsByRoleCreator : IPermissionsByRoleCreator
     {
         public IPermissions Create(string role)
         {
