@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
 
     using Arcadia.Ask.Auth;
+    using Arcadia.Ask.Auth.Roles;
 
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authorization;

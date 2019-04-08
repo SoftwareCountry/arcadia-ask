@@ -1,4 +1,4 @@
-﻿namespace Arcadia.Ask.Auth
+﻿namespace Arcadia.Ask.Auth.Roles
 {
     public static class Roles
     {
