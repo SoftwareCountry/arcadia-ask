@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
+    using Arcadia.Ask.Auth.Roles;
     using Arcadia.Ask.Models.DTO;
     using Arcadia.Ask.Models.Entities;
     using Arcadia.Ask.Storage.Questions;
@@ -16,10 +17,27 @@
     public class QuestionsHub : Hub<IQuestionsClient>
     {
         private readonly IQuestionStorage questionsStorage;
+        private const string ModeratorsGroupName = "ModeratorsGroup";
 
         public QuestionsHub(IQuestionStorage questionsStorage)
         {
             this.questionsStorage = questionsStorage;
+        }
+
+        public override async Task OnConnectedAsync()
+        {
+            if (this.Context.User.IsInRole(RoleNames.Moderator))
+            {
+                await this.Groups.AddToGroupAsync(this.Context.ConnectionId, ModeratorsGroupName);
+            }
+        }
+
+        public override async Task OnDisconnectedAsync(Exception exception)
+        {
+            if (this.Context.User.IsInRole(RoleNames.Moderator))
+            {
+                await this.Groups.RemoveFromGroupAsync(this.Context.ConnectionId, ModeratorsGroupName);
+            }
         }
 
         public async Task CreateQuestion(string text)
@@ -31,15 +49,18 @@
                 IsApproved = false,
                 PostedAt = DateTimeOffset.Now
             });
-            await this.Clients.All.QuestionIsChanged(this.EntityToDto(question));
+
+            await this.Clients.Group(ModeratorsGroupName).QuestionIsChanged(this.EntityToDto(question));
         }
 
+        [Authorize(Roles = RoleNames.Moderator)]
         public async Task ApproveQuestion(Guid questionId)
         {
             var question = await this.questionsStorage.ApproveQuestion(questionId);
             await this.Clients.All.QuestionIsChanged(this.EntityToDto(question));
         }
 
+        [Authorize(Roles = RoleNames.Moderator)]
         public async Task RemoveQuestion(Guid questionId)
         {
             await this.questionsStorage.DeleteQuestion(questionId);
@@ -65,6 +86,8 @@
         public async Task<IEnumerable<QuestionForSpecificUserDto>> GetQuestions()
         {
             var questions = await this.questionsStorage.GetQuestions();
+            questions = this.Context.User.IsInRole(RoleNames.Moderator) ? questions : questions.Where(q => q.IsApproved);
+
             return questions.Select(q => this.EntityToDtoForSpecificUser(q, this.CurrentUserGuid));
         }
 
