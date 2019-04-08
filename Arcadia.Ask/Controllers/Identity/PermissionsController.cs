@@ -12,17 +12,22 @@
     [ApiController]
     public class PermissionsController : ControllerBase
     {
+        private readonly PermissionsByRoleCreator permissionsCreator;
+
+        public PermissionsController(PermissionsByRoleCreator permissionsCreator)
+        {
+            this.permissionsCreator = permissionsCreator;
+        }
+
         [HttpGet]
         [Route("")]
         [Authorize]
         public ActionResult<IPermissions> Get()
         {
             var role = this.User.Claims
-                .Where(c => ClaimTypes.Role == c.Type)
-                .Select(c => c.Value)
-                .FirstOrDefault();
+                .FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
 
-            var permissions = new PermissionsByRoleCreator(role).Permissions;
+            var permissions = this.permissionsCreator.Create(role);
 
             return this.Ok(permissions);
         }

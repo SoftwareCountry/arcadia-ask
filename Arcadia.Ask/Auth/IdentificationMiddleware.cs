@@ -3,6 +3,8 @@
     using System;
     using System.Security.Claims;
 
+    using Arcadia.Ask.Auth.Roles;
+
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Builder;
@@ -18,7 +20,7 @@
                     var claims = new[]
                     {
                         new Claim(ClaimTypes.Name, Guid.NewGuid().ToString()),
-                        new Claim(ClaimTypes.Role, Roles.Roles.User)
+                        new Claim(ClaimTypes.Role, RoleNames.User)
                     };
                     var identity = new ClaimsIdentity(claims, cookieName);
                     var principal = new ClaimsPrincipal(identity);

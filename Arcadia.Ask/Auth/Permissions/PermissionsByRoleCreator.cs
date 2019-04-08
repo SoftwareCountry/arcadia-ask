@@ -1,24 +1,26 @@
 ﻿namespace Arcadia.Ask.Auth.Permissions
 {
+    using System;
+
     using Arcadia.Ask.Auth.Roles;
 
     public class PermissionsByRoleCreator
     {
-        public IPermissions Permissions { get; }
-
-        public PermissionsByRoleCreator(string role)
+        public IPermissions Create(string role)
         {
-            if (role == Roles.Moderator)
+            if (role == null)
             {
-                this.Permissions = new ModeratorPermissions();
+                throw new ArgumentNullException(nameof(role));
             }
-            else if (role == Roles.User)
+
+            switch (role)
             {
-                this.Permissions = new UserPermissions();
-            }
-            else
-            {
-                throw new UnknownRoleException(role);
+                case RoleNames.Moderator:
+                    return new ModeratorPermissions();
+                case RoleNames.User:
+                    return new UserPermissions();
+                default:
+                    throw new ArgumentException($"Role {role} is unknown");
             }
         }
     }
