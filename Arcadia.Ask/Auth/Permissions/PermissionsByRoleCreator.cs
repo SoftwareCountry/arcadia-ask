@@ -8,17 +8,16 @@
 
         public PermissionsByRoleCreator(string role)
         {
-            if (role == RoleNames.Moderator)
+            switch (role)
             {
-                this.Permissions = new ModeratorPermissions();
-            }
-            else if (role == RoleNames.User)
-            {
-                this.Permissions = new UserPermissions();
-            }
-            else
-            {
-                throw new UnknownRoleException(role);
+                case RoleNames.Moderator:
+                    this.Permissions = new ModeratorPermissions();
+                    break;
+                case RoleNames.User:
+                    this.Permissions = new UserPermissions();
+                    break;
+                default:
+                    throw new UnknownRoleException(role);
             }
         }
     }
