@@ -1,4 +1,4 @@
-﻿namespace Arcadia.Ask.Storage.Exceptions
+﻿namespace Arcadia.Ask.Questions.Exceptions
 {
     using System;
 
