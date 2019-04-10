@@ -89,6 +89,14 @@
             await this.Clients.All.DisplayedQuestionChanged(questionId);
         }
 
+        [Authorize(Roles = RoleNames.Moderator)]
+        public async Task HideQuestion()
+        {
+            this.displayedQuestion.CurrentDisplayedQuestionId = Guid.Empty;
+
+            await this.Clients.All.DisplayedQuestionHidden();
+        }
+
         public async Task UpvoteQuestion(Guid questionId)
         {
             var question = await this.questionsStorage.UpvoteQuestion(questionId, this.CurrentUserGuid);

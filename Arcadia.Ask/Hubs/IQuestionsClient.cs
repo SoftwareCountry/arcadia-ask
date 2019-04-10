@@ -13,5 +13,7 @@
         Task QuestionIsVoted(Guid questionId);
 
         Task DisplayedQuestionChanged(Guid questionId);
+
+        Task DisplayedQuestionHidden();
     }
 }
