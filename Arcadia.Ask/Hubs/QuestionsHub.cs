@@ -8,6 +8,7 @@
     using Arcadia.Ask.Auth.Roles;
     using Arcadia.Ask.Models.DTO;
     using Arcadia.Ask.Models.Entities;
+    using Arcadia.Ask.Questions;
     using Arcadia.Ask.Storage.Questions;
 
     using Microsoft.AspNetCore.Authorization;
@@ -17,11 +18,17 @@
     public class QuestionsHub : Hub<IQuestionsClient>
     {
         private readonly IQuestionStorage questionsStorage;
+        private readonly IDisplayedQuestion displayedQuestion;
+
         private const string ModeratorsGroupName = "ModeratorsGroup";
 
-        public QuestionsHub(IQuestionStorage questionsStorage)
+        public QuestionsHub(
+            IQuestionStorage questionsStorage,
+            IDisplayedQuestion displayedQuestion
+        )
         {
             this.questionsStorage = questionsStorage;
+            this.displayedQuestion = displayedQuestion;
         }
 
         public override async Task OnConnectedAsync()
@@ -111,7 +118,8 @@
                 Text = entity.Text,
                 PostedAt = entity.PostedAt,
                 IsApproved = entity.IsApproved,
-                Votes = entity.Votes?.Count ?? 0
+                Votes = entity.Votes?.Count ?? 0,
+                IsDisplayed = this.displayedQuestion.CurrentDisplayedQuestionId == entity.QuestionId
             };
         }
 
