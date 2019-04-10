@@ -8,8 +8,6 @@
     using Arcadia.Ask.Auth.Roles;
     using Arcadia.Ask.Models.DTO;
     using Arcadia.Ask.Models.Entities;
-    using Arcadia.Ask.Questions;
-    using Arcadia.Ask.Questions.Exceptions;
     using Arcadia.Ask.Storage.Questions;
 
     using Microsoft.AspNetCore.Authorization;
@@ -19,17 +17,12 @@
     public class QuestionsHub : Hub<IQuestionsClient>
     {
         private readonly IQuestionStorage questionsStorage;
-        private readonly IDisplayedQuestion displayedQuestion;
 
         private const string ModeratorsGroupName = "ModeratorsGroup";
 
-        public QuestionsHub(
-            IQuestionStorage questionsStorage,
-            IDisplayedQuestion displayedQuestion
-        )
+        public QuestionsHub(IQuestionStorage questionsStorage)
         {
             this.questionsStorage = questionsStorage;
-            this.displayedQuestion = displayedQuestion;
         }
 
         public override async Task OnConnectedAsync()
@@ -73,28 +66,6 @@
         {
             await this.questionsStorage.DeleteQuestion(questionId);
             await this.Clients.All.QuestionIsRemoved(questionId);
-        }
-
-        [Authorize(Roles = RoleNames.Moderator)]
-        public async Task DisplayQuestion(Guid questionId)
-        {
-            var question = await this.questionsStorage.GetQuestion(questionId);
-
-            if (!question.IsApproved)
-            {
-                throw new QuestionNotApprovedException(questionId);
-            }
-
-            this.displayedQuestion.CurrentDisplayedQuestionId = question.QuestionId;
-            await this.Clients.All.DisplayedQuestionChanged(questionId);
-        }
-
-        [Authorize(Roles = RoleNames.Moderator)]
-        public async Task HideQuestion()
-        {
-            this.displayedQuestion.CurrentDisplayedQuestionId = Guid.Empty;
-
-            await this.Clients.All.DisplayedQuestionHidden();
         }
 
         public async Task UpvoteQuestion(Guid questionId)
@@ -141,8 +112,7 @@
                 Text = entity.Text,
                 PostedAt = entity.PostedAt,
                 IsApproved = entity.IsApproved,
-                Votes = entity.Votes?.Count ?? 0,
-                IsDisplayed = this.displayedQuestion.CurrentDisplayedQuestionId == entity.QuestionId
+                Votes = entity.Votes?.Count ?? 0
             };
         }
 
