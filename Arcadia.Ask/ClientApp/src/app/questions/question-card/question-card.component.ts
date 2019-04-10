@@ -13,7 +13,7 @@ export class QuestionCardComponent {
   public editable: boolean;
 
   @Input()
-  public withVoteButton: boolean;
+  public votingAvailable: boolean;
 
   @Input()
   public question: Question;

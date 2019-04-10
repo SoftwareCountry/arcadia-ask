@@ -1,6 +1,6 @@
 <app-questions-list 
   [editable]="canEditQuestions| async"
-  [withVoteButton]="canVoteQuestions | async"
+  [votingAvailable]="canVoteQuestions | async"
 >
 </app-questions-list>
 <app-add-question-form *ngIf="canCreateQuestions | async">
