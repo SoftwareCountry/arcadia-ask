@@ -5,7 +5,6 @@ import { DashboardRoutingModule } from './dashboard-routing.module';
 import { MainComponent } from './main/main.component';
 import { QuestionsModule } from '../questions/questions.module';
 import { MatGridListModule } from '@angular/material';
-import { IdentityModule } from '../identity/identity.module';
 
 @NgModule({
   declarations: [MainComponent],
@@ -13,8 +12,7 @@ import { IdentityModule } from '../identity/identity.module';
     MatGridListModule,
     CommonModule,
     DashboardRoutingModule,
-    QuestionsModule,
-    IdentityModule
+    QuestionsModule
   ],
   providers: []
 })
