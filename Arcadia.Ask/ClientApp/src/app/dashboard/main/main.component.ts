@@ -18,7 +18,7 @@ export class MainComponent {
   constructor(permissionService: PermissionService) {
     const permissions = permissionService.getPermissions().pipe(share());
     this.canEditQuestions = permissions
-      .pipe(map(p => p.canApproveQuestion && p.canCreateQuestion));
+      .pipe(map(p => p.canApproveQuestion && p.canDeleteQuestion));
 
     this.canVoteQuestions = permissions.
       pipe(map(p => p.canVote));
