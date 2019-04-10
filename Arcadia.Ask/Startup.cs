@@ -84,6 +84,7 @@ namespace Arcadia.Ask
             app.UseSignalR(routes =>
             {
                 routes.MapHub<QuestionsHub>("/questions");
+                routes.MapHub<DisplayQuestionHub>("/displayed_question");
             });
 
             app.UseMvc(routes =>
