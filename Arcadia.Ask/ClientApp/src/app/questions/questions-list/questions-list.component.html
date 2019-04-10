@@ -3,6 +3,7 @@
     <app-question-card 
       [question]="question"
       [editable]="editable"
+      [votingAvailable]="votingAvailable"
       (voted)="onVoted(question.metadata.questionId, $event)"
       (approved)="onApproved(question.metadata.questionId)"
       (deleted)="onDeleted(question.metadata.questionId)"

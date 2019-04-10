@@ -16,6 +16,9 @@ export class QuestionsListComponent {
   @Input()
   public readonly editable: boolean;
 
+  @Input()
+  public readonly votingAvailable: boolean;
+
   public readonly questions: Observable<Question[]>;
 
   constructor(private readonly questionsStore: QuestionsStore) {
