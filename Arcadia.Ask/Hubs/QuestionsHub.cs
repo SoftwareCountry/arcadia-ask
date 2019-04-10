@@ -17,7 +17,6 @@
     public class QuestionsHub : Hub<IQuestionsClient>
     {
         private readonly IQuestionStorage questionsStorage;
-
         private const string ModeratorsGroupName = "ModeratorsGroup";
 
         public QuestionsHub(IQuestionStorage questionsStorage)
