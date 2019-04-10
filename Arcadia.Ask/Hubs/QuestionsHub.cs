@@ -9,6 +9,7 @@
     using Arcadia.Ask.Models.DTO;
     using Arcadia.Ask.Models.Entities;
     using Arcadia.Ask.Questions;
+    using Arcadia.Ask.Questions.Exceptions;
     using Arcadia.Ask.Storage.Questions;
 
     using Microsoft.AspNetCore.Authorization;
@@ -72,6 +73,20 @@
         {
             await this.questionsStorage.DeleteQuestion(questionId);
             await this.Clients.All.QuestionIsRemoved(questionId);
+        }
+
+        [Authorize(Roles = RoleNames.Moderator)]
+        public async Task DisplayQuestion(Guid questionId)
+        {
+            var question = await this.questionsStorage.GetQuestion(questionId);
+
+            if (!question.IsApproved)
+            {
+                throw new QuestionNotApprovedException(questionId);
+            }
+
+            this.displayedQuestion.CurrentDisplayedQuestionId = question.QuestionId;
+            await this.Clients.All.DisplayedQuestionChanged(questionId);
         }
 
         public async Task UpvoteQuestion(Guid questionId)

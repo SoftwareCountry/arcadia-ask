@@ -11,5 +11,7 @@
         Task QuestionIsRemoved(Guid questionId);
 
         Task QuestionIsVoted(Guid questionId);
+
+        Task DisplayedQuestionChanged(Guid questionId);
     }
 }
