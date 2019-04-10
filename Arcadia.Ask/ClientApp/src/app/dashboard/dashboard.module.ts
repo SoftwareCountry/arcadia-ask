@@ -13,7 +13,6 @@ import { MatGridListModule } from '@angular/material';
     CommonModule,
     DashboardRoutingModule,
     QuestionsModule
-  ],
-  providers: []
+  ]
 })
 export class DashboardModule { }
