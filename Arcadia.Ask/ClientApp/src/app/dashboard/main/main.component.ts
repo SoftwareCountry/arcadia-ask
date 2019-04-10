@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { PermissionService } from '../../identity/permissions.service';
-import { map } from 'rxjs/operators';
+import { map, share } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -16,7 +16,7 @@ export class MainComponent {
   public canCreateQuestions: Observable<boolean>;
 
   constructor(permissionService: PermissionService) {
-    const permissions = permissionService.getPermissions();
+    const permissions = permissionService.getPermissions().pipe(share());
     this.canEditQuestions = permissions
       .pipe(map(p => p.canApproveQuestion && p.canCreateQuestion));
 
