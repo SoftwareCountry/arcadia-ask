@@ -4,7 +4,6 @@
     using System.Threading.Tasks;
 
     using Arcadia.Ask.Auth.Roles;
-    using Arcadia.Ask.Models.DTO;
     using Arcadia.Ask.Questions;
     using Arcadia.Ask.Questions.Exceptions;
     using Arcadia.Ask.Storage.Questions;
@@ -37,7 +36,7 @@
             }
 
             this.displayedQuestion.CurrentDisplayedQuestionId = question.QuestionId;
-            await this.Clients.All.DisplayedQuestionChanged(new QuestionDto(question));
+            await this.Clients.All.DisplayedQuestionChanged(questionId);
         }
 
         [Authorize(Roles = RoleNames.Moderator)]
@@ -48,20 +47,10 @@
             await this.Clients.All.DisplayedQuestionHidden();
         }
 
-        public async Task<QuestionDto> GetDisplayedQuestion()
+        public Task<Guid> GetDisplayedQuestionId()
         {
-            try
-            {
-                var displayedQuestionId = this.displayedQuestion.CurrentDisplayedQuestionId;
-                var question = await this.questionsStorage.GetQuestion(displayedQuestionId);
-
-                return new QuestionDto(question);
-            }
-            catch (QuestionNotFoundException)
-            {
-                await this.Clients.All.DisplayedQuestionHidden();
-                return null;
-            }
+            return Task.FromResult(this.displayedQuestion.CurrentDisplayedQuestionId);
         }
+
     }
 }
