@@ -50,14 +50,14 @@
                 PostedAt = DateTimeOffset.Now
             });
 
-            await this.Clients.Group(ModeratorsGroupName).QuestionIsChanged(this.EntityToDto(question));
+            await this.Clients.Group(ModeratorsGroupName).QuestionIsChanged(new QuestionDto(question));
         }
 
         [Authorize(Roles = RoleNames.Moderator)]
         public async Task ApproveQuestion(Guid questionId)
         {
             var question = await this.questionsStorage.ApproveQuestion(questionId);
-            await this.Clients.All.QuestionIsChanged(this.EntityToDto(question));
+            await this.Clients.All.QuestionIsChanged(new QuestionDto(question));
         }
 
         [Authorize(Roles = RoleNames.Moderator)]
@@ -70,7 +70,7 @@
         public async Task UpvoteQuestion(Guid questionId)
         {
             var question = await this.questionsStorage.UpvoteQuestion(questionId, this.CurrentUserGuid);
-            var questionDto = this.EntityToDto(question);
+            var questionDto = new QuestionDto(question);
 
             await this.VotesAreChanged(questionDto);
         }
@@ -78,7 +78,7 @@
         public async Task DownvoteQuestion(Guid questionId)
         {
             var question = await this.questionsStorage.DownvoteQuestion(questionId, this.CurrentUserGuid);
-            var questionDto = this.EntityToDto(question);
+            var questionDto = new QuestionDto(question);
 
             await this.VotesAreChanged(questionDto);
         }
@@ -97,24 +97,6 @@
             await this.Clients.Caller.QuestionIsVoted(question.QuestionId);
         }
 
-        private QuestionDto EntityToDto(QuestionEntity entity)
-        {
-            if (entity == null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
-
-            return new QuestionDto
-            {
-                QuestionId = entity.QuestionId,
-                Author = entity.Author,
-                Text = entity.Text,
-                PostedAt = entity.PostedAt,
-                IsApproved = entity.IsApproved,
-                Votes = entity.Votes?.Count ?? 0
-            };
-        }
-
         private QuestionForSpecificUserDto EntityToDtoForSpecificUser(QuestionEntity entity, Guid userId)
         {
             if (entity == null)
@@ -124,7 +106,7 @@
 
             return new QuestionForSpecificUserDto
             {
-                Metadata = this.EntityToDto(entity),
+                Metadata = new QuestionDto(entity),
                 DidVote = entity.Votes?.Any(v => v.UserId == userId) ?? false
             };
         }

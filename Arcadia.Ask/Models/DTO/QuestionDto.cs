@@ -1,7 +1,9 @@
-﻿using System;
-
-namespace Arcadia.Ask.Models.DTO
+﻿namespace Arcadia.Ask.Models.DTO
 {
+    using System;
+
+    using Arcadia.Ask.Models.Entities;
+
     public class QuestionDto
     {
         public Guid QuestionId { get; set; }
@@ -15,5 +17,20 @@ namespace Arcadia.Ask.Models.DTO
         public bool IsApproved { get; set; }
 
         public int Votes { get; set; }
+
+        public QuestionDto(QuestionEntity entity)
+        {
+            if (entity == null)
+            {
+                throw new ArgumentNullException(nameof(entity));
+            }
+
+            this.QuestionId = entity.QuestionId;
+            this.Author = entity.Author;
+            this.Text = entity.Text;
+            this.PostedAt = entity.PostedAt;
+            this.IsApproved = entity.IsApproved;
+            this.Votes = entity.Votes?.Count ?? 0;
+        }
     }
 }
