@@ -21,12 +21,12 @@ export class AddQuestionFormComponent {
 
   public onSubmit() {
     this.questionsStore.createQuestion(this.model.text)
-      .then(() => this.openDialog())
+      .then(() => this.notifyAboutQuestionCreated())
       .then(() => this.model.text = '')
       .catch(x => console.error(x));
   }
 
-  private openDialog(): void {
+  private notifyAboutQuestionCreated(): void {
     this.dialog.open(
       QuestionCreatedPopupComponent, {
         data: {questionText: this.model.text}
