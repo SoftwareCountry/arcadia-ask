@@ -6,7 +6,7 @@
     using System.Threading.Tasks;
 
     using Arcadia.Ask.Models.Entities;
-    using Arcadia.Ask.Storage.Exceptions;
+    using Arcadia.Ask.Questions.Exceptions;
 
     using Microsoft.EntityFrameworkCore;
 

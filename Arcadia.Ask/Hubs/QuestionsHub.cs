@@ -124,15 +124,7 @@
 
             return new QuestionForSpecificUserDto
             {
-                Metadata = new QuestionDto
-                {
-                    QuestionId = entity.QuestionId,
-                    Author = entity.Author,
-                    Text = entity.Text,
-                    PostedAt = entity.PostedAt,
-                    IsApproved = entity.IsApproved,
-                    Votes = entity.Votes?.Count ?? 0
-                },
+                Metadata = this.EntityToDto(entity),
                 DidVote = entity.Votes?.Any(v => v.UserId == userId) ?? false
             };
         }
