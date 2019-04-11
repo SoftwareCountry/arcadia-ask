@@ -88,27 +88,13 @@
             var questions = await this.questionsStorage.GetQuestions();
             questions = this.Context.User.IsInRole(RoleNames.Moderator) ? questions : questions.Where(q => q.IsApproved);
 
-            return questions.Select(q => this.EntityToDtoForSpecificUser(q, this.CurrentUserGuid));
+            return questions.Select(q => new QuestionForSpecificUserDto(q, this.CurrentUserGuid));
         }
 
         private async Task VotesAreChanged(QuestionDto question)
         {
             await this.Clients.All.QuestionIsChanged(question);
             await this.Clients.Caller.QuestionIsVoted(question.QuestionId);
-        }
-
-        private QuestionForSpecificUserDto EntityToDtoForSpecificUser(QuestionEntity entity, Guid userId)
-        {
-            if (entity == null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
-
-            return new QuestionForSpecificUserDto
-            {
-                Metadata = new QuestionDto(entity),
-                DidVote = entity.Votes?.Any(v => v.UserId == userId) ?? false
-            };
         }
 
         private Guid CurrentUserGuid => Guid.Parse(this.Context.User.Identity.Name);
