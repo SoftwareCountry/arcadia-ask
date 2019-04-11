@@ -4,6 +4,7 @@ namespace Arcadia.Ask
     using Arcadia.Ask.Auth.Permissions;
     using Arcadia.Ask.Configuration;
     using Arcadia.Ask.Hubs;
+    using Arcadia.Ask.Questions;
     using Arcadia.Ask.Storage;
     using Arcadia.Ask.Storage.Questions;
 
@@ -38,6 +39,7 @@ namespace Arcadia.Ask
             });
             services.AddTransient<IQuestionStorage, QuestionStorage>();
             services.AddTransient<IPermissionsByRoleLoader, PermissionsByRoleLoader>();
+            services.AddSingleton<IDisplayedQuestion, DisplayedQuestion>();
 
             services.AddSignalR();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
@@ -82,6 +84,7 @@ namespace Arcadia.Ask
             app.UseSignalR(routes =>
             {
                 routes.MapHub<QuestionsHub>("/questions");
+                routes.MapHub<DisplayQuestionHub>("/displayed-question");
             });
 
             app.UseMvc(routes =>
