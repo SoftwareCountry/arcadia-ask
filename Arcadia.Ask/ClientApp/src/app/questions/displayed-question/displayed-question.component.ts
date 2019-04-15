@@ -16,7 +16,7 @@ export class DisplayedQuestionComponent {
   @Input()
   public readonly votingAvailable: boolean;
 
-  public displayedQuestion: Observable<Question>;
+  public question$: Observable<Question>;
 
   constructor(private readonly questionsStore: QuestionsStore) {}
 

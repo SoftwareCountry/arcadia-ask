@@ -1,4 +1,4 @@
-<div *ngIf="displayedQuestion$ | async as question">
+<div *ngIf="question$ | async as question">
   <app-question-card 
     [question]="question"
     [editable]="editable"
