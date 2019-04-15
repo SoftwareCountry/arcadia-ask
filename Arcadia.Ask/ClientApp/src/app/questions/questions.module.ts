@@ -6,10 +6,11 @@ import { QuestionsListComponent } from './questions-list/questions-list.componen
 import { AddQuestionFormComponent } from './add-question-form/add-question-form.component';
 import { FormsModule } from '@angular/forms';
 import { QuestionCardComponent } from './question-card/question-card.component';
+import { DisplayedQuestionComponent } from './displayed-question/displayed-question.component';
 
 @NgModule({
-  declarations: [QuestionsListComponent, AddQuestionFormComponent, QuestionCardComponent],
-  exports: [QuestionsListComponent, AddQuestionFormComponent],
+  declarations: [QuestionsListComponent, AddQuestionFormComponent, QuestionCardComponent, DisplayedQuestionComponent],
+  exports: [QuestionsListComponent, AddQuestionFormComponent, DisplayedQuestionComponent],
   imports: [
     CommonModule,
     QuestionsRoutingModule,
