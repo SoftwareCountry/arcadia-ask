@@ -108,7 +108,8 @@ export class DisplayedQuestionService implements OnDestroy {
 
   private async dispose() {
     try {
-      await (await this.hubConnection).stop();
+      const hubConnection = await this.hubConnection;
+      await hubConnection.stop();
     } finally {
       this.displayedQuestionSubscription.unsubscribe();
     }
