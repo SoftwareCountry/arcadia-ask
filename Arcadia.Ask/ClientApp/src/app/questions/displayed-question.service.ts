@@ -13,7 +13,7 @@ type DisplayedQuestionChange =
 @Injectable({
   providedIn: 'root',
 })
-export class DisaplayedQuestionService implements OnDestroy {
+export class DisplayedQuestionService implements OnDestroy {
   public displayedQuestion: Observable<Question>;
 
   private readonly allQuestions: Observable<Map<string, Question>>;
