@@ -1,7 +1,25 @@
-<app-questions-list 
-  [editable]="canEditQuestions| async"
-  [votingAvailable]="canVoteQuestions | async"
->
-</app-questions-list>
-<app-add-question-form *ngIf="canCreateQuestions | async">
-</app-add-question-form>
+<div class="content" fxLayout="row" fxLayout.xs="column" fxFlexFill>
+  <app-displayed-question
+    fxFlex="6 6 60" fxFlex.sm="5 5 50"
+  >
+  </app-displayed-question>
+
+  <div class="question-sidebar" fxFlex="4 4 40" fxFlex.sm="5 5 50" fxLayout="column">
+    <app-questions-list 
+      fxFlexAlign="start"
+      fxFlex="7 7 70"
+      fxFlex.xs="5 5 50"
+      style="overflow-y: auto;"
+      [editable]="canEditQuestions| async"
+      [votingAvailable]="canVoteQuestions | async"
+    >
+    </app-questions-list>
+
+    <app-add-question-form 
+      fxFlex="3 3 30" 
+      fxFlex.xs="5 5 50"
+      *ngIf="canCreateQuestions | async"
+    >
+    </app-add-question-form>
+  </div>
+</div>
