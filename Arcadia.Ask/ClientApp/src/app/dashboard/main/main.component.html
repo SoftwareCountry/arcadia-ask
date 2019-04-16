@@ -3,14 +3,14 @@
   fxFlexFill
 >
   <app-displayed-question
-    fxFlex="8 1 auto" fxFlex.xs="5 5 50"
+    fxFlex="8 6 0" fxFlex.xs="5 5 50"
     [editable]="canEditQuestions| async"
     [votingAvailable]="canVoteQuestions | async"
   >
   </app-displayed-question>
 
   <div class="question-sidebar" 
-    fxFlex="2 1 auto" fxFlex.xs="5 5 50"
+    fxFlex="3 2 0" fxFlex.xs="5 5 50"
     fxLayout="column" fxLayoutAlign="start stratch"
   >
     <app-questions-list 
