@@ -8,7 +8,11 @@
   </button>
   {{question.metadata.text}}
 
-  <button mat-icon-button color="primary" *ngIf="question.metadata.isApproved && displayable">
+  <button 
+    mat-icon-button color="primary" 
+    *ngIf="question.metadata.isApproved && displayable"
+    (click)="display()"
+  >
     <mat-icon>add_to_queue</mat-icon>
   </button>
 

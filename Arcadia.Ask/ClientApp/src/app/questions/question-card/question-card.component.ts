@@ -30,6 +30,9 @@ export class QuestionCardComponent {
   @Output()
   public approved = new EventEmitter<void>();
 
+  @Output()
+  public displayed = new EventEmitter<void>();
+
   public vote() {
     this.voted.emit(true);
   }
@@ -40,6 +43,10 @@ export class QuestionCardComponent {
 
   public delete() {
     this.deleted.emit();
+  }
+
+  public display() {
+    this.displayed.emit();
   }
 
 }

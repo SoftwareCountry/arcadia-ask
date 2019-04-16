@@ -4,6 +4,7 @@ import { QuestionsStore } from '../questions-store.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Map } from 'immutable';
+import { DisplayedQuestionService } from '../displayed-question.service';
 
 @Component({
   selector: 'app-questions-list',
@@ -24,7 +25,10 @@ export class QuestionsListComponent {
 
   public readonly questions: Observable<Question[]>;
 
-  constructor(private readonly questionsStore: QuestionsStore) {
+  constructor(
+    private readonly questionsStore: QuestionsStore,
+    private readonly displayedQuestionService: DisplayedQuestionService
+  ) {
     this.questions = this.questionsStore
       .questions
       .pipe(
@@ -50,6 +54,10 @@ export class QuestionsListComponent {
 
   public async onApproved(questionId: string) {
     await this.questionsStore.approveQuestion(questionId);
+  }
+
+  public async onDisplayed(questionId: string) {
+    await this.displayedQuestionService.displayQuestion(questionId);
   }
 
   private extractQuestions(source: Map<string, Question>) {
