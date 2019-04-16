@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Question } from '../question';
 import { QuestionsStore } from '../questions-store.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-displayed-question',
@@ -18,9 +19,13 @@ export class DisplayedQuestionComponent {
 
   public question$: Observable<Question>;
 
-  constructor(private readonly questionsStore: QuestionsStore) {}
+  constructor(private readonly questionsStore: QuestionsStore) {
+    this.question$ = questionsStore.questions.pipe(
+      map(question => question.first())
+    );
+  }
 
-  public async onVoted(questionId: string, upvoted: boolean) {
+  public async vote(questionId: string, upvoted: boolean) {
     if (upvoted) {
       await this.questionsStore.upvoteQuestion(questionId);
     } else {
@@ -28,11 +33,11 @@ export class DisplayedQuestionComponent {
     }
   }
 
-  public async onDeleted(questionId: string) {
+  public async delete(questionId: string) {
     await this.questionsStore.removeQuestion(questionId);
   }
 
-  public async onApproved(questionId: string) {
+  public async approve(questionId: string) {
     await this.questionsStore.approveQuestion(questionId);
   }
 

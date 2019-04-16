@@ -7,6 +7,7 @@ import { AddQuestionFormComponent } from './add-question-form/add-question-form.
 import { FormsModule } from '@angular/forms';
 import { QuestionCardComponent } from './question-card/question-card.component';
 import { DisplayedQuestionComponent } from './displayed-question/displayed-question.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   declarations: [QuestionsListComponent, AddQuestionFormComponent, QuestionCardComponent, DisplayedQuestionComponent],
@@ -15,6 +16,7 @@ import { DisplayedQuestionComponent } from './displayed-question/displayed-quest
     CommonModule,
     QuestionsRoutingModule,
     FormsModule,
+    FlexLayoutModule,
     MatIconModule,
     MatListModule,
     MatButtonModule,
