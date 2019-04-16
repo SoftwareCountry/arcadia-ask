@@ -11,6 +11,7 @@
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.SignalR;
 
+    [Authorize]
     public class DisplayQuestionHub : Hub<IDisplayQuestionClient>
     {
         private readonly IDisplayedQuestion displayedQuestion;
