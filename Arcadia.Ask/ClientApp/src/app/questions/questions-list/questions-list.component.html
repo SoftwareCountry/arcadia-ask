@@ -4,6 +4,7 @@
       [question]="question"
       [editable]="editable"
       [votingAvailable]="votingAvailable"
+      [displayable]="displayable"
       (voted)="onVoted(question.metadata.questionId, $event)"
       (approved)="onApproved(question.metadata.questionId)"
       (deleted)="onDeleted(question.metadata.questionId)"

@@ -16,6 +16,9 @@ export class QuestionCardComponent {
   public votingAvailable: boolean;
 
   @Input()
+  public displayable: boolean;
+
+  @Input()
   public question: Question;
 
   @Output()
