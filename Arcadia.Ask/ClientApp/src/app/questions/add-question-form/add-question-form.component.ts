@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { QuestionsStore } from '../questions-store.service';
 import { MatDialog } from '@angular/material';
 import { QuestionCreatedPopupComponent } from './question-created-popup/question-created-popup.component';
@@ -11,6 +11,9 @@ import { NgForm } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddQuestionFormComponent {
+  @ViewChild('questionForm')
+  public questionForm: NgForm;
+
   public model = {
     text: ''
   };
@@ -20,10 +23,10 @@ export class AddQuestionFormComponent {
     private readonly dialog: MatDialog,
   ) { }
 
-  public onSubmit(form: NgForm) {
+  public onSubmit() {
     this.questionsStore.createQuestion(this.model.text)
       .then(() => this.notifyAboutQuestionCreated())
-      .then(() => form.resetForm())
+      .then(() => this.questionForm.resetForm())
       .catch(x => console.error(x));
   }
 
