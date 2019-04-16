@@ -30,12 +30,12 @@ export class DisplayedQuestionService implements OnDestroy {
     this.displayedQuestionSubscription = (this.displayedQuestion as ConnectableObservable<Question>).connect();
   }
 
-  public displayQuestion(questionId: string) {
-    this.invoke('DisplayQuestion', questionId);
+  public async displayQuestion(questionId: string) {
+    await this.invoke('DisplayQuestion', questionId);
   }
 
-  public hideQuestion() {
-    this.invoke('HideQuestion');
+  public async hideQuestion() {
+    await this.invoke('HideQuestion');
   }
 
   public ngOnDestroy(): void {
