@@ -6,7 +6,9 @@
   <div class="display-question-top"
     fxFlex="2 1 0" fxLayout="row" fxLayoutAlign="end center"
   >
-    <button mat-icon-button>
+    <button mat-icon-button
+      *ngIf="hidingAvailable"
+    >
       <mat-icon>remove_from_queue</mat-icon>
     </button>
   </div>
