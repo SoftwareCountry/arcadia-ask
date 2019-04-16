@@ -23,10 +23,11 @@ export class DisplayedQuestionComponent {
 
   public question$: Observable<Question>;
 
-  constructor(private readonly questionsStore: QuestionsStore) {
-    this.question$ = questionsStore.questions.pipe(
-      map(question => question.first())
-    );
+  constructor(
+    private readonly questionsStore: QuestionsStore,
+    private readonly displayedQuestionService: DisplayedQuestionService
+  ) {
+    this.question$ = this.displayedQuestionService.displayedQuestion;
   }
 
   public async vote(questionId: string, upvoted: boolean) {
