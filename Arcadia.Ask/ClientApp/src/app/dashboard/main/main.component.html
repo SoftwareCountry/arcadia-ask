@@ -1,13 +1,16 @@
-<div class="content" fxLayout="row" fxLayout.xs="column" fxFlexFill>
+<div class="content" 
+  fxLayout="row" fxLayout.xs="column"
+  fxFlexFill
+>
   <app-displayed-question
-    fxFlex="6 6 60" fxFlex.sm="5 5 50"
+    fxFlex="8 1 auto" fxFlex.xs="5 5 50"
     [editable]="canEditQuestions| async"
     [votingAvailable]="canVoteQuestions | async"
   >
   </app-displayed-question>
 
   <div class="question-sidebar" 
-    fxFlex="4 4 40" fxFlex.sm="5 5 50" 
+    fxFlex="2 1 auto" fxFlex.xs="5 5 50"
     fxLayout="column" fxLayoutAlign="start stratch"
   >
     <app-questions-list 
