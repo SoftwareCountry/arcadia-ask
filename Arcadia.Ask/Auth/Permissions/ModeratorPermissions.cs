@@ -9,5 +9,9 @@
         public bool CanApproveQuestion { get; } = true;
 
         public bool CanDeleteQuestion { get; } = true;
+
+        public bool CanHideQuestion { get; } = true;
+
+        public bool CanDisplayQuestion { get; } = true;
     }
 }
