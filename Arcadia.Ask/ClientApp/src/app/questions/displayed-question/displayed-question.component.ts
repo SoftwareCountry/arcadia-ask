@@ -30,6 +30,10 @@ export class DisplayedQuestionComponent {
     this.question$ = this.displayedQuestionService.displayedQuestion;
   }
 
+  public async hide() {
+    await this.displayedQuestionService.hideQuestion();
+  }
+
   public async vote(questionId: string, upvoted: boolean) {
     if (upvoted) {
       await this.questionsStore.upvoteQuestion(questionId);
