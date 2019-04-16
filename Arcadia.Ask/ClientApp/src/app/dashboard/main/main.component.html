@@ -6,11 +6,12 @@
   >
   </app-displayed-question>
 
-  <div class="question-sidebar" fxFlex="4 4 40" fxFlex.sm="5 5 50" fxLayout="column">
+  <div class="question-sidebar" 
+    fxFlex="4 4 40" fxFlex.sm="5 5 50" 
+    fxLayout="column" fxLayoutAlign="start stratch"
+  >
     <app-questions-list 
-      fxFlexAlign="start"
-      fxFlex="7 7 70"
-      fxFlex.xs="5 5 50"
+      fxFlex="7 7 70" fxFlex.xs="5 2 0"
       style="overflow-y: auto;"
       [editable]="canEditQuestions| async"
       [votingAvailable]="canVoteQuestions | async"
@@ -18,8 +19,7 @@
     </app-questions-list>
 
     <app-add-question-form 
-      fxFlex="3 3 30" 
-      fxFlex.xs="5 5 50"
+      fxFlex="3 3 30" fxFlex.xs="5 3 0"
       *ngIf="canCreateQuestions | async"
     >
     </app-add-question-form>
