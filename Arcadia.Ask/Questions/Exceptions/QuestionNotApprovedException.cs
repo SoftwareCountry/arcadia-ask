@@ -5,7 +5,7 @@
     public class QuestionNotApprovedException : Exception
     {
         public QuestionNotApprovedException(Guid questionId)
-            : base($"Question with id {questionId} was not approved, yet")
+            : base($"Question with id {questionId} was not approved yet")
         {
         }
     }
