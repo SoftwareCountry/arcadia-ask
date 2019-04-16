@@ -1,6 +1,8 @@
 <div class="content" fxLayout="row" fxLayout.xs="column" fxFlexFill>
   <app-displayed-question
     fxFlex="6 6 60" fxFlex.sm="5 5 50"
+    [editable]="canEditQuestions| async"
+    [votingAvailable]="canVoteQuestions | async"
   >
   </app-displayed-question>
 
