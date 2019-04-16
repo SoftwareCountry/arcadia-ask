@@ -21,6 +21,7 @@
     class="display-question-bottom"
     fxFlex="2 1 0" fxLayout="row" fxLayoutAlign="center center" 
   >
+    {{question.metadata.votes}}
     <button 
       *ngIf="votingAvailable"
       mat-icon-button color="primary" 
