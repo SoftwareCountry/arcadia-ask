@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
-import { Observable, from, ReplaySubject, concat, Subscription, ConnectableObservable } from 'rxjs';
-import { switchMap, flatMap, multicast, withLatestFrom, map } from 'rxjs/operators';
+import { Observable, from, ReplaySubject, concat, Subscription, ConnectableObservable, combineLatest } from 'rxjs';
+import { flatMap, multicast, map, withLatestFrom } from 'rxjs/operators';
 import { QuestionsStore } from './questions-store.service';
 import { Question } from './question';
 import { Map } from 'immutable';
@@ -44,19 +44,23 @@ export class DisplayedQuestionService implements OnDestroy {
 
   private getDisplayedQuestionStream(hubConnection: HubConnection) {
     const initialDisplayedQuestion = from(this.getCurrentDisplayedQuestionId());
-    const displayedQuestionIdStream = concat(
-      initialDisplayedQuestion,
-      this.onDisplayedQuestionChanges(hubConnection).pipe(
-        switchMap(
-          questionChange =>
-            (questionChange.type === 'hidden' ? null : questionChange.newQuestionId)
-        )
+    const currentDisplayedQuestionId = this.onDisplayedQuestionChanges(hubConnection).pipe(
+      withLatestFrom(
+        questionChange =>
+          (questionChange.type === 'hidden' ? null : questionChange.newQuestionId)
       )
     );
 
-    return this.allQuestions.pipe(
-      withLatestFrom(displayedQuestionIdStream),
-      map(([questions, displayedId]) => (questions.get(displayedId)))
+    const displayedQuestionIdStream = concat(
+      initialDisplayedQuestion,
+      currentDisplayedQuestionId
+    );
+
+    return combineLatest(
+      this.allQuestions,
+      displayedQuestionIdStream
+    ).pipe(
+      map(([questions, displayedId]) => questions.get(displayedId))
     );
   }
 
