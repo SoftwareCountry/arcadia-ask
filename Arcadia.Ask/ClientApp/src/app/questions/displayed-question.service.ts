@@ -49,7 +49,7 @@ export class DisplayedQuestionService implements OnDestroy {
       this.onDisplayedQuestionChanges(hubConnection).pipe(
         switchMap(
           questionChange =>
-            (questionChange.type === 'hidden' ? '' : questionChange.newQuestionId)
+            (questionChange.type === 'hidden' ? null : questionChange.newQuestionId)
         )
       )
     );
