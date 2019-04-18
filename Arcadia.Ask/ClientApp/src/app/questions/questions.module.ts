@@ -9,7 +9,12 @@ import { QuestionCardComponent } from './question-card/question-card.component';
 import { QuestionCreatedPopupComponent } from './add-question-form/question-created-popup';
 
 @NgModule({
-  declarations: [QuestionsListComponent, AddQuestionFormComponent, QuestionCardComponent, QuestionCreatedPopupComponent],
+  declarations: [
+    QuestionsListComponent,
+    AddQuestionFormComponent,
+    QuestionCardComponent,
+    QuestionCreatedPopupComponent
+  ],
   exports: [QuestionsListComponent, AddQuestionFormComponent],
   imports: [
     CommonModule,
