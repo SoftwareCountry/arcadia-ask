@@ -25,8 +25,10 @@ export class AddQuestionFormComponent {
 
   public onSubmit() {
     this.questionsStore.createQuestion(this.model.text)
-      .then(() => this.notifyAboutQuestionCreated())
-      .then(() => this.questionForm.resetForm())
+      .then(() => {
+        this.notifyAboutQuestionCreated();
+        this.questionForm.resetForm();
+      })
       .catch(x => console.error(x));
   }
 
