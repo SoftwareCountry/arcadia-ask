@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { QuestionsStore } from '../questions-store.service';
 import { MatDialog } from '@angular/material';
-import { QuestionCreatedPopupComponent } from './question-created-popup/question-created-popup.component';
+import { QuestionCreatedPopupComponent } from './question-created-popup';
 import { NgForm } from '@angular/forms';
 
 @Component({

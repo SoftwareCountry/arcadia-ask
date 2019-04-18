@@ -6,7 +6,7 @@ import { QuestionsListComponent } from './questions-list/questions-list.componen
 import { AddQuestionFormComponent } from './add-question-form/add-question-form.component';
 import { FormsModule } from '@angular/forms';
 import { QuestionCardComponent } from './question-card/question-card.component';
-import { QuestionCreatedPopupComponent } from './add-question-form/question-created-popup/question-created-popup.component';
+import { QuestionCreatedPopupComponent } from './add-question-form/question-created-popup';
 
 @NgModule({
   declarations: [QuestionsListComponent, AddQuestionFormComponent, QuestionCardComponent, QuestionCreatedPopupComponent],
