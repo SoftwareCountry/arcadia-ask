@@ -5,8 +5,8 @@ import { QuestionCreatedData } from './question-created-data';
 
 @Component({
   selector: 'app-question-created-popup',
-  templateUrl: 'question-created-popup.component.html',
-  styleUrls: ['question-created-popup.component.html'],
+  templateUrl: './question-created-popup.component.html',
+  styleUrls: ['./question-created-popup.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class QuestionCreatedPopupComponent {
