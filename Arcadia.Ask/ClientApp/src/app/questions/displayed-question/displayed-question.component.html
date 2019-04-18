@@ -1,0 +1,51 @@
+<div class="displayed-question-content"
+  *ngIf="question$ | async as question"
+  fxLayout="column" fxFlex="1 1 100"
+>
+
+  <div class="display-question-top"
+    fxFlex="2 1 0" fxLayout="row" fxLayoutAlign="end center"
+  >
+    <button mat-icon-button>
+      <mat-icon>remove_from_queue</mat-icon>
+    </button>
+  </div>
+
+  <div class="question-text" 
+    fxFlex="8 9 0" fxLayout="row" fxLayoutAlign="center center" fxFlexFill
+  >
+    <h1 fxFlexFill>{{question.metadata.text}}</h1>
+  </div>
+
+  <div
+    class="display-question-bottom"
+    fxFlex="2 1 0" fxLayout="row" fxLayoutAlign="center center" 
+  >
+    {{question.metadata.votes}}
+    <button 
+      *ngIf="votingAvailable"
+      mat-icon-button color="primary" 
+      (click)="vote(question.metadata.questionId, true)" 
+      [disabled]="question.didVote"
+    >
+      <mat-icon>thumb_up</mat-icon>
+    </button>
+
+    <span *ngIf="editable">
+      <button 
+        *ngIf="!question.metadata.isApproved" 
+        mat-icon-button color="primary" 
+        (click)="approve(question.metadata.questionId)"
+      >
+        <mat-icon>done</mat-icon>
+      </button>
+
+      <button 
+        mat-icon-button 
+        (click)="delete(question.metadata.questionId)"
+      >
+        <mat-icon color="warn">delete</mat-icon>
+      </button>
+    </span>
+  </div>
+</div>

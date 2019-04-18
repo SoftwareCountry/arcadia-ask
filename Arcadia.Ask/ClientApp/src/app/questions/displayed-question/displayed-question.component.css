@@ -1,0 +1,11 @@
+.question-text {
+  overflow-y: auto;
+}
+
+.question-text > h1 {
+  overflow-wrap: anywhere;
+}
+
+.displayed-question-content{
+  padding: 20px;
+}

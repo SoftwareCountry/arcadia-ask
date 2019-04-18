@@ -6,6 +6,8 @@ import { QuestionsListComponent } from './questions-list/questions-list.componen
 import { AddQuestionFormComponent } from './add-question-form/add-question-form.component';
 import { FormsModule } from '@angular/forms';
 import { QuestionCardComponent } from './question-card/question-card.component';
+import { DisplayedQuestionComponent } from './displayed-question/displayed-question.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { QuestionCreatedPopupComponent } from './add-question-form/question-created-popup';
 
 @NgModule({
@@ -13,13 +15,15 @@ import { QuestionCreatedPopupComponent } from './add-question-form/question-crea
     QuestionsListComponent,
     AddQuestionFormComponent,
     QuestionCardComponent,
-    QuestionCreatedPopupComponent
+    QuestionCreatedPopupComponent,
+    DisplayedQuestionComponent,
   ],
-  exports: [QuestionsListComponent, AddQuestionFormComponent],
+  exports: [QuestionsListComponent, AddQuestionFormComponent, DisplayedQuestionComponent],
   imports: [
     CommonModule,
     QuestionsRoutingModule,
     FormsModule,
+    FlexLayoutModule,
     MatIconModule,
     MatListModule,
     MatButtonModule,

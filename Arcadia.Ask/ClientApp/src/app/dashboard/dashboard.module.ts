@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { MainComponent } from './main/main.component';
@@ -12,6 +13,7 @@ import { MatGridListModule } from '@angular/material';
     MatGridListModule,
     CommonModule,
     DashboardRoutingModule,
+    FlexLayoutModule,
     QuestionsModule
   ]
 })

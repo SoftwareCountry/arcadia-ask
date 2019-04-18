@@ -10,6 +10,7 @@ import { QuestionsModule } from './questions/questions.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatToolbarModule } from '@angular/material';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { MatToolbarModule } from '@angular/material';
     QuestionsModule,
     DashboardModule,
     RouterModule.forRoot([]),
+    FlexLayoutModule,
     BrowserAnimationsModule
   ],
   providers: [],
