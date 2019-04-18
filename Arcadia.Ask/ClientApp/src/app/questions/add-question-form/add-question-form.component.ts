@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { QuestionsStore } from '../questions-store.service';
 import { MatDialog } from '@angular/material';
-import { QuestionCreatedPopupComponent } from './question-created-popup';
+import { QuestionCreatedPopupComponent, QuestionCreatedData } from './question-created-popup';
 import { NgForm } from '@angular/forms';
 
 @Component({
@@ -31,10 +31,9 @@ export class AddQuestionFormComponent {
   }
 
   private notifyAboutQuestionCreated(): void {
-    this.dialog.open(
-      QuestionCreatedPopupComponent, {
-        data: {questionText: this.model.text}
-      }
+    const data: QuestionCreatedData = { questionText: this.model.text };
+    this.dialog.open<QuestionCreatedPopupComponent, QuestionCreatedData>(
+      QuestionCreatedPopupComponent, { data }
     );
   }
 }
