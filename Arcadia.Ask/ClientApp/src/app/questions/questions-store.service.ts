@@ -1,9 +1,10 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { Question, QuestionMetadata } from './question';
-import { HubConnectionBuilder, HubConnection } from '@aspnet/signalr';
-import { Observable, from, Subscription, ReplaySubject, ConnectableObservable } from 'rxjs';
-import { flatMap, scan, switchMap, startWith, multicast } from 'rxjs/operators';
+import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
 import { Map } from 'immutable';
+import { ConnectableObservable, from, Observable, ReplaySubject, Subscription } from 'rxjs';
+import { flatMap, multicast, scan, startWith, switchMap } from 'rxjs/operators';
+
+import { Question, QuestionMetadata } from './question';
 
 type QuestionChange =
   { type: 'changed', question: QuestionMetadata } |
