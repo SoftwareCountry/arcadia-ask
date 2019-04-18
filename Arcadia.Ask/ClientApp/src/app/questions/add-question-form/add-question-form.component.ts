@@ -1,8 +1,9 @@
 import { Component, ChangeDetectionStrategy, ViewChild } from '@angular/core';
-import { QuestionsStore } from '../questions-store.service';
-import { MatDialog } from '@angular/material';
-import { QuestionCreatedPopupComponent, QuestionCreatedData } from './question-created-popup';
 import { NgForm } from '@angular/forms';
+import { MatDialog } from '@angular/material';
+
+import { QuestionsStore } from '../questions-store.service';
+import { QuestionCreatedPopupComponent, QuestionCreatedData } from './question-created-popup';
 
 @Component({
   selector: 'app-add-question-form',
