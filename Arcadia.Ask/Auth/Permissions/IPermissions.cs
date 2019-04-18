@@ -9,5 +9,9 @@
         bool CanApproveQuestion { get; }
 
         bool CanDeleteQuestion { get; }
+
+        bool CanHideQuestion { get; }
+
+        bool CanDisplayQuestion { get; }
     }
 }
