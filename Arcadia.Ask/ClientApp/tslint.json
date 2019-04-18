@@ -62,6 +62,8 @@
     ],
     "ordered-imports": [
       true, {
+        "import-sources-order": "case-insensitive",
+        "named-imports-order": "case-insensitive",
         "grouped-imports": true
     }],
     "no-angle-bracket-type-assertion": true,
