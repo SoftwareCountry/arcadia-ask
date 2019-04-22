@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { Question } from '../question';
 import { QuestionsStore } from '../questions-store.service';
 import { map } from 'rxjs/operators';
+import { DisplayedQuestionService } from '../displayed-question.service';
 
 @Component({
   selector: 'app-displayed-question',
@@ -17,12 +18,20 @@ export class DisplayedQuestionComponent {
   @Input()
   public readonly votingAvailable: boolean;
 
+  @Input()
+  public readonly hidingAvailable: boolean;
+
   public question$: Observable<Question>;
 
-  constructor(private readonly questionsStore: QuestionsStore) {
-    this.question$ = questionsStore.questions.pipe(
-      map(question => question.first())
-    );
+  constructor(
+    private readonly questionsStore: QuestionsStore,
+    private readonly displayedQuestionService: DisplayedQuestionService
+  ) {
+    this.question$ = this.displayedQuestionService.displayedQuestion;
+  }
+
+  public async hide() {
+    await this.displayedQuestionService.hideQuestion();
   }
 
   public async vote(questionId: string, upvoted: boolean) {

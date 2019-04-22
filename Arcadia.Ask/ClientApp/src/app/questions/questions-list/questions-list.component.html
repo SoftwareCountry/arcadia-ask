@@ -7,9 +7,11 @@
       [question]="question"
       [editable]="editable"
       [votingAvailable]="votingAvailable"
+      [displayable]="displayable"
       (voted)="onVoted(question.metadata.questionId, $event)"
       (approved)="onApproved(question.metadata.questionId)"
       (deleted)="onDeleted(question.metadata.questionId)"
+      (displayed)="onDisplayed(question.metadata.questionId)"
       >
     </app-question-card>
   </mat-list-item>

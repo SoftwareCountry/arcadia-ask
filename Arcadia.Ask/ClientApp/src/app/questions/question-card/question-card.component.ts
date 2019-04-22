@@ -16,6 +16,9 @@ export class QuestionCardComponent {
   public votingAvailable: boolean;
 
   @Input()
+  public displayable: boolean;
+
+  @Input()
   public question: Question;
 
   @Output()
@@ -27,6 +30,9 @@ export class QuestionCardComponent {
   @Output()
   public approved = new EventEmitter<void>();
 
+  @Output()
+  public displayed = new EventEmitter<void>();
+
   public vote() {
     this.voted.emit(true);
   }
@@ -37,6 +43,10 @@ export class QuestionCardComponent {
 
   public delete() {
     this.deleted.emit();
+  }
+
+  public display() {
+    this.displayed.emit();
   }
 
 }

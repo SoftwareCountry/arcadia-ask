@@ -6,6 +6,7 @@
     fxFlex="8 6 0" fxFlex.xs="5 5 50"
     [editable]="canEditQuestions| async"
     [votingAvailable]="canVoteQuestions | async"
+    [hidingAvailable]="canHideQuestions | async"
   >
   </app-displayed-question>
 
@@ -17,6 +18,7 @@
       fxFlex="7 7 70" fxFlex.xs="5 2 0"
       [editable]="canEditQuestions| async"
       [votingAvailable]="canVoteQuestions | async"
+      [displayable]="canDisplayQuestion | async"
     >
     </app-questions-list>
 

@@ -15,6 +15,10 @@ export class MainComponent {
 
   public canCreateQuestions: Observable<boolean>;
 
+  public canHideQuestions: Observable<boolean>;
+
+  public canDisplayQuestion: Observable<boolean>;
+
   constructor(permissionService: PermissionService) {
     const permissions = permissionService.getPermissions().pipe(share());
     this.canEditQuestions = permissions
@@ -25,5 +29,11 @@ export class MainComponent {
 
     this.canCreateQuestions = permissions.
       pipe(map(p => p.canCreateQuestion));
+
+    this.canHideQuestions = permissions.
+      pipe(map(p => p.canHideQuestion));
+
+    this.canDisplayQuestion = permissions.
+      pipe(map(p => p.canDisplayQuestion));
   }
 }
