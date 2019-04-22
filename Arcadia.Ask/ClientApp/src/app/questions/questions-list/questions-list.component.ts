@@ -1,10 +1,11 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { Question } from '../question';
-import { QuestionsStore } from '../questions-store.service';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { Map } from 'immutable';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Map } from 'immutable';
+
 import { DisplayedQuestionService } from '../displayed-question.service';
+import { Question } from '../question';
+import { QuestionsStore } from '../questions-store.service';
 
 @Component({
   selector: 'app-questions-list',

@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { PermissionService } from '../../identity/permissions.service';
-import { map, share } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { map, share } from 'rxjs/operators';
+
+import { PermissionService } from '../../identity/permissions.service';
 
 @Component({
   selector: 'app-main',

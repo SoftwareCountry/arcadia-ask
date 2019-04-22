@@ -60,6 +60,12 @@
         "order": "instance-sandwich"
       }
     ],
+    "ordered-imports": [
+      true, {
+        "import-sources-order": "any",
+        "named-imports-order": "any",
+        "grouped-imports": true
+    }],
     "no-angle-bracket-type-assertion": true,
     "no-arg": true,
     "no-bitwise": true,

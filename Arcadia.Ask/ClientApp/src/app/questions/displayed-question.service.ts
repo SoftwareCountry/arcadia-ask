@@ -1,10 +1,11 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
-import { Observable, from, ReplaySubject, concat, Subscription, ConnectableObservable, combineLatest } from 'rxjs';
-import { flatMap, multicast, map, withLatestFrom } from 'rxjs/operators';
-import { QuestionsStore } from './questions-store.service';
-import { Question } from './question';
 import { Map } from 'immutable';
+import { combineLatest, concat, ConnectableObservable, from, Observable, ReplaySubject, Subscription } from 'rxjs';
+import { flatMap, map, multicast, withLatestFrom } from 'rxjs/operators';
+
+import { Question } from './question';
+import { QuestionsStore } from './questions-store.service';
 
 type DisplayedQuestionChange =
   { type: 'changed', newQuestionId: string } |

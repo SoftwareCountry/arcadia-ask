@@ -1,9 +1,9 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Observable } from 'rxjs';
+
+import { DisplayedQuestionService } from '../displayed-question.service';
 import { Question } from '../question';
 import { QuestionsStore } from '../questions-store.service';
-import { map } from 'rxjs/operators';
-import { DisplayedQuestionService } from '../displayed-question.service';
 
 @Component({
   selector: 'app-displayed-question',
