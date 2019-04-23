@@ -3,7 +3,7 @@
   fxFlexFill
 >
   <app-displayed-question
-    fxFlex="8 6 0" fxFlex.xs="5 5 50"
+    fxFlex="8 6 0" fxFlex.xs="5 0 300px"
     [editable]="canEditQuestions| async"
     [votingAvailable]="canVoteQuestions | async"
     [hidingAvailable]="canHideQuestions | async"
@@ -11,7 +11,7 @@
   </app-displayed-question>
 
   <mat-card class="question-sidebar" 
-    fxFlex="3 2 0" fxFlex.xs="5 5 50"
+    fxFlex="3 2 0" fxFlex.xs="2 1 300px"
     fxLayout="column" fxLayoutAlign="start stretch"
   >
     <app-questions-list 
