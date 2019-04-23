@@ -10,7 +10,7 @@
   >
   </app-displayed-question>
 
-  <div class="question-sidebar" 
+  <mat-card class="question-sidebar" 
     fxFlex="3 2 0" fxFlex.xs="5 5 50"
     fxLayout="column" fxLayoutAlign="start stretch"
   >
@@ -27,5 +27,5 @@
       *ngIf="canCreateQuestions | async"
     >
     </app-add-question-form>
-  </div>
+  </mat-card>
 </div>
