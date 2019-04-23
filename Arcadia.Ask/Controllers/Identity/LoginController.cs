@@ -21,7 +21,7 @@
         [Authorize]
         public async Task<IActionResult> SignInAsModerator()
         {
-            var roleName = RoleNames.Moderator;
+            const string roleName = RoleNames.Moderator;
 
             if (this.User.IsInRole(roleName))
             {
