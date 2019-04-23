@@ -1,5 +1,6 @@
 ﻿namespace Arcadia.Ask.Controllers.Identity
 {
+    using System;
     using System.Security.Claims;
     using System.Threading.Tasks;
 
@@ -7,6 +8,7 @@
     using Arcadia.Ask.Auth.Roles;
 
     using Microsoft.AspNetCore.Authentication;
+    using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
@@ -37,6 +39,15 @@
             await this.HttpContext.SignInAsync(principal);
 
             return this.Redirect("/");
+        }
+
+        [Route("")]
+        public ActionResult SignIn()
+        {
+            var returnUrl = this.Request.Query[CookieAuthenticationDefaults.ReturnUrlParameter].ToString();
+            var redirectUrl = string.IsNullOrEmpty(returnUrl) ? "/" : returnUrl;
+
+            return this.Redirect(redirectUrl);
         }
     }
 }

@@ -11,6 +11,7 @@ namespace Arcadia.Ask
     using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.SpaServices.AngularCli;
     using Microsoft.EntityFrameworkCore;
@@ -48,6 +49,7 @@ namespace Arcadia.Ask
                 .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
+                    options.LoginPath = new PathString("/api/auth");
                     options.Cookie.Name = this.ApplicationSettings.AuthSettings.UserCookieName;
                     options.Cookie.IsEssential = true;
                 });
