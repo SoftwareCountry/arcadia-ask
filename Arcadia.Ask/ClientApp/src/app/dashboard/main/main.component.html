@@ -15,7 +15,7 @@
     fxLayout="column" fxLayoutAlign="start stretch"
   >
     <app-questions-list 
-      fxFlex="7 7 70" fxFlex.xs="5 2 0"
+      fxFlex="1 1 100" fxFlex.xs="5 2 0"
       [editable]="canEditQuestions| async"
       [votingAvailable]="canVoteQuestions | async"
       [displayable]="canDisplayQuestion | async"
@@ -23,7 +23,7 @@
     </app-questions-list>
 
     <app-add-question-form 
-      fxFlex="3 3 30" fxFlex.xs="5 3 0"
+      fxFlex.xs="5 3 0"
       *ngIf="canCreateQuestions | async"
     >
     </app-add-question-form>
