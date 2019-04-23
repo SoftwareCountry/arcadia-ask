@@ -1,11 +1,10 @@
-.question-text {
+mat-card-content {
   overflow-y: auto;
-}
-
-.question-text > h1 {
   overflow-wrap: anywhere;
+  font-size: 2em;
 }
 
 .displayed-question-content{
   padding: 20px;
+  margin: 15px;
 }
