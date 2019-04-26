@@ -1,7 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { MatInputModule, MatFormFieldModule, MatButtonModule, MatListModule, MatIconModule, MatDialogModule } from '@angular/material';
+import {
+  MatInputModule,
+  MatFormFieldModule,
+  MatButtonModule,
+  MatListModule,
+  MatIconModule,
+  MatDialogModule,
+  MatCardModule
+} from '@angular/material';
 import { FormsModule } from '@angular/forms';
 
 import { AddQuestionFormComponent } from './add-question-form/add-question-form.component';
@@ -31,6 +39,7 @@ import { QuestionCreatedPopupComponent } from './add-question-form/question-crea
     MatFormFieldModule,
     MatInputModule,
     MatDialogModule,
+    MatCardModule
   ],
   entryComponents: [QuestionCreatedPopupComponent]
 })
