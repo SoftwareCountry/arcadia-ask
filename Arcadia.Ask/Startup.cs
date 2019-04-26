@@ -76,7 +76,6 @@ namespace Arcadia.Ask
             }
 
             app.UseHttpsRedirection();
-
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
