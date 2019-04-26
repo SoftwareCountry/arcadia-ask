@@ -42,10 +42,20 @@
         }
 
         [Route("")]
-        public ActionResult SignIn()
+        public async Task<ActionResult> SignIn()
         {
             var returnUrl = this.Request.Query[CookieAuthenticationDefaults.ReturnUrlParameter].ToString();
             var redirectUrl = string.IsNullOrEmpty(returnUrl) ? "/" : returnUrl;
+            
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.Name, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Role, RoleNames.User)
+            };
+            var identity = new ClaimsIdentity(claims, "cookie-guid");
+            var principal = new ClaimsPrincipal(identity);
+
+            await this.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
             return this.Redirect(redirectUrl);
         }

@@ -8,6 +8,7 @@ namespace Arcadia.Ask
     using Arcadia.Ask.Storage;
     using Arcadia.Ask.Storage.Questions;
 
+    using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -76,10 +77,9 @@ namespace Arcadia.Ask
             }
 
             app.UseHttpsRedirection();
+            
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
-
-            app.UseGuidIdentification(this.ApplicationSettings.AuthSettings.UserCookieName);
 
             app.UseAuthentication();
 
@@ -100,7 +100,18 @@ namespace Arcadia.Ask
             {
                 // To learn more about options for serving an Angular SPA from ASP.NET Core,
                 // see https://go.microsoft.com/fwlink/?linkid=864501
-
+                spa.ApplicationBuilder.Use(async (context, next) =>
+                {
+                    if (!context.User.Identity.IsAuthenticated)
+                    {
+                        await context.ChallengeAsync();
+                    }
+                    else
+                    {
+                        await next();
+                    }
+                });
+                
                 spa.Options.SourcePath = "ClientApp";
 
                 if (env.IsDevelopment())
