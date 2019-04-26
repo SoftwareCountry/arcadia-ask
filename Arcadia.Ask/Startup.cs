@@ -1,6 +1,5 @@
 namespace Arcadia.Ask
 {
-    using Arcadia.Ask.Auth;
     using Arcadia.Ask.Auth.Permissions;
     using Arcadia.Ask.Configuration;
     using Arcadia.Ask.Hubs;
@@ -77,7 +76,7 @@ namespace Arcadia.Ask
             }
 
             app.UseHttpsRedirection();
-            
+
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
@@ -111,7 +110,7 @@ namespace Arcadia.Ask
                         await next();
                     }
                 });
-                
+
                 spa.Options.SourcePath = "ClientApp";
 
                 if (env.IsDevelopment())
