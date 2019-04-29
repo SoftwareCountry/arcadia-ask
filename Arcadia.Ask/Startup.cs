@@ -1,5 +1,8 @@
 namespace Arcadia.Ask
 {
+    using System;
+    using System.Threading.Tasks;
+
     using Arcadia.Ask.Auth.Permissions;
     using Arcadia.Ask.Configuration;
     using Arcadia.Ask.Hubs;
@@ -98,17 +101,7 @@ namespace Arcadia.Ask
             {
                 // To learn more about options for serving an Angular SPA from ASP.NET Core,
                 // see https://go.microsoft.com/fwlink/?linkid=864501
-                spa.ApplicationBuilder.Use(async (context, next) =>
-                {
-                    if (!context.User.Identity.IsAuthenticated)
-                    {
-                        await context.ChallengeAsync();
-                    }
-                    else
-                    {
-                        await next();
-                    }
-                });
+                spa.ApplicationBuilder.Use(RequireAuthentication);
 
                 spa.Options.SourcePath = "ClientApp";
 
@@ -117,6 +110,18 @@ namespace Arcadia.Ask
                     spa.UseAngularCliServer("start");
                 }
             });
+        }
+
+        private static async Task RequireAuthentication(HttpContext context, Func<Task> next)
+        {
+            if (!context.User.Identity.IsAuthenticated)
+            {
+                await context.ChallengeAsync();
+            }
+            else
+            {
+                await next();
+            }
         }
     }
 }
