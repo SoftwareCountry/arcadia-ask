@@ -25,7 +25,7 @@
                 var buffer = Encoding.ASCII.GetBytes(source);
 
                 var hash = sha1.ComputeHash(buffer);
-                return Convert.ToBase64String(hash);
+                return BitConverter.ToString(hash).Replace("-", "").ToLower();
             }
         }
 
@@ -33,6 +33,7 @@
         {
             var hashedPassword = ComputeHashFromString(password);
 
+            var all = await this.dbCtx.Moderators.ToListAsync();
             return await this.dbCtx.Moderators
                 .AnyAsync(m => m.Login == login && m.Hash == hashedPassword);
         }
