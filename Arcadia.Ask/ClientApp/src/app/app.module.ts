@@ -12,7 +12,6 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { QuestionsModule } from './questions/questions.module';
 import { IdentityModule } from './identity/identity.module';
-import { IDENTITY_ROUTES } from './identity/identity.routes';
 
 @NgModule({
   declarations: [
@@ -27,9 +26,7 @@ import { IDENTITY_ROUTES } from './identity/identity.routes';
     QuestionsModule,
     DashboardModule,
     IdentityModule,
-    RouterModule.forRoot([{
-      path: 'sign-in', children: IDENTITY_ROUTES
-    }]),
+    RouterModule.forRoot([]),
     FlexLayoutModule,
     BrowserAnimationsModule
   ],
