@@ -1,6 +1,8 @@
 namespace Arcadia.Ask
 {
-    using Arcadia.Ask.Auth;
+    using System;
+    using System.Threading.Tasks;
+
     using Arcadia.Ask.Auth.Permissions;
     using Arcadia.Ask.Configuration;
     using Arcadia.Ask.Hubs;
@@ -8,9 +10,11 @@ namespace Arcadia.Ask
     using Arcadia.Ask.Storage;
     using Arcadia.Ask.Storage.Questions;
 
+    using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.Cookies;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.SpaServices.AngularCli;
     using Microsoft.EntityFrameworkCore;
@@ -48,6 +52,7 @@ namespace Arcadia.Ask
                 .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
+                    options.LoginPath = new PathString("/api/auth");
                     options.Cookie.Name = this.ApplicationSettings.AuthSettings.UserCookieName;
                     options.Cookie.IsEssential = true;
                 });
@@ -77,8 +82,6 @@ namespace Arcadia.Ask
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
-            app.UseGuidIdentification(this.ApplicationSettings.AuthSettings.UserCookieName);
-
             app.UseAuthentication();
 
             app.UseSignalR(routes =>
@@ -98,6 +101,7 @@ namespace Arcadia.Ask
             {
                 // To learn more about options for serving an Angular SPA from ASP.NET Core,
                 // see https://go.microsoft.com/fwlink/?linkid=864501
+                spa.ApplicationBuilder.Use(RequireAuthentication);
 
                 spa.Options.SourcePath = "ClientApp";
 
@@ -106,6 +110,18 @@ namespace Arcadia.Ask
                     spa.UseAngularCliServer("start");
                 }
             });
+        }
+
+        private static async Task RequireAuthentication(HttpContext context, Func<Task> next)
+        {
+            if (!context.User.Identity.IsAuthenticated)
+            {
+                await context.ChallengeAsync();
+            }
+            else
+            {
+                await next();
+            }
         }
     }
 }
