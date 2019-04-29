@@ -49,7 +49,7 @@
                 new Claim(ClaimTypes.Name, this.User.Identity.Name),
                 new Claim(ClaimTypes.Role, roleName)
             };
-            var identity = new ClaimsIdentity(claims, roleName);
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
 
             await this.HttpContext.SignInAsync(principal);
@@ -68,7 +68,7 @@
                 new Claim(ClaimTypes.Name, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.Role, RoleNames.User)
             };
-            var identity = new ClaimsIdentity(claims, "cookie-guid");
+            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
 
             await this.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
