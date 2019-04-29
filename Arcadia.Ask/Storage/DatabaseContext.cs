@@ -32,5 +32,7 @@
         public DbSet<QuestionEntity> Questions { get; set; }
 
         public DbSet<VoteEntity> Votes { get; set; }
+
+        public DbSet<ModeratorEntity> Moderators { get; set; }
     }
 }
