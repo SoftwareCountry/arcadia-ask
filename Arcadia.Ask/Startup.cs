@@ -1,5 +1,6 @@
 namespace Arcadia.Ask
 {
+    using Arcadia.Ask.Auth;
     using Arcadia.Ask.Auth.Permissions;
     using Arcadia.Ask.Configuration;
     using Arcadia.Ask.Hubs;
@@ -40,6 +41,7 @@ namespace Arcadia.Ask
             });
             services.AddTransient<IQuestionStorage, QuestionStorage>();
             services.AddTransient<IPermissionsByRoleLoader, PermissionsByRoleLoader>();
+            services.AddTransient<ISignInService, SignInService>();
             services.AddSingleton<IDisplayedQuestion, DisplayedQuestion>();
 
             services.AddSignalR();
