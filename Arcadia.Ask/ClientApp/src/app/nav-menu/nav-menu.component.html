@@ -1,5 +1,15 @@
 <header>
-  <mat-toolbar color="primary">
-    Ask
+  <mat-toolbar color="primary" fxFlexLayout="row">
+    <span>
+      Ask
+    </span>
+
+    <span fxFlex="1 1 auto"></span>
+
+    <span>
+      <button mat-button
+        routerLink="/sign-in/moderator"
+      >Sign is as moderator</button>
+    </span>
   </mat-toolbar>
 </header>
