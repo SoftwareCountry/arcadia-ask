@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { MatGridListModule, MatCardModule } from '@angular/material';
+import { MatGridListModule } from '@angular/material';
 
 import { QuestionsModule } from '../questions/questions.module';
 
@@ -12,7 +12,6 @@ import { MainComponent } from './main/main.component';
   declarations: [MainComponent],
   imports: [
     MatGridListModule,
-    MatCardModule,
     CommonModule,
     DashboardRoutingModule,
     FlexLayoutModule,
