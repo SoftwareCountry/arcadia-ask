@@ -1,3 +1,7 @@
 app-questions-list {
   overflow-y: auto;
 }
+
+.question-sidebar {
+  margin: 15px;
+}
