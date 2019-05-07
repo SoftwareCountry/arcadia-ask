@@ -1,14 +1,15 @@
 ﻿namespace Arcadia.Ask.Models.Entities
 {
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
-    public class UserEntity
+    public class RoleEntity
     {
         [Key]
-        public string Login { get; set; }
+        public Guid RoleId { get; set; }
 
-        public string Hash { get; set; }
+        public string Name { get; set; }
 
         public IEnumerable<UserRoleEntity> UserRoles { get; set; }
     }

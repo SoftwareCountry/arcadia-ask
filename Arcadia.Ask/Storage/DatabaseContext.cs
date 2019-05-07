@@ -27,6 +27,19 @@
                     PostedAt = DateTimeOffset.Now
                 }
             );
+
+            modelBuilder.Entity<UserRoleEntity>()
+                .HasKey(ur => new { ur.UserLogin, ur.RoleId });
+
+            modelBuilder.Entity<UserRoleEntity>()
+                .HasOne(ur => ur.User)
+                .WithMany(u => u.UserRoles)
+                .HasForeignKey(ur => ur.UserLogin);
+
+            modelBuilder.Entity<UserRoleEntity>()
+                .HasOne(ur => ur.Role)
+                .WithMany(r => r.UserRoles)
+                .HasForeignKey(ur => ur.RoleId);
         }
 
         public DbSet<QuestionEntity> Questions { get; set; }
@@ -34,5 +47,7 @@
         public DbSet<VoteEntity> Votes { get; set; }
 
         public DbSet<UserEntity> Users { get; set; }
+
+        public DbSet<RoleEntity> Roles { get; set; }
     }
 }
