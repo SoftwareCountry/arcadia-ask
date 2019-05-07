@@ -11,6 +11,7 @@ import { AppComponent } from './app.component';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { QuestionsModule } from './questions/questions.module';
+import { IdentityModule } from './identity/identity.module';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { QuestionsModule } from './questions/questions.module';
     FormsModule,
     QuestionsModule,
     DashboardModule,
+    IdentityModule,
     RouterModule.forRoot([]),
     FlexLayoutModule,
     BrowserAnimationsModule
