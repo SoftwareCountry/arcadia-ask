@@ -33,8 +33,8 @@
         {
             var hashedPassword = ComputeHashFromString(password);
 
-            var all = await this.dbCtx.Moderators.ToListAsync();
-            return await this.dbCtx.Moderators
+            var all = await this.dbCtx.Users.ToListAsync();
+            return await this.dbCtx.Users
                 .AnyAsync(m => m.Login == login && m.Hash == hashedPassword);
         }
     }

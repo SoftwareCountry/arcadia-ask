@@ -2,10 +2,11 @@
 {
     using System.ComponentModel.DataAnnotations;
 
-    public class ModeratorEntity
+    public class UserEntity
     {
         [Key]
         public string Login { get; set; }
+
         public string Hash { get; set; }
     }
 }

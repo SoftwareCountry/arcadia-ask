@@ -33,6 +33,6 @@
 
         public DbSet<VoteEntity> Votes { get; set; }
 
-        public DbSet<ModeratorEntity> Moderators { get; set; }
+        public DbSet<UserEntity> Users { get; set; }
     }
 }
