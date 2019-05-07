@@ -1,6 +1,8 @@
 ﻿namespace Arcadia.Ask.Controllers.Identity
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
 
@@ -36,25 +38,36 @@
                 return this.Ok();
             }
 
-            var isCredentialsValid = await this.signInService.IsModeratorWithCredentialsExists(req.Login, req.Password);
+            try
+            {
+                var moderator = await this.signInService.GetUserByCredentials(req.Login, req.Password);
 
-            if (!isCredentialsValid)
+                if (moderator.Roles.All(r => r != roleName))
+                {
+                    return this.Unauthorized();
+                }
+
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.NameIdentifier, moderator.Login),
+                    new Claim(ClaimTypes.Name, this.User.Identity.Name)
+                };
+
+                claims.AddRange(
+                    moderator.Roles?.Select(r => new Claim(ClaimTypes.Role, r))
+                );
+
+                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var principal = new ClaimsPrincipal(identity);
+
+                await this.HttpContext.SignInAsync(principal);
+
+                return this.Ok();
+            }
+            catch (UserWasNotFoundException)
             {
                 return this.Unauthorized();
             }
-
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, req.Login), 
-                new Claim(ClaimTypes.Name, this.User.Identity.Name),
-                new Claim(ClaimTypes.Role, roleName)
-            };
-            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var principal = new ClaimsPrincipal(identity);
-
-            await this.HttpContext.SignInAsync(principal);
-
-            return this.Ok();
         }
 
         [Route("")]
@@ -62,7 +75,7 @@
         {
             var returnUrl = this.Request.Query[CookieAuthenticationDefaults.ReturnUrlParameter].ToString();
             var redirectUrl = string.IsNullOrEmpty(returnUrl) ? "/" : returnUrl;
-            
+
             var claims = new[]
             {
                 new Claim(ClaimTypes.Name, Guid.NewGuid().ToString()),
