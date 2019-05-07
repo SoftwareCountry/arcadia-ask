@@ -1,0 +1,15 @@
+<div class="login-form-wrapper"
+  fxLayout="column" fxLayoutAlign="center center"
+  fxFlexFill
+>
+  <h2>Sign in as moderator</h2>
+  <form #signInForm="ngForm">
+    <mat-form-field>
+      <input matInput placeholder="Login" type="text" id="login" name="login" required [(ngModel)]="model.login">
+    </mat-form-field><br>
+    <mat-form-field>
+      <input matInput placeholder="Password" type="password" id="password" name="password" minlength="6" maxlength="20" required [(ngModel)]="model.password">
+    </mat-form-field><br>
+      <button mat-raised-button color="accent" type="submit" [disabled]="!signInForm.form.valid">Sign in</button>
+  </form> 
+</div>
