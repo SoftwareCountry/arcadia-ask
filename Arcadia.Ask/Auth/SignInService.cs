@@ -31,18 +31,6 @@
             }
         }
 
-        public async Task<bool> IsModeratorWithCredentialsExists(string login, string password)
-        {
-            var hashedPassword = ComputeHashFromString(password);
-
-            return await this.dbCtx.Users
-                .Include(u => u.UserRoles)
-                .ThenInclude(ur => ur.Role)
-                .Where(u =>
-                    u.UserRoles.Any(ur => ur.Role.Name == RoleNames.Moderator))
-                .AnyAsync(m => m.Login == login && m.Hash == hashedPassword);
-        }
-
         public async Task<User> GetUserByCredentials(string login, string password)
         {
             var hashedPassword = ComputeHashFromString(password);
