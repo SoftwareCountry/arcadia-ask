@@ -42,5 +42,22 @@
                     u.UserRoles.Any(ur => ur.Role.Name == RoleNames.Moderator))
                 .AnyAsync(m => m.Login == login && m.Hash == hashedPassword);
         }
+
+        public async Task<User> GetModeratorByCredentials(string login, string password)
+        {
+            var hashedPassword = ComputeHashFromString(password);
+
+            var moderator = await this.dbCtx.Users
+                .Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.Role)
+                .Where(u =>
+                    u.UserRoles.Any(ur => ur.Role.Name == RoleNames.Moderator) &&
+                    u.Login == login && u.Hash == hashedPassword
+                ).FirstOrDefaultAsync();
+
+            return moderator != null
+                ? new User(moderator.Login, moderator.UserRoles?.Select(ur => ur.Role.Name))
+                : throw new UserWasNotFoundException();
+        }
     }
 }
