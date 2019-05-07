@@ -33,7 +33,6 @@
         {
             var hashedPassword = ComputeHashFromString(password);
 
-            var all = await this.dbCtx.Moderators.ToListAsync();
             return await this.dbCtx.Moderators
                 .AnyAsync(m => m.Login == login && m.Hash == hashedPassword);
         }
