@@ -20,6 +20,14 @@ steps:
     arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
     zipAfterPublish: True
 
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'custom'
+    custom: 'ef'
+    arguments: 'migrations script --output $(Build.ArtifactStagingDirectory)  --idempotent'
+    feedsToUse: 'select'
+    versioningScheme: 'off'
+
 - task: PublishBuildArtifacts@1
   inputs:
     ArtifactName: 'drop'
