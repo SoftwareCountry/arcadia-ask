@@ -23,8 +23,11 @@ namespace Arcadia.Ask
 
     public class Startup
     {
+        public IConfiguration configuration;
+
         public Startup(IConfiguration configuration)
         {
+            this.configuration = configuration;
             this.ApplicationSettings = configuration.Get<ApplicationSettings>();
         }
 
@@ -33,13 +36,18 @@ namespace Arcadia.Ask
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddEntityFrameworkInMemoryDatabase();
+            //services.AddEntityFrameworkInMemoryDatabase();
 
             services.AddDbContext<DatabaseContext>((sp, options) =>
             {
                 options
+                    .UseSqlServer(this.configuration.GetConnectionString("DefaultConnection"));
+
+                /*
+                options
                     .UseInMemoryDatabase("InMemoryDatabase")
                     .UseInternalServiceProvider(sp);
+                    */
             });
             services.AddTransient<IQuestionStorage, QuestionStorage>();
             services.AddTransient<IPermissionsByRoleLoader, PermissionsByRoleLoader>();
