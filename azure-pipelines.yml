@@ -24,7 +24,7 @@ steps:
   inputs:
     command: 'custom'
     custom: 'ef'
-    arguments: 'migrations script --output $(Build.ArtifactStagingDirectory)  --idempotent'
+    arguments: 'migrations script --project Arcadia.Ask --output $(Build.ArtifactStagingDirectory)/db.sql  --idempotent'
     feedsToUse: 'select'
     versioningScheme: 'off'
 
