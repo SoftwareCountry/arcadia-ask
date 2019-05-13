@@ -52,11 +52,6 @@ namespace Arcadia.Ask.Migrations
                         principalColumn: "QuestionId",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            migrationBuilder.InsertData(
-                table: "Questions",
-                columns: new[] { "QuestionId", "Author", "IsApproved", "PostedAt", "Text" },
-                values: new object[] { new Guid("7c3de3b3-2266-439a-bd18-0b23d3001b4f"), "Author", true, new DateTimeOffset(new DateTime(2019, 5, 7, 18, 59, 31, 285, DateTimeKind.Unspecified).AddTicks(1942), new TimeSpan(0, 3, 0, 0, 0)), "Test" });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

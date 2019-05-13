@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Arcadia.Ask.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20190507155932_InitialCreate")]
+    [Migration("20190513115010_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -49,16 +49,6 @@ namespace Arcadia.Ask.Migrations
                     b.HasKey("QuestionId");
 
                     b.ToTable("Questions");
-
-                    b.HasData(
-                        new
-                        {
-                            QuestionId = new Guid("7c3de3b3-2266-439a-bd18-0b23d3001b4f"),
-                            Author = "Author",
-                            IsApproved = true,
-                            PostedAt = new DateTimeOffset(new DateTime(2019, 5, 7, 18, 59, 31, 285, DateTimeKind.Unspecified).AddTicks(1942), new TimeSpan(0, 3, 0, 0, 0)),
-                            Text = "Test"
-                        });
                 });
 
             modelBuilder.Entity("Arcadia.Ask.Models.Entities.VoteEntity", b =>
