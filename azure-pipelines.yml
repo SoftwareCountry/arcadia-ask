@@ -20,6 +20,14 @@ steps:
     arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
     zipAfterPublish: True
 
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'custom'
+    custom: 'ef'
+    arguments: 'migrations script --project Arcadia.Ask --output $(Build.ArtifactStagingDirectory)/db.sql  --idempotent --context Arcadia.Ask.Storage.DatabaseContext'
+    feedsToUse: 'select'
+    versioningScheme: 'off'
+
 - task: PublishBuildArtifacts@1
   inputs:
     ArtifactName: 'drop'
