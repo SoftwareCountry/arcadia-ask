@@ -10,6 +10,6 @@
 
         public string Hash { get; set; }
 
-        public IEnumerable<UserRoleEntity> UserRoles { get; set; }
+        public virtual ICollection<UserRoleEntity> UserRoles { get; set; }
     }
 }
