@@ -8,8 +8,6 @@
         public string Login { get; set; }
 
         [Required]
-        [MinLength(6)]
-        [MaxLength(20)]
         public string Password { get; set; }
     }
 }

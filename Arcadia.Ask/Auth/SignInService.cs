@@ -1,49 +1,38 @@
 ﻿namespace Arcadia.Ask.Auth
 {
-    using System;
     using System.Linq;
-    using System.Security.Cryptography;
-    using System.Text;
+    using System.Threading;
     using System.Threading.Tasks;
 
     using Arcadia.Ask.Auth.Roles;
-    using Arcadia.Ask.Storage;
+    using Arcadia.Ask.Storage.Users;
 
-    using Microsoft.EntityFrameworkCore;
+    using Microsoft.AspNetCore.Identity;
 
     public class SignInService : ISignInService
     {
-        private readonly DatabaseContext dbCtx;
+        private readonly IPasswordHasher<User> passwordHasher;
+        private readonly IUserRepository userRepository;
 
-        public SignInService(DatabaseContext dbCtx)
+        public SignInService(IPasswordHasher<User> passwordHasher, IUserRepository userRepository)
         {
-            this.dbCtx = dbCtx;
+            this.passwordHasher = passwordHasher;
+            this.userRepository = userRepository;
         }
 
-        private static string ComputeHashFromString(string source)
+        public async Task<User> GetModeratorByCredentials(string login, string password, CancellationToken? token = null)
         {
-            using (var sha1 = SHA1.Create())
+            var foundModerator = await this.userRepository.FindUserByLoginAndRole(login, RoleNames.Moderator, token);
+
+            if (foundModerator == null)
             {
-                var buffer = Encoding.ASCII.GetBytes(source);
-
-                var hash = sha1.ComputeHash(buffer);
-                return BitConverter.ToString(hash).Replace("-", "").ToLower();
+                throw new UserWasNotFoundException();
             }
-        }
 
-        public async Task<User> GetUserByCredentials(string login, string password)
-        {
-            var hashedPassword = ComputeHashFromString(password);
+            var user = new User(login, foundModerator.UserRoles.Select(r => r.Role.Name));
 
-            var moderator = await this.dbCtx.Users
-                .Include(u => u.UserRoles)
-                .ThenInclude(ur => ur.Role)
-                .Where(u =>
-                    u.Login == login && u.Hash == hashedPassword
-                ).FirstOrDefaultAsync();
-
-            return moderator != null
-                ? new User(moderator.Login, moderator.UserRoles?.Select(ur => ur.Role.Name))
+            return this.passwordHasher.VerifyHashedPassword(user, foundModerator.Hash, password) == PasswordVerificationResult.Success
+                ? user
                 : throw new UserWasNotFoundException();
         }
     }

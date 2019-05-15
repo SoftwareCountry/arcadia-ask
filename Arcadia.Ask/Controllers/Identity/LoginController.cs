@@ -40,13 +40,7 @@
 
             try
             {
-                var moderator = await this.signInService.GetUserByCredentials(req.Login, req.Password);
-
-
-                if (moderator.Roles?.All(r => r != roleName) ?? true)
-                {
-                    return this.Unauthorized();
-                }
+                var moderator = await this.signInService.GetModeratorByCredentials(req.Login, req.Password);
 
                 var claims = new List<Claim>
                 {
