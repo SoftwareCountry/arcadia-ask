@@ -2,6 +2,7 @@
 {
     using System;
     using System.Security.Claims;
+    using System.Threading;
     using System.Threading.Tasks;
 
     using Arcadia.Ask.Auth;
@@ -27,7 +28,7 @@
         [Route("moderator/sign-in")]
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> SignInAsModerator(ModeratorSignInRequestModel req)
+        public async Task<IActionResult> SignInAsModerator(ModeratorSignInRequestModel req, CancellationToken token)
         {
             const string roleName = RoleNames.Moderator;
 
@@ -36,7 +37,7 @@
                 return this.Ok();
             }
 
-            var isCredentialsValid = await this.signInService.IsModeratorWithCredentialsExists(req.Login, req.Password, this.HttpContext.RequestAborted);
+            var isCredentialsValid = await this.signInService.IsModeratorWithCredentialsExists(req.Login, req.Password, token);
 
             if (!isCredentialsValid)
             {
