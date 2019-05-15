@@ -26,8 +26,12 @@ namespace Arcadia.Ask
 
     public class Startup
     {
+        private readonly IConfiguration configuration;
+        private bool useInMemoryDatabase = false;
+
         public Startup(IConfiguration configuration)
         {
+            this.configuration = configuration;
             this.ApplicationSettings = configuration.Get<ApplicationSettings>();
         }
 
@@ -36,13 +40,18 @@ namespace Arcadia.Ask
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddEntityFrameworkInMemoryDatabase();
-
             services.AddDbContext<DatabaseContext>((sp, options) =>
             {
-                options
-                    .UseInMemoryDatabase("InMemoryDatabase")
-                    .UseInternalServiceProvider(sp);
+                if (this.useInMemoryDatabase)
+                {
+                    options
+                        .UseInMemoryDatabase("InMemoryDatabase");
+                }
+                else
+                {
+                    options
+                        .UseSqlServer(this.configuration.GetConnectionString("DefaultConnection"));
+                }
             });
             services.AddTransient<IQuestionStorage, QuestionStorage>();
             services.AddTransient<IPermissionsByRoleLoader, PermissionsByRoleLoader>();
@@ -75,6 +84,7 @@ namespace Arcadia.Ask
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                this.useInMemoryDatabase = true;
             }
             else
             {

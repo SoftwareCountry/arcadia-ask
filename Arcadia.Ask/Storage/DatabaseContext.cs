@@ -16,17 +16,6 @@
         {
             modelBuilder.Entity<VoteEntity>()
                 .HasKey(v => new { v.QuestionId, v.UserId });
-
-            modelBuilder.Entity<QuestionEntity>().HasData(
-                new QuestionEntity
-                {
-                    QuestionId = Guid.NewGuid(),
-                    Text = "Test",
-                    Author = "Author",
-                    IsApproved = true,
-                    PostedAt = DateTimeOffset.Now
-                }
-            );
         }
 
         public DbSet<QuestionEntity> Questions { get; set; }
