@@ -5,20 +5,17 @@
 
     using Arcadia.Ask.Auth.Roles;
     using Arcadia.Ask.Models.Entities;
-    using Arcadia.Ask.Storage;
     using Arcadia.Ask.Storage.Users;
 
     using Microsoft.AspNetCore.Identity;
 
     public class SignInService : ISignInService
     {
-        private readonly DatabaseContext dbCtx;
         private readonly IPasswordHasher<UserEntity> passwordHasher;
         private readonly IUserRepository userRepository;
 
-        public SignInService(DatabaseContext dbCtx, IPasswordHasher<UserEntity> passwordHasher, IUserRepository userRepository)
+        public SignInService(IPasswordHasher<UserEntity> passwordHasher, IUserRepository userRepository)
         {
-            this.dbCtx = dbCtx;
             this.passwordHasher = passwordHasher;
             this.userRepository = userRepository;
         }
