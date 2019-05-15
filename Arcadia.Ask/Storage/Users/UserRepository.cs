@@ -18,7 +18,7 @@
             this.dbCtx = dbCtx;
         }
 
-        public async Task<UserEntity> FindUserByLoginAndRole(string login, string role, CancellationToken token = default(CancellationToken))
+        public async Task<UserEntity> FindUserByLoginAndRole(string login, string role, CancellationToken token)
         {
             return await this.dbCtx.Users
                 .Include(u => u.UserRoles)
