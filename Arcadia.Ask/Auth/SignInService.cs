@@ -20,7 +20,7 @@
             this.userRepository = userRepository;
         }
 
-        public async Task<User> GetModeratorByCredentials(string login, string password, CancellationToken token = default(CancellationToken))
+        public async Task<User> GetModeratorByCredentials(string login, string password, CancellationToken token)
         {
             var foundModerator = await this.userRepository.FindUserByLoginAndRole(login, RoleNames.Moderator, token);
 
