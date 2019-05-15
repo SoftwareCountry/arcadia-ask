@@ -21,7 +21,7 @@
             this.passwordHasher = passwordHasher;
         }
 
-        public async Task<bool> IsModeratorWithCredentialsExists(string login, string password, CancellationToken token = default(CancellationToken))
+        public async Task<bool> IsModeratorWithCredentialsExists(string login, string password, CancellationToken token)
         {
             var moderator = await this.dbCtx.Moderators
                 .Where(m => m.Login == login).FirstOrDefaultAsync(token);
