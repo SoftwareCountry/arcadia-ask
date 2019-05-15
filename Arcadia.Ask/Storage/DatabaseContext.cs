@@ -16,6 +16,7 @@
         {
             modelBuilder.Entity<VoteEntity>()
                 .HasKey(v => new { v.QuestionId, v.UserId });
+<<<<<<< HEAD
 
             modelBuilder.Entity<QuestionEntity>().HasData(
                 new QuestionEntity
@@ -40,6 +41,8 @@
                 .HasOne(ur => ur.Role)
                 .WithMany(r => r.UserRoles)
                 .HasForeignKey(ur => ur.RoleId);
+=======
+>>>>>>> 788da8159f4aa72b86a50ca77af97a909779bc69
         }
 
         public DbSet<QuestionEntity> Questions { get; set; }
