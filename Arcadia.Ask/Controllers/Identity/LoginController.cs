@@ -51,6 +51,10 @@
 
                 claims.AddRange(
                     moderator.Roles?.Select(r => new Claim(ClaimTypes.Role, r))
+                    ?? new[]
+                    {
+                        new Claim(ClaimTypes.Role, roleName)
+                    }
                 );
 
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
