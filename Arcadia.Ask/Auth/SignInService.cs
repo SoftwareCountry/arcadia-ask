@@ -1,41 +1,37 @@
 ﻿namespace Arcadia.Ask.Auth
 {
-    using System;
-    using System.Security.Cryptography;
-    using System.Text;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
 
+    using Arcadia.Ask.Models.Entities;
     using Arcadia.Ask.Storage;
 
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
 
     public class SignInService : ISignInService
     {
         private readonly DatabaseContext dbCtx;
+        private readonly IPasswordHasher<ModeratorEntity> passwordHasher;
 
-        public SignInService(DatabaseContext dbCtx)
+        public SignInService(DatabaseContext dbCtx, IPasswordHasher<ModeratorEntity> passwordHasher)
         {
             this.dbCtx = dbCtx;
-        }
-
-        private static string ComputeHashFromString(string source)
-        {
-            using (var sha1 = SHA1.Create())
-            {
-                var buffer = Encoding.ASCII.GetBytes(source);
-
-                var hash = sha1.ComputeHash(buffer);
-                return BitConverter.ToString(hash).Replace("-", "").ToLower();
-            }
+            this.passwordHasher = passwordHasher;
         }
 
         public async Task<bool> IsModeratorWithCredentialsExists(string login, string password, CancellationToken? token = null)
         {
-            var hashedPassword = ComputeHashFromString(password);
+            var moderator = await this.dbCtx.Moderators
+                .Where(m => m.Login == login).FirstOrDefaultAsync(token ?? CancellationToken.None);
 
-            return await this.dbCtx.Moderators
-                .AnyAsync(m => m.Login == login && m.Hash == hashedPassword, token ?? CancellationToken.None);
+            if (moderator == null)
+            {
+                return false;
+            }
+
+            return this.passwordHasher.VerifyHashedPassword(moderator, moderator.Hash, password) == PasswordVerificationResult.Success;
         }
     }
 }
