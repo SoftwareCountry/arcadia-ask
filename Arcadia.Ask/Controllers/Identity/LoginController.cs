@@ -36,7 +36,7 @@
                 return this.Ok();
             }
 
-            var isCredentialsValid = await this.signInService.IsModeratorWithCredentialsExists(req.Login, req.Password);
+            var isCredentialsValid = await this.signInService.IsModeratorWithCredentialsExists(req.Login, req.Password, this.HttpContext.RequestAborted);
 
             if (!isCredentialsValid)
             {

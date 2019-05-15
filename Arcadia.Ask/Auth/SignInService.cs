@@ -3,6 +3,7 @@
     using System;
     using System.Security.Cryptography;
     using System.Text;
+    using System.Threading;
     using System.Threading.Tasks;
 
     using Arcadia.Ask.Storage;
@@ -29,12 +30,12 @@
             }
         }
 
-        public async Task<bool> IsModeratorWithCredentialsExists(string login, string password)
+        public async Task<bool> IsModeratorWithCredentialsExists(string login, string password, CancellationToken? token = null)
         {
             var hashedPassword = ComputeHashFromString(password);
 
             return await this.dbCtx.Moderators
-                .AnyAsync(m => m.Login == login && m.Hash == hashedPassword);
+                .AnyAsync(m => m.Login == login && m.Hash == hashedPassword, token ?? CancellationToken.None);
         }
     }
 }
