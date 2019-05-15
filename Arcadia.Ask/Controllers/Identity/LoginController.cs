@@ -42,7 +42,8 @@
             {
                 var moderator = await this.signInService.GetUserByCredentials(req.Login, req.Password);
 
-                if (moderator.Roles.All(r => r != roleName))
+
+                if (moderator.Roles?.All(r => r != roleName) ?? true)
                 {
                     return this.Unauthorized();
                 }
