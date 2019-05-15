@@ -20,19 +20,13 @@
 
         public async Task<UserEntity> FindUserByLoginAndRole(string login, string role, CancellationToken? token = null)
         {
-            var found = await this.dbCtx.Users
+            return await this.dbCtx.Users
                 .Include(u => u.UserRoles)
                 .ThenInclude(ur => ur.Role)
-                .Where(u =>
-                    u.UserRoles.Any(ur => ur.Role.Name == RoleNames.Moderator) && u.Login == login).FirstOrDefaultAsync(token ?? CancellationToken.None);
-
-            if (found == null)
-            {
-                return null;
-            }
-
-            this.dbCtx.Entry(found).State = EntityState.Detached;
-            return found;
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u =>
+                        u.UserRoles.Any(ur => ur.Role.Name == RoleNames.Moderator) && u.Login == login,
+                    token ?? CancellationToken.None);
         }
     }
 }
