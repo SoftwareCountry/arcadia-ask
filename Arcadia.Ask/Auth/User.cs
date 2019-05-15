@@ -4,13 +4,14 @@
 
     public class User
     {
-        public User( string login, IEnumerable<string> roles)
+        public User(string login, IEnumerable<string> roles)
         {
             this.Login = login;
             this.Roles = roles;
         }
 
         public string Login { get; }
+
         public IEnumerable<string> Roles { get; }
     }
 }
