@@ -7,6 +7,6 @@
 
     public interface IUserRepository
     {
-        Task<UserEntity> FindUserByLoginAndRole(string login, string role, CancellationToken? token = null);
+        Task<UserEntity> FindUserByLoginAndRole(string login, string role, CancellationToken token = default(CancellationToken));
     }
 }

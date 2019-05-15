@@ -18,7 +18,7 @@
             this.dbCtx = dbCtx;
         }
 
-        public async Task<UserEntity> FindUserByLoginAndRole(string login, string role, CancellationToken? token = null)
+        public async Task<UserEntity> FindUserByLoginAndRole(string login, string role, CancellationToken token = default(CancellationToken))
         {
             return await this.dbCtx.Users
                 .Include(u => u.UserRoles)
@@ -26,7 +26,7 @@
                 .AsNoTracking()
                 .FirstOrDefaultAsync(u =>
                         u.UserRoles.Any(ur => ur.Role.Name == RoleNames.Moderator) && u.Login == login,
-                    token ?? CancellationToken.None);
+                    token);
         }
     }
 }
