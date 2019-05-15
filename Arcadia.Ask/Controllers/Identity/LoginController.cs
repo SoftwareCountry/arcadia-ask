@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Security.Claims;
+    using System.Threading;
     using System.Threading.Tasks;
 
     using Arcadia.Ask.Auth;
@@ -29,7 +30,7 @@
         [Route("moderator/sign-in")]
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> SignInAsModerator(ModeratorSignInRequestModel req)
+        public async Task<IActionResult> SignInAsModerator(ModeratorSignInRequestModel req, CancellationToken token)
         {
             const string roleName = RoleNames.Moderator;
 
@@ -40,7 +41,7 @@
 
             try
             {
-                var moderator = await this.signInService.GetModeratorByCredentials(req.Login, req.Password);
+                var moderator = await this.signInService.GetModeratorByCredentials(req.Login, req.Password, token);
 
                 var claims = new List<Claim>
                 {

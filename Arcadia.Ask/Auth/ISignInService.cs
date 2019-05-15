@@ -5,6 +5,6 @@
 
     public interface ISignInService
     {
-        Task<User> GetModeratorByCredentials(string login, string password, CancellationToken? token = null);
+        Task<User> GetModeratorByCredentials(string login, string password, CancellationToken token = default(CancellationToken));
     }
 }
