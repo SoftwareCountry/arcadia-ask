@@ -11,6 +11,7 @@ namespace Arcadia.Ask
     using Arcadia.Ask.Questions;
     using Arcadia.Ask.Storage;
     using Arcadia.Ask.Storage.Questions;
+    using Arcadia.Ask.Storage.Users;
 
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.Cookies;
@@ -54,9 +55,13 @@ namespace Arcadia.Ask
                 }
             });
             services.AddTransient<IQuestionStorage, QuestionStorage>();
+            services.AddTransient<IUserRepository, UserRepository>();
+
             services.AddTransient<IPermissionsByRoleLoader, PermissionsByRoleLoader>();
+
             services.AddTransient<IPasswordHasher<UserEntity>, PasswordHasher<UserEntity>>();
             services.AddTransient<ISignInService, SignInService>();
+
             services.AddSingleton<IDisplayedQuestion, DisplayedQuestion>();
 
             services.AddSignalR();
