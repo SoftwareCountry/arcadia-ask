@@ -2,9 +2,12 @@
 {
     using System;
     using System.Security.Claims;
+    using System.Threading;
     using System.Threading.Tasks;
 
+    using Arcadia.Ask.Auth;
     using Arcadia.Ask.Auth.Roles;
+    using Arcadia.Ask.Models.Requests;
 
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authentication.Cookies;
@@ -15,20 +18,35 @@
     [ApiController]
     public class LoginController : ControllerBase
     {
+        private readonly ISignInService signInService;
+
+        public LoginController(ISignInService signInService)
+        {
+            this.signInService = signInService;
+        }
+
         [Route("moderator/sign-in")]
-        [HttpGet]
+        [HttpPost]
         [Authorize]
-        public async Task<IActionResult> SignInAsModerator()
+        public async Task<IActionResult> SignInAsModerator(ModeratorSignInRequestModel req, CancellationToken token)
         {
             const string roleName = RoleNames.Moderator;
 
             if (this.User.IsInRole(roleName))
             {
-                return this.Redirect("/");
+                return this.Ok();
+            }
+
+            var isCredentialsValid = await this.signInService.IsModeratorWithCredentialsExists(req.Login, req.Password, token);
+
+            if (!isCredentialsValid)
+            {
+                return this.Unauthorized();
             }
 
             var claims = new[]
             {
+                new Claim(ClaimTypes.NameIdentifier, req.Login), 
                 new Claim(ClaimTypes.Name, this.User.Identity.Name),
                 new Claim(ClaimTypes.Role, roleName)
             };
@@ -37,7 +55,7 @@
 
             await this.HttpContext.SignInAsync(principal);
 
-            return this.Redirect("/");
+            return this.Ok();
         }
 
         [Route("")]
