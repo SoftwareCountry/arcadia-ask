@@ -20,9 +20,10 @@
             this.userRepository = userRepository;
         }
 
-        public async Task<bool> IsModeratorWithCredentialsExists(string login, string password, CancellationToken? token = null)
+        public async Task<bool> IsModeratorWithCredentialsExists(string login, string password, CancellationToken token = default(CancellationToken))
         {
             var moderator = await this.userRepository.FindUserByLoginAndRole(login, RoleNames.Moderator, token);
+
             if (moderator == null)
             {
                 return false;

@@ -5,6 +5,6 @@
 
     public interface ISignInService
     {
-        Task<bool> IsModeratorWithCredentialsExists(string login, string password, CancellationToken? token = null);
+        Task<bool> IsModeratorWithCredentialsExists(string login, string password, CancellationToken token = default(CancellationToken));
     }
 }
