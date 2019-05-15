@@ -4,7 +4,6 @@
 
     public interface ISignInService
     {
-
         Task<bool> IsModeratorWithCredentialsExists(string login, string password);
     }
 }
