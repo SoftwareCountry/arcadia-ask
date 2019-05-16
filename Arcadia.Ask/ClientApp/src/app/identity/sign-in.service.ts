@@ -9,7 +9,7 @@ import { SignInModel } from './sign-in.model';
 export class SignInService {
   constructor(private readonly http: HttpClient) {}
 
-  public signInAsModerator(requestModel: SignInModel): Observable<any> {
+  public signInAsModerator(requestModel: SignInModel): Observable<{}> {
     return this.http.post('/api/auth/moderator/sign-in', requestModel);
   }
 }
