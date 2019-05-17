@@ -20,18 +20,18 @@
             this.userRepository = userRepository;
         }
 
-        public async Task<User> GetModeratorByCredentials(string login, string password, CancellationToken token)
+        public async Task<User> GetUserByCredentials(string login, string password, CancellationToken token)
         {
-            var foundModerator = await this.userRepository.FindUserByLoginAndRole(login, RoleNames.Moderator, token);
+            var foundUser = await this.userRepository.FindUserByLogin(login, token);
 
-            if (foundModerator == null)
+            if (foundUser == null)
             {
                 throw new UserWasNotFoundException();
             }
 
-            var user = new User(login, foundModerator.UserRoles.Select(r => r.Role.Name));
+            var user = new User(login, foundUser.UserRoles.Select(r => r.Role.Name));
 
-            return this.passwordHasher.VerifyHashedPassword(user, foundModerator.Hash, password) == PasswordVerificationResult.Success
+            return this.passwordHasher.VerifyHashedPassword(user, foundUser.Hash, password) == PasswordVerificationResult.Success
                 ? user
                 : throw new UserWasNotFoundException();
         }

@@ -1,7 +1,5 @@
 ﻿namespace Arcadia.Ask.Storage
 {
-    using System;
-
     using Arcadia.Ask.Models.Entities;
 
     using Microsoft.EntityFrameworkCore;

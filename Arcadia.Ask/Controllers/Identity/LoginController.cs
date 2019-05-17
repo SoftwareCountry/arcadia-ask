@@ -41,7 +41,7 @@
 
             try
             {
-                var moderator = await this.signInService.GetModeratorByCredentials(req.Login, req.Password, token);
+                var moderator = await this.signInService.GetUserByCredentials(req.Login, req.Password, token);
 
                 var claims = new List<Claim>
                 {
