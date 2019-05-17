@@ -4,29 +4,33 @@
     using System.Threading;
     using System.Threading.Tasks;
 
+    using Arcadia.Ask.Auth.Roles;
     using Arcadia.Ask.Models.Entities;
-    using Arcadia.Ask.Storage;
+    using Arcadia.Ask.Storage.Users;
 
     using Microsoft.AspNetCore.Identity;
-    using Microsoft.EntityFrameworkCore;
 
     public class SignInService : ISignInService
     {
-        private readonly DatabaseContext dbCtx;
-        private readonly IPasswordHasher<ModeratorEntity> passwordHasher;
+        private readonly IPasswordHasher<UserEntity> passwordHasher;
+        private readonly IUserRepository userRepository;
 
-        public SignInService(DatabaseContext dbCtx, IPasswordHasher<ModeratorEntity> passwordHasher)
+        public SignInService(IPasswordHasher<UserEntity> passwordHasher, IUserRepository userRepository)
         {
-            this.dbCtx = dbCtx;
             this.passwordHasher = passwordHasher;
+            this.userRepository = userRepository;
         }
 
         public async Task<bool> IsModeratorWithCredentialsExists(string login, string password, CancellationToken token)
         {
-            var moderator = await this.dbCtx.Moderators
-                .Where(m => m.Login == login).FirstOrDefaultAsync(token);
+            var moderator = await this.userRepository.FindUserByLogin(login, token);
 
             if (moderator == null)
+            {
+                return false;
+            }
+
+            if (moderator.UserRoles.All(r => r.Role.Name != RoleNames.Moderator))
             {
                 return false;
             }
