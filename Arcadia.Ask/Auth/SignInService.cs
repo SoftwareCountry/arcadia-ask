@@ -1,5 +1,6 @@
 ﻿namespace Arcadia.Ask.Auth
 {
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -22,9 +23,14 @@
 
         public async Task<bool> IsModeratorWithCredentialsExists(string login, string password, CancellationToken token)
         {
-            var moderator = await this.userRepository.FindUserByLoginAndRole(login, RoleNames.Moderator, token);
+            var moderator = await this.userRepository.FindUserByLogin(login, token);
 
             if (moderator == null)
+            {
+                return false;
+            }
+
+            if (moderator.UserRoles.All(r => r.Role.Name != RoleNames.Moderator))
             {
                 return false;
             }

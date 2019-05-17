@@ -1,10 +1,8 @@
 ﻿namespace Arcadia.Ask.Storage.Users
 {
-    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Arcadia.Ask.Auth.Roles;
     using Arcadia.Ask.Models.Entities;
 
     using Microsoft.EntityFrameworkCore;
@@ -18,15 +16,13 @@
             this.dbCtx = dbCtx;
         }
 
-        public async Task<UserEntity> FindUserByLoginAndRole(string login, string role, CancellationToken token)
+        public async Task<UserEntity> FindUserByLogin(string login, CancellationToken token)
         {
             return await this.dbCtx.Users
                 .Include(u => u.UserRoles)
                 .ThenInclude(ur => ur.Role)
                 .AsNoTracking()
-                .FirstOrDefaultAsync(u =>
-                        u.UserRoles.Any(ur => ur.Role.Name == RoleNames.Moderator) && u.Login == login,
-                    token);
+                .FirstOrDefaultAsync(u => u.Login == login, token);
         }
     }
 }
