@@ -20,6 +20,16 @@
             this.passwordHasher = passwordHasher;
         }
 
+        public DbSet<QuestionEntity> Questions { get; set; }
+
+        public DbSet<VoteEntity> Votes { get; set; }
+
+        public DbSet<UserEntity> Users { get; set; }
+
+        public DbSet<RoleEntity> Roles { get; set; }
+
+        public DbSet<UserRoleEntity> UserRoles { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<VoteEntity>()
@@ -51,16 +61,27 @@
             };
 
             modelBuilder.Entity<RoleEntity>().HasData(userRole, moderatorRole);
+
+            var adminRoles = new[] { userRole, moderatorRole };
+
+            var adminLogin = "admin";
+            var adminPassword = "changeit";
+            
+            this.AddUser(modelBuilder, adminLogin, adminRoles, adminPassword);
         }
 
-        public DbSet<QuestionEntity> Questions { get; set; }
+        private void AddUser(ModelBuilder modelBuilder, string login, RoleEntity[] roles, string password)
+        {
+            var adminUser = new User(login, roles.Select(x => x.Name));
 
-        public DbSet<VoteEntity> Votes { get; set; }
+            var admin = new UserEntity()
+            {
+                Hash = this.passwordHasher.HashPassword(adminUser, password),
+                Login = login
+            };
 
-        public DbSet<UserEntity> Users { get; set; }
-
-        public DbSet<RoleEntity> Roles { get; set; }
-
-        public DbSet<UserRoleEntity> UserRoles { get; set; }
+            modelBuilder.Entity<UserEntity>().HasData(admin);
+            modelBuilder.Entity<UserRoleEntity>().HasData(roles.Select(x => new UserRoleEntity() { RoleId = x.RoleId, UserLogin = admin.Login }));
+        }
     }
 }
