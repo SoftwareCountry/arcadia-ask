@@ -5,37 +5,35 @@
     using System.Threading.Tasks;
 
     using Arcadia.Ask.Auth.Roles;
-    using Arcadia.Ask.Models.Entities;
     using Arcadia.Ask.Storage.Users;
 
     using Microsoft.AspNetCore.Identity;
 
     public class SignInService : ISignInService
     {
-        private readonly IPasswordHasher<UserEntity> passwordHasher;
+        private readonly IPasswordHasher<User> passwordHasher;
         private readonly IUserRepository userRepository;
 
-        public SignInService(IPasswordHasher<UserEntity> passwordHasher, IUserRepository userRepository)
+        public SignInService(IPasswordHasher<User> passwordHasher, IUserRepository userRepository)
         {
             this.passwordHasher = passwordHasher;
             this.userRepository = userRepository;
         }
 
-        public async Task<bool> IsModeratorWithCredentialsExists(string login, string password, CancellationToken token)
+        public async Task<User> GetUserByCredentials(string login, string password, CancellationToken token)
         {
-            var moderator = await this.userRepository.FindUserByLogin(login, token);
+            var foundUser = await this.userRepository.FindUserByLogin(login, token);
 
-            if (moderator == null)
+            if (foundUser == null)
             {
-                return false;
+                throw new UserWasNotFoundException();
             }
 
-            if (moderator.UserRoles.All(r => r.Role.Name != RoleNames.Moderator))
-            {
-                return false;
-            }
+            var user = new User(login, foundUser.UserRoles.Select(r => r.Role.Name));
 
-            return this.passwordHasher.VerifyHashedPassword(moderator, moderator.Hash, password) == PasswordVerificationResult.Success;
+            return this.passwordHasher.VerifyHashedPassword(user, foundUser.Hash, password) == PasswordVerificationResult.Success
+                ? user
+                : throw new UserWasNotFoundException();
         }
     }
 }

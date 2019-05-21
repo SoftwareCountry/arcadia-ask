@@ -7,7 +7,6 @@ namespace Arcadia.Ask
     using Arcadia.Ask.Auth.Permissions;
     using Arcadia.Ask.Configuration;
     using Arcadia.Ask.Hubs;
-    using Arcadia.Ask.Models.Entities;
     using Arcadia.Ask.Questions;
     using Arcadia.Ask.Storage;
     using Arcadia.Ask.Storage.Questions;
@@ -59,7 +58,7 @@ namespace Arcadia.Ask
 
             services.AddTransient<IPermissionsByRoleLoader, PermissionsByRoleLoader>();
 
-            services.AddTransient<IPasswordHasher<UserEntity>, PasswordHasher<UserEntity>>();
+            services.AddTransient<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddTransient<ISignInService, SignInService>();
 
             services.AddSingleton<IDisplayedQuestion, DisplayedQuestion>();
