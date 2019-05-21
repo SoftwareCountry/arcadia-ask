@@ -1,13 +1,23 @@
 ﻿namespace Arcadia.Ask.Storage
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
+    using Arcadia.Ask.Auth;
+    using Arcadia.Ask.Auth.Roles;
     using Arcadia.Ask.Models.Entities;
 
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
 
     public class DatabaseContext : DbContext
     {
-        public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
+        private readonly IPasswordHasher<User> passwordHasher;
+
+        public DatabaseContext(DbContextOptions<DatabaseContext> options, IPasswordHasher<User> passwordHasher) : base(options)
         {
+            this.passwordHasher = passwordHasher;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -27,6 +37,20 @@
                 .HasOne(ur => ur.Role)
                 .WithMany(r => r.UserRoles)
                 .HasForeignKey(ur => ur.RoleId);
+
+            var userRole = new RoleEntity()
+            {
+                RoleId = Guid.Parse("af2a4f78-3712-4300-abcd-d59a0136c833"),
+                Name = RoleNames.User
+            };
+
+            var moderatorRole = new RoleEntity()
+            {
+                RoleId = Guid.Parse("835f137e-4b44-4e7b-8563-849eb151fd74"),
+                Name = RoleNames.Moderator
+            };
+
+            modelBuilder.Entity<RoleEntity>().HasData(userRole, moderatorRole);
         }
 
         public DbSet<QuestionEntity> Questions { get; set; }
