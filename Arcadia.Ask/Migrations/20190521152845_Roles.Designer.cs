@@ -4,14 +4,16 @@ using Arcadia.Ask.Storage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Arcadia.Ask.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20190521152845_Roles")]
+    partial class Roles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,13 +73,6 @@ namespace Arcadia.Ask.Migrations
                     b.HasKey("Login");
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Login = "admin",
-                            Hash = "AQAAAAEAACcQAAAAEOoGxBJ4DDHCDmmh9dETHA2CzQnkdtA4Fc+9ZkUVGVqhkfl48+Nv3t/KaGCmVGnzRA=="
-                        });
                 });
 
             modelBuilder.Entity("Arcadia.Ask.Models.Entities.UserRoleEntity", b =>
@@ -91,18 +86,6 @@ namespace Arcadia.Ask.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("UserRoles");
-
-                    b.HasData(
-                        new
-                        {
-                            UserLogin = "admin",
-                            RoleId = new Guid("af2a4f78-3712-4300-abcd-d59a0136c833")
-                        },
-                        new
-                        {
-                            UserLogin = "admin",
-                            RoleId = new Guid("835f137e-4b44-4e7b-8563-849eb151fd74")
-                        });
                 });
 
             modelBuilder.Entity("Arcadia.Ask.Models.Entities.VoteEntity", b =>
