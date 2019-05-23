@@ -84,5 +84,14 @@
 
             return this.Redirect(redirectUrl);
         }
+
+        [Authorize]
+        [Route("sign-out")]
+        [HttpPost]
+        public async Task<ActionResult> SignOut()
+        {
+            await this.HttpContext.SignOutAsync();
+            return this.Ok();
+        }
     }
 }
