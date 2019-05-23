@@ -6,6 +6,10 @@
 
     <span fxFlex="1 1 auto"></span>
 
+
+    <span *ngIf="isModerator$ | async">
+      <a mat-button (click)="signOut()">Sign out</a>
+    </span>
     <span *ngIf="(isModerator$ | async) === false">
       <a mat-button routerLink="/sign-in/moderator">Sign in</a>
     </span>

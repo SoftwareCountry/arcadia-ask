@@ -12,4 +12,8 @@ export class SignInService {
   public signInAsModerator(requestModel: SignInModel): Observable<{}> {
     return this.http.post('/api/auth/moderator/sign-in', requestModel);
   }
+
+  public signOut(): Observable<{}> {
+    return this.http.post('/api/auth/sign-out', {});
+  }
 }
