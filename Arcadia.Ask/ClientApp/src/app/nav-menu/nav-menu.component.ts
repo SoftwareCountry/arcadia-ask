@@ -12,7 +12,7 @@ import { map } from 'rxjs/operators';
 export class NavMenuComponent {
   public isModerator$: Observable<boolean>;
 
-  constructor(permissionsService: PermissionService) { 
+  constructor(permissionsService: PermissionService) {
     this.isModerator$ = permissionsService.getPermissions().pipe(
       map(p => p.canDeleteQuestion)
     );
