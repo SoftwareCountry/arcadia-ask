@@ -11,9 +11,7 @@ type QuestionChange =
   { type: 'removed', id: string } |
   { type: 'voted', id: string };
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class QuestionsStore implements OnDestroy {
   public questions: Observable<Map<string, Question>>;
 

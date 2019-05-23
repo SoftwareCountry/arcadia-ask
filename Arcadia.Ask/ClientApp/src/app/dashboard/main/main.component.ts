@@ -3,11 +3,14 @@ import { Observable } from 'rxjs';
 import { map, share } from 'rxjs/operators';
 
 import { PermissionService } from '../../identity/permissions.service';
+import { QuestionsStore } from 'src/app/questions/questions-store.service';
+import { DisplayedQuestionService } from 'src/app/questions/displayed-question.service';
 
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
-  styleUrls: ['./main.component.css']
+  styleUrls: ['./main.component.css'],
+  providers: [QuestionsStore, DisplayedQuestionService]
 })
 export class MainComponent {
   public canEditQuestions: Observable<boolean>;

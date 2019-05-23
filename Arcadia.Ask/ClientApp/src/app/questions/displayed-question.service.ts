@@ -11,9 +11,7 @@ type DisplayedQuestionChange =
   { type: 'changed', newQuestionId: string } |
   { type: 'hidden' };
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class DisplayedQuestionService implements OnDestroy {
   public displayedQuestion: Observable<Question>;
 
