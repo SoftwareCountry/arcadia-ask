@@ -13,8 +13,6 @@ export class NavMenuComponent {
   public isModerator$: Observable<boolean>;
 
   constructor(permissionsService: PermissionService) {
-    this.isModerator$ = permissionsService.getPermissions().pipe(
-      map(p => p.canDeleteQuestion)
-    );
+    this.isModerator$ = permissionsService.isUserModerator();
   }
 }
