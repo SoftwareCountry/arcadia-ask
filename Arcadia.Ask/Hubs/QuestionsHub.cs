@@ -69,7 +69,7 @@
 
         public async Task UpvoteQuestion(Guid questionId)
         {
-            var question = await this.questionsStorage.UpvoteQuestion(questionId, this.CurrentUserGuid);
+            var question = await this.questionsStorage.UpvoteQuestion(questionId, this.Context.User.Identity.Name);
             var questionDto = this.EntityToDto(question);
 
             await this.VotesAreChanged(questionDto);
@@ -77,7 +77,7 @@
 
         public async Task DownvoteQuestion(Guid questionId)
         {
-            var question = await this.questionsStorage.DownvoteQuestion(questionId, this.CurrentUserGuid);
+            var question = await this.questionsStorage.DownvoteQuestion(questionId, this.Context.User.Identity.Name);
             var questionDto = this.EntityToDto(question);
 
             await this.VotesAreChanged(questionDto);
@@ -88,7 +88,7 @@
             var questions = await this.questionsStorage.GetQuestions();
             questions = this.Context.User.IsInRole(RoleNames.Moderator) ? questions : questions.Where(q => q.IsApproved);
 
-            return questions.Select(q => this.EntityToDtoForSpecificUser(q, this.CurrentUserGuid));
+            return questions.Select(q => this.EntityToDtoForSpecificUser(q, this.Context.User.Identity.Name));
         }
 
         private async Task VotesAreChanged(QuestionDto question)
@@ -115,7 +115,7 @@
             };
         }
 
-        private QuestionForSpecificUserDto EntityToDtoForSpecificUser(QuestionEntity entity, Guid userId)
+        private QuestionForSpecificUserDto EntityToDtoForSpecificUser(QuestionEntity entity, string userId)
         {
             if (entity == null)
             {
@@ -128,7 +128,5 @@
                 DidVote = entity.Votes?.Any(v => v.UserId == userId) ?? false
             };
         }
-
-        private Guid CurrentUserGuid => Guid.Parse(this.Context.User.Identity.Name);
     }
 }

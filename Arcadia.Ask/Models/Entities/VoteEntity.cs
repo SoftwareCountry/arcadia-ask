@@ -9,7 +9,8 @@
         [ForeignKey("Question")]
         public Guid QuestionId { get; set; }
 
-        public Guid UserId { get; set; }
+        [MaxLength(50)]
+        public string UserId { get; set; }
 
         /// <summary>
         ///     This value is true if question is upvoted and false if downvoted.

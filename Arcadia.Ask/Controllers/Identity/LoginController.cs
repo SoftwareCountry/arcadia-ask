@@ -45,8 +45,7 @@
 
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.NameIdentifier, moderator.Login),
-                    new Claim(ClaimTypes.Name, this.User.Identity.Name)
+                    new Claim(ClaimTypes.Name, moderator.Login),
                 };
 
                 claims.AddRange(

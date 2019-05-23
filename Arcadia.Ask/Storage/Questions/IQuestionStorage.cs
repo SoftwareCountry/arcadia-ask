@@ -18,8 +18,8 @@
 
         Task<QuestionEntity> ApproveQuestion(Guid questionId);
 
-        Task<QuestionEntity> UpvoteQuestion(Guid questionId, Guid userId);
+        Task<QuestionEntity> UpvoteQuestion(Guid questionId, string userId);
 
-        Task<QuestionEntity> DownvoteQuestion(Guid questionId, Guid userId);
+        Task<QuestionEntity> DownvoteQuestion(Guid questionId, string userId);
     }
 }
