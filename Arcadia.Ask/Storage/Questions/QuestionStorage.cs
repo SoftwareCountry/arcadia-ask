@@ -78,12 +78,12 @@
             return entity;
         }
 
-        public async Task<QuestionEntity> UpvoteQuestion(Guid questionId, Guid userId)
+        public async Task<QuestionEntity> UpvoteQuestion(Guid questionId, string userId)
         {
             return await this.VoteForQuestion(questionId, userId, VoteStatus.Upvoted);
         }
 
-        public async Task<QuestionEntity> DownvoteQuestion(Guid questionId, Guid userId)
+        public async Task<QuestionEntity> DownvoteQuestion(Guid questionId, string userId)
         {
             return await this.VoteForQuestion(questionId, userId, VoteStatus.Downvoted);
         }
@@ -101,7 +101,7 @@
             this.dbCtx.Entry(entity).State = EntityState.Detached;
         }
 
-        private async Task<QuestionEntity> VoteForQuestion(Guid questionId, Guid userId, VoteStatus voteStatus)
+        private async Task<QuestionEntity> VoteForQuestion(Guid questionId, string userId, VoteStatus voteStatus)
         {
             var entity = await this.FindQuestionEntityByIdAsync(questionId);
 

@@ -4,14 +4,16 @@ using Arcadia.Ask.Storage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Arcadia.Ask.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20190523141614_VoteUserIdTypeUpdate")]
+    partial class VoteUserIdTypeUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -76,7 +78,7 @@ namespace Arcadia.Ask.Migrations
                         new
                         {
                             Login = "admin",
-                            Hash = "AQAAAAEAACcQAAAAEOoGxBJ4DDHCDmmh9dETHA2CzQnkdtA4Fc+9ZkUVGVqhkfl48+Nv3t/KaGCmVGnzRA=="
+                            Hash = "AQAAAAEAACcQAAAAENxCkosl5PseACjVmg9c2pOMVHAZZCimTxcAheoikYROQYH3IL8JELJUC4OQrDI/Dw=="
                         });
                 });
 
@@ -114,7 +116,7 @@ namespace Arcadia.Ask.Migrations
                     b.Property<string>("UserId")
                         .HasMaxLength(50);
 
-                    b.HasKey("QuestionId", "VoteId");
+                    b.HasKey("QuestionId", "UserId");
 
                     b.ToTable("Votes");
                 });
